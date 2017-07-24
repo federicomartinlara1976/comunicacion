@@ -1,0 +1,68 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="true"
+	monitoring="autodetect" dynamicConfig="true"
+	name="CM1"
+    maxBytesLocalHeap="100M"
+    maxBytesLocalOffHeap="10G"
+    maxBytesLocalDisk="60G">
+
+	<diskStore path="java.io.tmpdir" />
+
+	<defaultCache maxElementsInMemory="10000" eternal="false"
+		timeToIdleSeconds="1800" timeToLiveSeconds="3600" overflowToDisk="true"
+		maxElementsOnDisk="10000000" diskPersistent="false"
+		diskExpiryThreadIntervalSeconds="1800" />
+
+	<cache name="org.hibernate.cache.internal.StandardQueryCache"
+		maxElementsInMemory="1"
+		eternal="false" timeToIdleSeconds="1800"
+		timeToLiveSeconds="3600"/>
+
+	<cache name="org.hibernate.cache.spi.UpdateTimestampsCache"
+		maxElementsInMemory="1"
+		timeToIdleSeconds="1800" timeToLiveSeconds="3600"
+		eternal="false"/>
+	
+	<cache name="TIPOS_COMUNICACION" 
+		maxElementsInMemory="1"
+		eternal="false" diskSpoolBufferSizeMB="20"
+		timeToIdleSeconds="300" timeToLiveSeconds="600"
+		memoryStoreEvictionPolicy="LFU" transactionalMode="off"/>
+		
+	<cache name="CLIENTES" 
+		maxElementsInMemory="1"
+		eternal="false" diskSpoolBufferSizeMB="20"
+		timeToIdleSeconds="300" timeToLiveSeconds="600"
+		memoryStoreEvictionPolicy="LFU" transactionalMode="off"/>
+		
+	<cache name="AVISOS_CLIENTE" 
+		maxElementsInMemory="1"
+		eternal="false" diskSpoolBufferSizeMB="20"
+		timeToIdleSeconds="300" timeToLiveSeconds="600"
+		memoryStoreEvictionPolicy="LFU" transactionalMode="off"/>
+		
+	<cache name="MEDIOS_COMUNICACION_CLIENTE" 
+		maxElementsInMemory="1"
+		eternal="false" diskSpoolBufferSizeMB="20"
+		timeToIdleSeconds="300" timeToLiveSeconds="600"
+		memoryStoreEvictionPolicy="LFU" transactionalMode="off"/>
+		
+	<cache name="AVISOS" 
+		maxElementsInMemory="1"
+		eternal="false" diskSpoolBufferSizeMB="20"
+		timeToIdleSeconds="300" timeToLiveSeconds="600"
+		memoryStoreEvictionPolicy="LFU" transactionalMode="off"/>
+
+	<cache name="NOTIFICACIONES" 
+		maxElementsInMemory="1"
+		eternal="false" diskSpoolBufferSizeMB="20"
+		timeToIdleSeconds="300" timeToLiveSeconds="600"
+		memoryStoreEvictionPolicy="LFU" transactionalMode="off"/>
+		
+	<cache name="NOTIFICACIONES_AVISO" 
+		maxElementsInMemory="1"
+		eternal="false" diskSpoolBufferSizeMB="20"
+		timeToIdleSeconds="300" timeToLiveSeconds="600"
+		memoryStoreEvictionPolicy="LFU" transactionalMode="off"/>
+
+</ehcache>

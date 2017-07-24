@@ -1,0 +1,112 @@
+package net.bounceme.chronos.comunicacion.services.impl;
+
+import java.util.Date;
+
+import org.apache.commons.collections.Closure;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import net.bounceme.chronos.comunicacion.ComunicacionApplication;
+import net.bounceme.chronos.comunicacion.dao.DaoPersistence;
+import net.bounceme.chronos.comunicacion.exceptions.DataException;
+import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
+import net.bounceme.chronos.comunicacion.model.Aviso;
+import net.bounceme.chronos.comunicacion.model.Cliente;
+import net.bounceme.chronos.comunicacion.model.Notificacion;
+import net.bounceme.chronos.comunicacion.services.AvisosService;
+import net.bounceme.chronos.comunicacion.utils.Finalizer;
+
+/**
+ * Implementación del servicio que gestiona los avisos
+ * 
+ * @author frederik
+ *
+ */
+@Service(AvisosService.NAME)
+@Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
+public class AvisosServiceImpl extends Finalizer implements AvisosService {
+
+	private static final Logger log = Logger.getLogger(AvisosServiceImpl.class);
+
+	@Autowired
+	@Qualifier(ComunicacionApplication.CLIENTE_REPOSITORY)
+	private DaoPersistence<Cliente> clientesRepository;
+
+	@Autowired
+	@Qualifier(ComunicacionApplication.AVISOS_REPOSITORY)
+	private DaoPersistence<Aviso> avisosRepository;
+	
+	@Autowired
+	@Qualifier(ComunicacionApplication.NOTIFICACIONES_REPOSITORY)
+	private DaoPersistence<Notificacion> notificacionesRepository;
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.bounceme.chronos.comunicacion.services.AvisosService#nuevoAviso(java.lang.Long, java.util.Date,
+	 * java.lang.String)
+	 */
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	public Aviso nuevoAviso(Long idCliente, Date fechaInicioObra, String mensaje) throws ServiceException {
+		try {
+			Cliente cliente = clientesRepository.getObject(idCliente);
+
+			Aviso aviso = new Aviso();
+			aviso.setCliente(cliente);
+			aviso.setFechaInicioObra(fechaInicioObra);
+			aviso.setMensaje(mensaje);
+			aviso.setEstaNotificado(Boolean.FALSE);
+
+			return avisosRepository.saveObject(aviso);
+		}
+		catch (DataException exception) {
+			log.error(exception);
+			throw new ServiceException(exception);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.bounceme.chronos.comunicacion.services.AvisosService#anularAviso(java.lang.Long)
+	 */
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	public void anularAviso(Long idAviso) throws ServiceException {
+		try {
+			Aviso aviso = avisosRepository.getObject(idAviso);
+				
+			// Si está notificado este aviso, no lo borra
+			if (!aviso.getEstaNotificado()) {
+				CollectionUtils.forAllDo(aviso.getNotificaciones(), new Closure() {
+					public void execute(Object o) {
+						try {
+							Notificacion notificacion = (Notificacion) o;
+							notificacionesRepository.removeObject(notificacion.getId());
+						} catch (DataException exception) {
+							log.error(exception);
+						}
+					}
+				});
+				
+				avisosRepository.removeObject(idAviso);
+			}
+			
+		} catch (DataException exception) {
+			log.error(exception);
+			throw new ServiceException(exception);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see net.bounceme.chronos.comunicacion.services.AvisosService#get(java.lang.Long)
+	 */
+	@Override
+	public Aviso get(Long id) {
+		return avisosRepository.getObject(id);
+	}
+}

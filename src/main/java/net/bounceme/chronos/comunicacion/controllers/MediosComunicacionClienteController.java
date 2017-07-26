@@ -71,14 +71,16 @@ public class MediosComunicacionClienteController {
 	/**
 	 * Obtiene un medio de comunicación de un cliente
 	 * 
-	 * @param medio parámetros de entrada [idCliente, idTipo]
+	 * @param idCliente
+	 * @param idTipo
 	 * @return medio de comunicación
 	 */
 	@CrossOrigin
 	@RequestMapping(value = "/get", method = RequestMethod.GET)
 	public ResponseEntity<MedioComunicacionCliente> get(
-			@RequestBody ParamsMedioComunicacion medio) {
-		MedioComunicacionCliente medioComunicacionCliente = mediosComunicacionClienteService.get(medio.getIdCliente(), medio.getIdTipo());
+			@RequestParam(value = "idCliente") Long idCliente,
+			@RequestParam(value = "idTipo") Long idTipo) {
+		MedioComunicacionCliente medioComunicacionCliente = mediosComunicacionClienteService.get(idCliente, idTipo);
 		HttpStatus status = medioComunicacionCliente != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
 		return new ResponseEntity<MedioComunicacionCliente>(medioComunicacionCliente, status);
 	}
@@ -105,7 +107,8 @@ public class MediosComunicacionClienteController {
 	/**
      * Borra un medio de comunicación de un cliente
      * 
-     * @param medio parámetros de entrada [idCliente, idTipo]
+     * @param idCliente
+     * @param idTipo
      * @throws ControllerException
      */
 	@CrossOrigin

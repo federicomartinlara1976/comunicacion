@@ -58,7 +58,7 @@ public class AvisosController {
 	}
 	
 	/**
-	 * Obtiene un aviso
+	 * Obtiene un cliente
 	 * 
 	 * @param id
 	 * @return

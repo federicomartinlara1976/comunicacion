@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.bounceme.chronos.comunicacion.ComunicacionApplication;
+import net.bounceme.chronos.comunicacion.config.AppConfig;
 import net.bounceme.chronos.comunicacion.dao.DaoPersistence;
 import net.bounceme.chronos.comunicacion.dao.DaoQueries;
 import net.bounceme.chronos.comunicacion.exceptions.DataException;
@@ -37,15 +37,15 @@ public class ClientesServiceImpl extends Finalizer implements ClientesService {
 	private static final Logger log = Logger.getLogger(ClientesServiceImpl.class);
 
 	@Autowired
-	@Qualifier(ComunicacionApplication.CLIENTE_REPOSITORY)
+	@Qualifier(AppConfig.CLIENTE_REPOSITORY)
 	private DaoPersistence<Cliente> clientesRepository;
 
 	@Autowired
-	@Qualifier(ComunicacionApplication.MEDIOS_COMUNICACION_CLIENTE_REPOSITORY)
+	@Qualifier(AppConfig.MEDIOS_COMUNICACION_CLIENTE_REPOSITORY)
 	private DaoPersistence<MedioComunicacionCliente> mediosComunicacionClienteRepository;
 
 	@Autowired
-	@Qualifier(ComunicacionApplication.AVISOS_REPOSITORY)
+	@Qualifier(AppConfig.AVISOS_REPOSITORY)
 	private DaoPersistence<Aviso> avisosRepository;
 	
 	@Autowired

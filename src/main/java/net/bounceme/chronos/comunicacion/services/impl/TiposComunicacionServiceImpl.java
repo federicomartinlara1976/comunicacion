@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.bounceme.chronos.comunicacion.ComunicacionApplication;
+import net.bounceme.chronos.comunicacion.config.AppConfig;
 import net.bounceme.chronos.comunicacion.dao.DaoPersistence;
 import net.bounceme.chronos.comunicacion.dao.DaoQueries;
 import net.bounceme.chronos.comunicacion.exceptions.DataException;
@@ -33,7 +33,7 @@ public class TiposComunicacionServiceImpl extends Finalizer implements TiposComu
 	private static final Logger log = Logger.getLogger(TiposComunicacionServiceImpl.class);
 	
 	@Autowired
-	@Qualifier(ComunicacionApplication.TIPOS_COMUNICACION_REPOSITORY)
+	@Qualifier(AppConfig.TIPOS_COMUNICACION_REPOSITORY)
 	private DaoPersistence<TipoComunicacion> tiposComunicacionRepository;
 	
 	@Autowired

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.bounceme.chronos.comunicacion.ComunicacionApplication;
+import net.bounceme.chronos.comunicacion.config.AppConfig;
 import net.bounceme.chronos.comunicacion.dao.DaoPersistence;
 import net.bounceme.chronos.comunicacion.exceptions.DataException;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
@@ -34,15 +34,15 @@ public class AvisosServiceImpl extends Finalizer implements AvisosService {
 	private static final Logger log = Logger.getLogger(AvisosServiceImpl.class);
 
 	@Autowired
-	@Qualifier(ComunicacionApplication.CLIENTE_REPOSITORY)
+	@Qualifier(AppConfig.CLIENTE_REPOSITORY)
 	private DaoPersistence<Cliente> clientesRepository;
 
 	@Autowired
-	@Qualifier(ComunicacionApplication.AVISOS_REPOSITORY)
+	@Qualifier(AppConfig.AVISOS_REPOSITORY)
 	private DaoPersistence<Aviso> avisosRepository;
 	
 	@Autowired
-	@Qualifier(ComunicacionApplication.NOTIFICACIONES_REPOSITORY)
+	@Qualifier(AppConfig.NOTIFICACIONES_REPOSITORY)
 	private DaoPersistence<Notificacion> notificacionesRepository;
 
 	/*

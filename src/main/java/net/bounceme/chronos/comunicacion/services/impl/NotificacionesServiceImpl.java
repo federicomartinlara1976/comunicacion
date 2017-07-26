@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.bounceme.chronos.comunicacion.ComunicacionApplication;
+import net.bounceme.chronos.comunicacion.config.AppConfig;
 import net.bounceme.chronos.comunicacion.dao.DaoPersistence;
 import net.bounceme.chronos.comunicacion.exceptions.DataException;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
@@ -23,8 +23,8 @@ import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
 import net.bounceme.chronos.comunicacion.services.NotificacionesService;
 import net.bounceme.chronos.comunicacion.services.emisores.Emisor;
 import net.bounceme.chronos.comunicacion.services.emisores.EmisorFactory;
-import net.bounceme.chronos.comunicacion.utils.Finalizer;
 import net.bounceme.chronos.comunicacion.utils.Constantes.ResultadoEnvio;
+import net.bounceme.chronos.comunicacion.utils.Finalizer;
 
 /**
  * Implementación del servicio que gestiona las notificaciones
@@ -39,19 +39,19 @@ public class NotificacionesServiceImpl extends Finalizer implements Notificacion
 	private static final Logger log = Logger.getLogger(NotificacionesServiceImpl.class);
 
 	@Autowired
-	@Qualifier(ComunicacionApplication.AVISOS_REPOSITORY)
+	@Qualifier(AppConfig.AVISOS_REPOSITORY)
 	private DaoPersistence<Aviso> avisosRepository;
 
 	@Autowired
-	@Qualifier(ComunicacionApplication.NOTIFICACIONES_REPOSITORY)
+	@Qualifier(AppConfig.NOTIFICACIONES_REPOSITORY)
 	private DaoPersistence<Notificacion> notificacionesRepository;
 
 	@Autowired
-	@Qualifier(ComunicacionApplication.TIPOS_COMUNICACION_REPOSITORY)
+	@Qualifier(AppConfig.TIPOS_COMUNICACION_REPOSITORY)
 	private DaoPersistence<TipoComunicacion> tiposComunicacionRepository;
 
 	@Autowired
-	@Qualifier(ComunicacionApplication.MEDIOS_COMUNICACION_CLIENTE_REPOSITORY)
+	@Qualifier(AppConfig.MEDIOS_COMUNICACION_CLIENTE_REPOSITORY)
 	private DaoPersistence<MedioComunicacionCliente> mediosComunicacionClienteRepository;
 
 	@Autowired
@@ -102,7 +102,7 @@ public class NotificacionesServiceImpl extends Finalizer implements Notificacion
 	     * a la cola de mensajes. Posteriormente y en paralelo un receptor al otro lado de la cola
 	     * recoge el identificador, obtiene la notificación y la envía
 	     */
-		rabbitTemplate.convertAndSend(ComunicacionApplication.QUEUE_NAME, idNotificacion.toString());
+		rabbitTemplate.convertAndSend(AppConfig.QUEUE_NAME, idNotificacion.toString());
 	}
 
 	/* (non-Javadoc)

@@ -107,8 +107,7 @@ public class MediosComunicacionClienteController {
 	/**
      * Borra un medio de comunicación de un cliente
      * 
-     * @param idCliente
-     * @param idTipo
+     * @param medio parámetros de entrada [idCliente, idTipo]
      * @throws ControllerException
      */
 	@CrossOrigin

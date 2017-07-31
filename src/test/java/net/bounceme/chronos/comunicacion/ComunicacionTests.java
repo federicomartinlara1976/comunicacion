@@ -221,7 +221,8 @@ public class ComunicacionTests {
 	}
 	
 	/**
-	 * Prueba de creación de un aviso de un cliente
+	 * Prueba de creación de un aviso con error.
+	 * El parámetro del mensaje debe estar informado
 	 * 
 	 * @throws Exception
 	 */

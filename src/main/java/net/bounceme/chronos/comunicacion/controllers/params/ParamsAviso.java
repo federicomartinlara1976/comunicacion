@@ -2,6 +2,7 @@ package net.bounceme.chronos.comunicacion.controllers.params;
 
 import java.util.Date;
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class ParamsAviso {
@@ -11,6 +12,7 @@ public class ParamsAviso {
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date fechaInicioObra;
     
+    @NotBlank
     private String mensaje;
 
     /**

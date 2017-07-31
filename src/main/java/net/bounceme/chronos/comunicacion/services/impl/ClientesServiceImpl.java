@@ -7,6 +7,7 @@ import org.apache.commons.collections.Closure;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -59,7 +60,7 @@ public class ClientesServiceImpl extends Finalizer implements ClientesService {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public Cliente nuevo(String nombre, String apellidos, String dni) throws ServiceException {
+	public Cliente nuevo(@NotBlank String nombre, @NotBlank String apellidos, String dni) throws ServiceException {
 		try {
 			Cliente cliente = new Cliente();
 			cliente.setNombre(nombre);

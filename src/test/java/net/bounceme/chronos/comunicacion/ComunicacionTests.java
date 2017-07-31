@@ -221,12 +221,32 @@ public class ComunicacionTests {
 	}
 	
 	/**
+	 * Prueba de creación de un aviso de un cliente
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void test_AG_nuevoAvisoClienteNotValid() throws Exception {
+		Map<String, String> parameters = new HashMap<String, String>();
+		parameters.put("idCliente", "1");
+		parameters.put("fechaInicioObra", "2017-06-20");
+
+		String params = json(parameters);
+
+		log.info("Method: post\nURL: " + verbs.AVISOS_NEW.getValue() + "\n " + params);
+		mockMvc.perform(MockMvcRequestBuilders.post(verbs.AVISOS_NEW.getValue())
+				.contentType(contentType)
+				.content(params))
+				.andExpect(MockMvcResultMatchers.status().is5xxServerError());
+	}
+	
+	/**
 	 * Prueba de creación de una notificación de un aviso
 	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void test_AG_nuevaNotificacion_a_SMS() throws Exception {
+	public void test_AH_nuevaNotificacion_a_SMS() throws Exception {
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("idAviso", "1");
 		parameters.put("idTipoMedio", "1");
@@ -246,7 +266,7 @@ public class ComunicacionTests {
 	 * @throws Exception
 	 */
 	@Test
-	public void test_AH_nuevaNotificacion_a_FAX() throws Exception {
+	public void test_AI_nuevaNotificacion_a_FAX() throws Exception {
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("idAviso", "1");
 		parameters.put("idTipoMedio", "2");
@@ -266,7 +286,7 @@ public class ComunicacionTests {
 	 * @throws Exception
 	 */
 	@Test
-	public void test_AI_enviarNotificacion_SMS_Fallido() throws Exception {
+	public void test_AJ_enviarNotificacion_SMS_Fallido() throws Exception {
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("idNotificacion", "1");
 
@@ -297,7 +317,7 @@ public class ComunicacionTests {
 	 * @throws Exception
 	 */
 	@Test
-	public void test_AJ_enviarNotificacion_FAX_Fallido() throws Exception {
+	public void test_AK_enviarNotificacion_FAX_Fallido() throws Exception {
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("idNotificacion", "2");
 
@@ -328,7 +348,7 @@ public class ComunicacionTests {
      * @throws Exception
      */
     @Test
-    public void test_AK_enviarNotificacion_FAX_Correcto() throws Exception {
+    public void test_AL_enviarNotificacion_FAX_Correcto() throws Exception {
         // Cambiar numero de fax
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("idCliente", "1");

@@ -1,5 +1,7 @@
 package net.bounceme.chronos.comunicacion.controllers;
 
+import javax.validation.Valid;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -48,7 +50,7 @@ public class AvisosController {
 			method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public Aviso nuevo(
-			@RequestBody ParamsAviso aviso) throws ControllerException {
+			@RequestBody @Valid ParamsAviso aviso) throws ControllerException {
 		try {
 			return avisosService.nuevoAviso(aviso.getIdCliente(), aviso.getFechaInicioObra(), aviso.getMensaje());
 		} catch (ServiceException exception) {

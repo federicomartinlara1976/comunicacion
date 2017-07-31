@@ -2,6 +2,7 @@ package net.bounceme.chronos.comunicacion.controllers;
 
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -38,7 +39,7 @@ public class StatusHandler {
 	 * @param exception
 	 */
 	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR, reason = "Error interno")
-	@ExceptionHandler({ ControllerException.class, Exception.class })
+	@ExceptionHandler({ ControllerException.class, MethodArgumentNotValidException.class, Exception.class })
 	public void handleServiceException(Exception exception) {
 		log.error(exception);
 	}

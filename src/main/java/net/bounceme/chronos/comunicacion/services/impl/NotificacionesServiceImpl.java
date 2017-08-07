@@ -11,8 +11,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.bounceme.chronos.comunicacion.config.AppConfig;
-import net.bounceme.chronos.comunicacion.dao.DaoPersistence;
-import net.bounceme.chronos.comunicacion.exceptions.DataException;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.Aviso;
 import net.bounceme.chronos.comunicacion.model.Cliente;
@@ -25,6 +23,8 @@ import net.bounceme.chronos.comunicacion.services.emisores.Emisor;
 import net.bounceme.chronos.comunicacion.services.emisores.EmisorFactory;
 import net.bounceme.chronos.comunicacion.utils.Constantes.ResultadoEnvio;
 import net.bounceme.chronos.comunicacion.utils.Finalizer;
+import net.bounceme.chronos.utils.data.dao.DaoPersistence;
+import net.bounceme.chronos.utils.data.exceptions.DataException;
 
 /**
  * Implementación del servicio que gestiona las notificaciones

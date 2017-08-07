@@ -2,7 +2,6 @@ package net.bounceme.chronos.comunicacion.services;
 
 import java.util.List;
 
-import net.bounceme.chronos.comunicacion.exceptions.DataException;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
 

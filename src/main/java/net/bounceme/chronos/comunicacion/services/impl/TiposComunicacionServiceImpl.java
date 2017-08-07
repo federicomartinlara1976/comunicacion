@@ -12,13 +12,13 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.bounceme.chronos.comunicacion.config.AppConfig;
-import net.bounceme.chronos.comunicacion.dao.DaoPersistence;
-import net.bounceme.chronos.comunicacion.dao.DaoQueries;
-import net.bounceme.chronos.comunicacion.exceptions.DataException;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
 import net.bounceme.chronos.comunicacion.services.TiposComunicacionService;
 import net.bounceme.chronos.comunicacion.utils.Finalizer;
+import net.bounceme.chronos.utils.data.dao.DaoPersistence;
+import net.bounceme.chronos.utils.data.dao.DaoQueries;
+import net.bounceme.chronos.utils.data.exceptions.DataException;
 
 /**
  * Implementación del servicio que gestiona los tipos de comunicación aplicables a los clientes

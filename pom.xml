@@ -22,7 +22,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-
+		<chronoslibs.version>1.0.Final</chronoslibs.version>
         <ehcache.version>2.9.0</ehcache.version>
     </properties>
 
@@ -39,6 +39,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
+        
+        <dependency>
+			<groupId>net.bounceme.chronos.chronoslibs</groupId>
+			<artifactId>chronos-data-utils</artifactId>
+			<version>${chronoslibs.version}</version>
+		</dependency>
 
         <dependency>
             <groupId>commons-collections</groupId>

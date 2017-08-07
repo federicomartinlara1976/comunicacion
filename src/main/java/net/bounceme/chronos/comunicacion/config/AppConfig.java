@@ -16,11 +16,11 @@ import net.bounceme.chronos.comunicacion.model.Cliente;
 import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
 import net.bounceme.chronos.comunicacion.model.Notificacion;
 import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
+import net.bounceme.chronos.utils.data.config.DataConfig;
 import net.bounceme.chronos.utils.data.dao.DaoPersistence;
-import net.bounceme.chronos.utils.data.dao.DaoQueries;
 
 @Configuration
-public class AppConfig {
+public class AppConfig extends DataConfig {
 	
 	public static final String CLIENTE_REPOSITORY = "clienteRepository";
 	
@@ -88,16 +88,6 @@ public class AppConfig {
 	@Bean(name = NOTIFICACIONES_REPOSITORY)
 	public DaoPersistence<Notificacion> notificacionesRepository() {
 		return new DaoPersistence<Notificacion>(Notificacion.class);
-	}
-	
-	/**
-     * Crea el repositorio para las consultas
-     * 
-     * @return bean del repositorio
-     */
-	@Bean(name = DaoQueries.NAME)
-	public DaoQueries daoQueries() {
-		return new DaoQueries();
 	}
 	
 	/**

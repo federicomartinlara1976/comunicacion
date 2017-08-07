@@ -1,6 +1,7 @@
 package net.bounceme.chronos.comunicacion.model;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -148,7 +149,7 @@ public class Aviso implements Serializable {
 	 * @param notificaciones the notificaciones to set
 	 */
 	public void setNotificaciones(List<Notificacion> notificaciones) {
-		this.notificaciones = notificaciones;
+		this.notificaciones = Collections.unmodifiableList(notificaciones);
 	}
 
     /* (non-Javadoc)

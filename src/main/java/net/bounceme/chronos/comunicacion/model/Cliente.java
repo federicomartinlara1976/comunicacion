@@ -1,6 +1,7 @@
 package net.bounceme.chronos.comunicacion.model;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.Cacheable;
@@ -145,7 +146,7 @@ public class Cliente implements Serializable {
 	 * @param mediosComunicacion the mediosComunicacion to set
 	 */
 	public void setMediosComunicacion(List<MedioComunicacionCliente> mediosComunicacion) {
-		this.mediosComunicacion = mediosComunicacion;
+		this.mediosComunicacion = Collections.unmodifiableList(mediosComunicacion);
 	}
 
 	/**
@@ -159,7 +160,7 @@ public class Cliente implements Serializable {
 	 * @param avisos the avisos to set
 	 */
 	public void setAvisos(List<Aviso> avisos) {
-		this.avisos = avisos;
+		this.avisos = Collections.unmodifiableList(avisos);
 	}
 
 	/*

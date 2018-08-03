@@ -45,7 +45,7 @@ public class ComunicacionApplication {
 	    medios.put("FAX", "FAX_Emisor");
 	    medios.put("EMAIL", "EMAIL_Emisor");
 	    
-		return (evt) -> Arrays.asList("SMS,FAX,EMAIL".split(",")).forEach(a -> {
+		return (evt) -> Arrays.asList(new String[]{"SMS","FAX","EMAIL"}).forEach(a -> {
 			try {
 			    String emisor = medios.get(a);
 				tiposComunicacionService.nuevo(a, emisor);

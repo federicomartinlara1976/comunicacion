@@ -15,7 +15,6 @@ import net.bounceme.chronos.comunicacion.data.dao.DaoPersistence;
 import net.bounceme.chronos.comunicacion.data.dao.DaoQueries;
 import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
 import net.bounceme.chronos.comunicacion.services.TiposComunicacionService;
-import net.bounceme.chronos.comunicacion.utils.Finalizer;
 
 /**
  * Implementación del servicio que gestiona los tipos de comunicación aplicables
@@ -26,7 +25,7 @@ import net.bounceme.chronos.comunicacion.utils.Finalizer;
  */
 @Service(TiposComunicacionService.NAME)
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
-public class TiposComunicacionServiceImpl extends Finalizer implements TiposComunicacionService {
+public class TiposComunicacionServiceImpl implements TiposComunicacionService {
 
 	@Autowired
 	@Qualifier(AppConfig.TIPOS_COMUNICACION_REPOSITORY)

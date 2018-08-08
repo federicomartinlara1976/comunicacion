@@ -20,7 +20,6 @@ import net.bounceme.chronos.comunicacion.model.Aviso;
 import net.bounceme.chronos.comunicacion.model.Cliente;
 import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
 import net.bounceme.chronos.comunicacion.services.ClientesService;
-import net.bounceme.chronos.comunicacion.utils.Finalizer;
 
 /**
  * Implementación del servicio que gestiona los clientes
@@ -30,7 +29,7 @@ import net.bounceme.chronos.comunicacion.utils.Finalizer;
  */
 @Service(ClientesService.NAME)
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
-public class ClientesServiceImpl extends Finalizer implements ClientesService {
+public class ClientesServiceImpl implements ClientesService {
 
 	@Autowired
 	@Qualifier(AppConfig.CLIENTE_REPOSITORY)

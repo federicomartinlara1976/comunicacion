@@ -20,7 +20,6 @@ import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
 import net.bounceme.chronos.comunicacion.model.MedioComunicacionClienteId;
 import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
 import net.bounceme.chronos.comunicacion.services.MediosComunicacionClienteService;
-import net.bounceme.chronos.comunicacion.utils.Finalizer;
 
 /**
  * Implementación del servicio que gestiona los medios de comunicación de los
@@ -31,7 +30,7 @@ import net.bounceme.chronos.comunicacion.utils.Finalizer;
  */
 @Service(MediosComunicacionClienteService.NAME)
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
-public class MediosComunicacionClienteServiceImpl extends Finalizer implements MediosComunicacionClienteService {
+public class MediosComunicacionClienteServiceImpl implements MediosComunicacionClienteService {
 
 	@Autowired
 	@Qualifier(AppConfig.MEDIOS_COMUNICACION_CLIENTE_REPOSITORY)

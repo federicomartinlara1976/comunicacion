@@ -22,7 +22,6 @@ import net.bounceme.chronos.comunicacion.services.NotificacionesService;
 import net.bounceme.chronos.comunicacion.services.emisores.Emisor;
 import net.bounceme.chronos.comunicacion.services.emisores.EmisorFactory;
 import net.bounceme.chronos.comunicacion.utils.Constantes.ResultadoEnvio;
-import net.bounceme.chronos.comunicacion.utils.Finalizer;
 
 /**
  * Implementación del servicio que gestiona las notificaciones
@@ -32,7 +31,7 @@ import net.bounceme.chronos.comunicacion.utils.Finalizer;
  */
 @Service(NotificacionesService.NAME)
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
-public class NotificacionesServiceImpl extends Finalizer implements NotificacionesService {
+public class NotificacionesServiceImpl implements NotificacionesService {
 
 	@Autowired
 	@Qualifier(AppConfig.AVISOS_REPOSITORY)

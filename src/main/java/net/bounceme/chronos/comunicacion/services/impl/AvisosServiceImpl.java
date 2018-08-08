@@ -16,7 +16,6 @@ import net.bounceme.chronos.comunicacion.model.Aviso;
 import net.bounceme.chronos.comunicacion.model.Cliente;
 import net.bounceme.chronos.comunicacion.model.Notificacion;
 import net.bounceme.chronos.comunicacion.services.AvisosService;
-import net.bounceme.chronos.comunicacion.utils.Finalizer;
 
 /**
  * Implementación del servicio que gestiona los avisos
@@ -26,7 +25,7 @@ import net.bounceme.chronos.comunicacion.utils.Finalizer;
  */
 @Service(AvisosService.NAME)
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
-public class AvisosServiceImpl extends Finalizer implements AvisosService {
+public class AvisosServiceImpl implements AvisosService {
 
 	@Autowired
 	@Qualifier(AppConfig.CLIENTE_REPOSITORY)

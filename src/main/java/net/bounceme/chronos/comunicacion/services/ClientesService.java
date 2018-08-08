@@ -20,7 +20,6 @@ public interface ClientesService {
 	 * @param apellidos
 	 * @param dni
 	 * @return el cliente creado
-	 * @throws ServiceException
 	 */
 	Cliente nuevo(String nombre, String apellidos, String dni);
 	
@@ -39,7 +38,6 @@ public interface ClientesService {
 	 * @param nombre
 	 * @param apellidos
 	 * @param dni
-	 * @throws ServiceException
 	 */
 	void actualizar(Long id, String nombre, String apellidos, String dni);
 

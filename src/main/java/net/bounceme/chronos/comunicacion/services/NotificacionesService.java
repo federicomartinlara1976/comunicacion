@@ -18,7 +18,6 @@ public interface NotificacionesService {
      * @param idAviso El identificador del aviso
      * @param idTipoMedio El identificador del medio escogido
      * @return la notificación creada
-     * @throws ServiceException
      */
     Notificacion notificarAviso(Long idAviso, Long idTipoMedio);
     
@@ -34,7 +33,6 @@ public interface NotificacionesService {
      * Envía una notificación
      * 
      * @param idNotificacion
-     * @throws ServiceException
      */
     void enviarNotificacion(Long idNotificacion);
 }

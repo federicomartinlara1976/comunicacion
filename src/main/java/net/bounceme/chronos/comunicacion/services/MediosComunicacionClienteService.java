@@ -20,7 +20,6 @@ public interface MediosComunicacionClienteService {
 	 * @param idTipo tipo de medio de comunicación
 	 * @param valor
 	 * @return Medio de comunicación creado
-	 * @throws DataException
 	 */
 	MedioComunicacionCliente nuevo(Long idCliente, Long idTipo, String valor);
 
@@ -39,7 +38,6 @@ public interface MediosComunicacionClienteService {
 	 * @param idCliente identificador del cliente
      * @param idTipo tipo de medio de comunicación
 	 * @param valor
-	 * @throws DataException
 	 */
 	void actualizar(Long idCliente, Long idTipo, String valor);
 
@@ -48,7 +46,6 @@ public interface MediosComunicacionClienteService {
 	 * 
 	 * @param idCliente identificador del cliente
      * @param idTipo tipo de medio de comunicación
-	 * @throws DataException
 	 */
 	void borrar(Long idCliente, Long idTipo);
 	

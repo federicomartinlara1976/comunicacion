@@ -2,7 +2,6 @@ package net.bounceme.chronos.comunicacion.services;
 
 import java.util.Date;
 
-import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.Aviso;
 
 /**
@@ -23,7 +22,6 @@ public interface AvisosService {
      * @param fechaInicioObra
      * @param mensaje
      * @return el aviso creado
-     * @throws ServiceException
      */
     Aviso nuevoAviso(Long idCliente, Date fechaInicioObra, String mensaje);
     
@@ -32,7 +30,6 @@ public interface AvisosService {
      * enviadas no se borra el aviso
      * 
      * @param idAviso identificador del aviso
-     * @throws ServiceException
      */
     void anularAviso(Long idAviso);
 

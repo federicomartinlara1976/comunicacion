@@ -19,7 +19,6 @@ public interface TiposComunicacionService {
 	 * @param denominacion
 	 * @nombreEmisor nombre del bean emisor
 	 * @return el tipo creado
-	 * @throws ServiceException
 	 */
 	TipoComunicacion nuevo(String denominacion, String nombreEmisor);
 	
@@ -37,7 +36,6 @@ public interface TiposComunicacionService {
 	 * @param id
 	 * @param nuevaDenominacion
 	 * @param nuevoEmisor
-	 * @throws ServiceException
 	 */
 	void actualizar(Long id, String nuevaDenominacion, String nuevoEmisor);
 	
@@ -45,7 +43,6 @@ public interface TiposComunicacionService {
 	 * Borra un tipo de comunicación
 	 * 
 	 * @param id
-	 * @throws ServiceException
 	 */
 	void borrar(Long id);
 	

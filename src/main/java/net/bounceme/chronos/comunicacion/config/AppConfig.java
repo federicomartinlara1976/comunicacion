@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import net.bounceme.chronos.comunicacion.data.dao.DaoPersistence;
+import net.bounceme.chronos.comunicacion.data.dao.DaoQueries;
 import net.bounceme.chronos.comunicacion.jms.Receiver;
 import net.bounceme.chronos.comunicacion.model.Aviso;
 import net.bounceme.chronos.comunicacion.model.Cliente;
@@ -43,6 +44,11 @@ public class AppConfig {
 	@Bean(name = CLIENTE_REPOSITORY)
 	public DaoPersistence<Cliente> clienteRepository() {
 		return new DaoPersistence<Cliente>(Cliente.class);
+	}
+	
+	@Bean(name = DaoQueries.NAME)
+	public DaoQueries daoQueries() {
+		return new DaoQueries();
 	}
 	
 	/**

@@ -2,7 +2,6 @@ package net.bounceme.chronos.comunicacion.services;
 
 import java.util.List;
 
-import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
 
 /**
@@ -22,7 +21,7 @@ public interface TiposComunicacionService {
 	 * @return el tipo creado
 	 * @throws ServiceException
 	 */
-	TipoComunicacion nuevo(String denominacion, String nombreEmisor) throws ServiceException;
+	TipoComunicacion nuevo(String denominacion, String nombreEmisor);
 	
 	/**
 	 * Obtiene un tipo de comunicación
@@ -40,7 +39,7 @@ public interface TiposComunicacionService {
 	 * @param nuevoEmisor
 	 * @throws ServiceException
 	 */
-	void actualizar(Long id, String nuevaDenominacion, String nuevoEmisor) throws ServiceException;
+	void actualizar(Long id, String nuevaDenominacion, String nuevoEmisor);
 	
 	/**
 	 * Borra un tipo de comunicación
@@ -48,7 +47,7 @@ public interface TiposComunicacionService {
 	 * @param id
 	 * @throws ServiceException
 	 */
-	void borrar(Long id) throws ServiceException;
+	void borrar(Long id);
 	
 	/**
 	 * Lista todos los tipos de comunicación

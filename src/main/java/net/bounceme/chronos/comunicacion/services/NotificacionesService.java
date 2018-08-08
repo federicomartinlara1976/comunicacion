@@ -20,7 +20,7 @@ public interface NotificacionesService {
      * @return la notificación creada
      * @throws ServiceException
      */
-    Notificacion notificarAviso(Long idAviso, Long idTipoMedio) throws ServiceException;
+    Notificacion notificarAviso(Long idAviso, Long idTipoMedio);
     
     /**
      * Prepara la notificación para el envío (La pone en una cola de envíos para no tener que esperar la respuesta)
@@ -36,5 +36,5 @@ public interface NotificacionesService {
      * @param idNotificacion
      * @throws ServiceException
      */
-    void enviarNotificacion(Long idNotificacion) throws ServiceException;
+    void enviarNotificacion(Long idNotificacion);
 }

@@ -1,6 +1,5 @@
 package net.bounceme.chronos.comunicacion.controllers;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -27,8 +26,6 @@ import net.bounceme.chronos.comunicacion.services.NotificacionesService;
 @RequestMapping("/notificaciones")
 public class NotificacionesController {
 
-	private static final Logger log = Logger.getLogger(NotificacionesController.class);
-	
 	@Autowired
 	@Qualifier(NotificacionesService.NAME)
 	private NotificacionesService notificacionesService;
@@ -47,12 +44,8 @@ public class NotificacionesController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public Notificacion nuevo(
 			@RequestBody ParamsNotificacion notificacion) throws ControllerException {
-		try {
 			return notificacionesService.notificarAviso(notificacion.getIdAviso(), notificacion.getIdTipoMedio());
-		} catch (ServiceException exception) {
-			log.error(exception);
-			throw new ControllerException(exception);
-		}
+		
 	}
 	
 	/**
@@ -71,7 +64,6 @@ public class NotificacionesController {
 		try {
 			notificacionesService.prepararNotificacionParaEnvio(notificacion.getIdNotificacion());
 		} catch (ServiceException exception) {
-			log.error(exception);
 			throw new ControllerException(exception);
 		}
 	}

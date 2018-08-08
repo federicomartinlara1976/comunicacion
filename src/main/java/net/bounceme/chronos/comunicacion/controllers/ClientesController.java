@@ -2,7 +2,6 @@ package net.bounceme.chronos.comunicacion.controllers;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -30,12 +29,10 @@ import net.bounceme.chronos.comunicacion.services.ClientesService;
 @RequestMapping("/clientes")
 public class ClientesController {
 
-	private static final Logger log = Logger.getLogger(ClientesController.class);
-	
 	@Autowired
 	@Qualifier(ClientesService.NAME)
 	private ClientesService clientesService;
-	
+
 	/**
 	 * Lista todos los clientes
 	 * 
@@ -47,7 +44,7 @@ public class ClientesController {
 	public List<Cliente> listAll() {
 		return clientesService.listar();
 	}
-	
+
 	/**
 	 * Crea un cliente
 	 * 
@@ -57,21 +54,12 @@ public class ClientesController {
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
-	@RequestMapping(
-			value="/new", 
-			method = RequestMethod.POST,
-			consumes = "application/json")
+	@RequestMapping(value = "/new", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cliente nuevo(
-			@RequestBody Cliente cliente) throws ControllerException {
-		try {
-			return clientesService.nuevo(cliente.getNombre(), cliente.getApellidos(), cliente.getDni());
-		} catch (ServiceException exception) {
-			log.error(exception);
-			throw new ControllerException(exception);
-		}
+	public Cliente nuevo(@RequestBody Cliente cliente) throws ControllerException {
+		return clientesService.nuevo(cliente.getNombre(), cliente.getApellidos(), cliente.getDni());
 	}
-	
+
 	/**
 	 * Obtiene un cliente
 	 * 
@@ -79,53 +67,41 @@ public class ClientesController {
 	 * @return
 	 */
 	@CrossOrigin
-	@RequestMapping(value="/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Cliente> get(@PathVariable Long id) {
 		Cliente cliente = clientesService.get(id);
 		HttpStatus status = cliente != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
 		return new ResponseEntity<Cliente>(cliente, status);
 	}
-	
+
 	/**
 	 * Actualiza un cliente.
 	 * 
-	 * @param id identificador del cliente
+	 * @param id
+	 *            identificador del cliente
 	 * @param nombre
 	 * @param apellidos
 	 * @param dni
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
-	@RequestMapping(value="/{id}/update", 
-			method = RequestMethod.PUT,
-			consumes = "application/json")
+	@RequestMapping(value = "/{id}/update", method = RequestMethod.PUT, consumes = "application/json")
 	@ResponseStatus(HttpStatus.OK)
-	public void actualizar(
-			@PathVariable Long id,
-			@RequestBody Cliente cliente) throws ControllerException {
-		try {
-			clientesService.actualizar(id, cliente.getNombre(), cliente.getApellidos(), cliente.getDni());
-		} catch (ServiceException exception) {
-			log.error(exception);
-			throw new ControllerException(exception);
-		}
+	public void actualizar(@PathVariable Long id, @RequestBody Cliente cliente) throws ControllerException {
+		clientesService.actualizar(id, cliente.getNombre(), cliente.getApellidos(), cliente.getDni());
 	}
-	
+
 	/**
 	 * Borra un cliente.
 	 * 
-	 * @param id identificador del cliente
+	 * @param id
+	 *            identificador del cliente
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
-	@RequestMapping(value="/{id}/delete", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/{id}/delete", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
 	public void borrar(@PathVariable Long id) throws ControllerException {
-		try {
-			clientesService.borrar(id);
-		} catch (ServiceException exception) {
-			log.error(exception);
-			throw new ControllerException(exception);
-		}
+		clientesService.borrar(id);
 	}
 }

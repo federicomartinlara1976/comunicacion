@@ -2,7 +2,6 @@ package net.bounceme.chronos.comunicacion.services;
 
 import java.util.List;
 
-import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.Cliente;
 
 /**
@@ -23,7 +22,7 @@ public interface ClientesService {
 	 * @return el cliente creado
 	 * @throws ServiceException
 	 */
-	Cliente nuevo(String nombre, String apellidos, String dni) throws ServiceException;
+	Cliente nuevo(String nombre, String apellidos, String dni);
 	
 	/**
 	 * Obtiene un cliente por su identificador
@@ -42,7 +41,7 @@ public interface ClientesService {
 	 * @param dni
 	 * @throws ServiceException
 	 */
-	void actualizar(Long id, String nombre, String apellidos, String dni) throws ServiceException;
+	void actualizar(Long id, String nombre, String apellidos, String dni);
 
 	/**
 	 * Borra un cliente
@@ -50,7 +49,7 @@ public interface ClientesService {
 	 * @param id
 	 * @throws ServiceException
 	 */
-	void borrar(Long id) throws ServiceException;
+	void borrar(Long id);
 	
 	/**
 	 * Listado de todos los clientes

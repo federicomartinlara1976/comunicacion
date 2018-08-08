@@ -39,12 +39,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
-        
-        <dependency>
-			<groupId>net.bounceme.chronos.chronoslibs</groupId>
-			<artifactId>chronos-data-utils</artifactId>
-			<version>${chronoslibs.version}</version>
-		</dependency>
 
         <dependency>
             <groupId>commons-collections</groupId>

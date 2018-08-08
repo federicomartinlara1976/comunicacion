@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.commons.collections.Closure;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,15 +14,13 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.bounceme.chronos.comunicacion.config.AppConfig;
-import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
+import net.bounceme.chronos.comunicacion.data.dao.DaoPersistence;
+import net.bounceme.chronos.comunicacion.data.dao.DaoQueries;
 import net.bounceme.chronos.comunicacion.model.Aviso;
 import net.bounceme.chronos.comunicacion.model.Cliente;
 import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
 import net.bounceme.chronos.comunicacion.services.ClientesService;
 import net.bounceme.chronos.comunicacion.utils.Finalizer;
-import net.bounceme.chronos.utils.data.dao.DaoPersistence;
-import net.bounceme.chronos.utils.data.dao.DaoQueries;
-import net.bounceme.chronos.utils.data.exceptions.DataException;
 
 /**
  * Implementación del servicio que gestiona los clientes
@@ -34,8 +31,6 @@ import net.bounceme.chronos.utils.data.exceptions.DataException;
 @Service(ClientesService.NAME)
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class ClientesServiceImpl extends Finalizer implements ClientesService {
-
-	private static final Logger log = Logger.getLogger(ClientesServiceImpl.class);
 
 	@Autowired
 	@Qualifier(AppConfig.CLIENTE_REPOSITORY)
@@ -48,36 +43,36 @@ public class ClientesServiceImpl extends Finalizer implements ClientesService {
 	@Autowired
 	@Qualifier(AppConfig.AVISOS_REPOSITORY)
 	private DaoPersistence<Aviso> avisosRepository;
-	
+
 	@Autowired
 	@Qualifier(DaoQueries.NAME)
 	private DaoQueries daoQueries;
 
 	/*
 	 * (non-Javadoc)
-	 * @see net.bounceme.chronos.comunicacion.services.ClientesService#nuevo(java.lang.String, java.lang.String,
-	 * java.lang.String)
+	 * 
+	 * @see
+	 * net.bounceme.chronos.comunicacion.services.ClientesService#nuevo(java.
+	 * lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public Cliente nuevo(@NotBlank String nombre, @NotBlank String apellidos, String dni) throws ServiceException {
-		try {
-			Cliente cliente = new Cliente();
-			cliente.setNombre(nombre);
-			cliente.setApellidos(apellidos);
-			cliente.setDni(dni);
+	public Cliente nuevo(@NotBlank String nombre, @NotBlank String apellidos, String dni) {
+		Cliente cliente = new Cliente();
+		cliente.setNombre(nombre);
+		cliente.setApellidos(apellidos);
+		cliente.setDni(dni);
 
-			return clientesRepository.saveObject(cliente);
-		}
-		catch (DataException exception) {
-			log.error(exception);
-			throw new ServiceException(exception);
-		}
+		return clientesRepository.saveObject(cliente);
+
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see net.bounceme.chronos.comunicacion.services.ClientesService#get(java.lang.Long)
+	 * 
+	 * @see
+	 * net.bounceme.chronos.comunicacion.services.ClientesService#get(java.lang.
+	 * Long)
 	 */
 	@Override
 	public Cliente get(Long id) {
@@ -86,81 +81,69 @@ public class ClientesServiceImpl extends Finalizer implements ClientesService {
 
 	/*
 	 * (non-Javadoc)
-	 * @see net.bounceme.chronos.comunicacion.services.ClientesService#actualizar(java.lang.Long, java.lang.String,
-	 * java.lang.String, java.lang.String)
+	 * 
+	 * @see
+	 * net.bounceme.chronos.comunicacion.services.ClientesService#actualizar(
+	 * java.lang.Long, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public void actualizar(Long id, String nombre, String apellidos, String dni) throws ServiceException {
-		try {
-			Cliente cliente = clientesRepository.getObject(id);
+	public void actualizar(Long id, String nombre, String apellidos, String dni) {
+		Cliente cliente = clientesRepository.getObject(id);
 
-			if (StringUtils.isNotBlank(nombre)) {
-				cliente.setNombre(nombre);
-			}
-
-			if (StringUtils.isNotBlank(apellidos)) {
-				cliente.setApellidos(apellidos);
-			}
-
-			if (StringUtils.isNotBlank(dni)) {
-				cliente.setDni(dni);
-			}
-
-			clientesRepository.updateObject(cliente);
+		if (StringUtils.isNotBlank(nombre)) {
+			cliente.setNombre(nombre);
 		}
-		catch (DataException exception) {
-			log.error(exception);
-			throw new ServiceException(exception);
+
+		if (StringUtils.isNotBlank(apellidos)) {
+			cliente.setApellidos(apellidos);
 		}
+
+		if (StringUtils.isNotBlank(dni)) {
+			cliente.setDni(dni);
+		}
+
+		clientesRepository.updateObject(cliente);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see net.bounceme.chronos.comunicacion.services.ClientesService#borrar(java.lang.Long)
+	 * 
+	 * @see
+	 * net.bounceme.chronos.comunicacion.services.ClientesService#borrar(java.
+	 * lang.Long)
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public void borrar(Long id) throws ServiceException {
-		try {
-			Cliente cliente = clientesRepository.getObject(id);
+	public void borrar(Long id) {
+		Cliente cliente = clientesRepository.getObject(id);
 
-			// Si tuviera medios de comunicación, los disocia
-			CollectionUtils.forAllDo(cliente.getMediosComunicacion(), new Closure() {
-				public void execute(Object o) {
-					try {
-						MedioComunicacionCliente medio = (MedioComunicacionCliente) o;
-						medio = mediosComunicacionClienteRepository.getObject(medio.getId());
-						medio.setCliente(null);
-						mediosComunicacionClienteRepository.updateObject(medio);
-					} catch (DataException exception) {
-						log.error(exception);
-					}
-				}
-			});
+		// Si tuviera medios de comunicación, los disocia
+		CollectionUtils.forAllDo(cliente.getMediosComunicacion(), new Closure() {
+			public void execute(Object o) {
+				MedioComunicacionCliente medio = (MedioComunicacionCliente) o;
+				medio = mediosComunicacionClienteRepository.getObject(medio.getId());
+				medio.setCliente(null);
+				mediosComunicacionClienteRepository.updateObject(medio);
 
-			// Si tuviera avisos no notificados, los borra antes
-			CollectionUtils.forAllDo(cliente.getAvisos(), new Closure() {
-				public void execute(Object o) {
-					try {
-						Aviso aviso = (Aviso) o;
-						aviso.setCliente(null);
-						avisosRepository.updateObject(aviso);
-					} catch (DataException exception) {
-						log.error(exception);
-					}
-				}
-			});
-			
-			clientesRepository.removeObject(id);
-		} catch (DataException exception) {
-			log.error(exception);
-			throw new ServiceException(exception);
-		}
+			}
+		});
+
+		// Si tuviera avisos no notificados, los borra antes
+		CollectionUtils.forAllDo(cliente.getAvisos(), new Closure() {
+			public void execute(Object o) {
+				Aviso aviso = (Aviso) o;
+				aviso.setCliente(null);
+				avisosRepository.updateObject(aviso);
+			}
+		});
+
+		clientesRepository.removeObject(id);
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see net.bounceme.chronos.comunicacion.services.ClientesService#listar()
 	 */
 	@SuppressWarnings("unchecked")

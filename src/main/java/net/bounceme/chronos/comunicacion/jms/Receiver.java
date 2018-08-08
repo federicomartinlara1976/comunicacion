@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.services.NotificacionesService;
 
 /**
@@ -17,24 +16,20 @@ import net.bounceme.chronos.comunicacion.services.NotificacionesService;
  */
 @Component
 public class Receiver {
-	
+
 	private static final Logger log = Logger.getLogger(Receiver.class);
-	
+
 	@Autowired
 	@Qualifier(NotificacionesService.NAME)
 	private NotificacionesService notificacionesService;
 
-    /**
-     * El método receptor
-     * 
-     * @param message
-     */
-    public void receiveMessage(String message) {
-        try {
-        	log.info("Received <" + message + ">");
-        	notificacionesService.enviarNotificacion(Long.valueOf(message));
-        } catch (ServiceException exception) {
-        	log.error(exception);
-        }
-    }
+	/**
+	 * El método receptor
+	 * 
+	 * @param message
+	 */
+	public void receiveMessage(String message) {
+		log.info("Received <" + message + ">");
+		notificacionesService.enviarNotificacion(Long.valueOf(message));
+	}
 }

@@ -25,7 +25,7 @@ public interface AvisosService {
      * @return el aviso creado
      * @throws ServiceException
      */
-    Aviso nuevoAviso(Long idCliente, Date fechaInicioObra, String mensaje) throws ServiceException;
+    Aviso nuevoAviso(Long idCliente, Date fechaInicioObra, String mensaje);
     
     /**
      * Anula un aviso si no tiene notificaciones. Si tuviera notificaciones
@@ -34,7 +34,7 @@ public interface AvisosService {
      * @param idAviso identificador del aviso
      * @throws ServiceException
      */
-    void anularAviso(Long idAviso) throws ServiceException;
+    void anularAviso(Long idAviso);
 
 	/**
 	 * Obtiene un aviso

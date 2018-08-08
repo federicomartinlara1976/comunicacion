@@ -10,17 +10,16 @@ import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import net.bounceme.chronos.comunicacion.data.dao.DaoPersistence;
 import net.bounceme.chronos.comunicacion.jms.Receiver;
 import net.bounceme.chronos.comunicacion.model.Aviso;
 import net.bounceme.chronos.comunicacion.model.Cliente;
 import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
 import net.bounceme.chronos.comunicacion.model.Notificacion;
 import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
-import net.bounceme.chronos.utils.data.config.DataConfig;
-import net.bounceme.chronos.utils.data.dao.DaoPersistence;
 
 @Configuration
-public class AppConfig extends DataConfig {
+public class AppConfig {
 	
 	public static final String CLIENTE_REPOSITORY = "clienteRepository";
 	

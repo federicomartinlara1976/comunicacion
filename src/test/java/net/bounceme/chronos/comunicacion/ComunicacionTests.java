@@ -107,7 +107,7 @@ public class ComunicacionTests {
 		parameters.put("apellidos", "Martín Lara");
 		parameters.put("dni", "30943266-D");
 
-		String cliente = json(parameters);
+		String cliente = toJson(parameters);
 
 		log.info("Method: post\nURL: " + verbs.CLIENTES_NEW.getValue() + "\n " + cliente);
 		mockMvc.perform(MockMvcRequestBuilders.post(verbs.CLIENTES_NEW.getValue())
@@ -143,7 +143,7 @@ public class ComunicacionTests {
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("dni", "30943266D");
 
-		String datosModificados = json(parameters);
+		String datosModificados = toJson(parameters);
 
 		log.info("Method: put\nURL: " + verbs.CLIENTES_UPDATE.getValue() + "\n " + datosModificados);
 		mockMvc.perform(MockMvcRequestBuilders.put(verbs.CLIENTES_UPDATE.getValue())
@@ -169,7 +169,7 @@ public class ComunicacionTests {
 		parameters.put("idTipo", "1");
 		parameters.put("valor", "600000000");
 
-		String params = json(parameters);
+		String params = toJson(parameters);
 
 		log.info("Method: post\nURL: " + verbs.MEDIOS_COMUNICACION_NEW.getValue() + "\n " + params);
 		mockMvc.perform(MockMvcRequestBuilders.post(verbs.MEDIOS_COMUNICACION_NEW.getValue())
@@ -190,7 +190,7 @@ public class ComunicacionTests {
 		parameters.put("idTipo", "2");
 		parameters.put("valor", "900000000");
 
-		String params = json(parameters);
+		String params = toJson(parameters);
 
 		log.info("Method: post\nURL: " + verbs.MEDIOS_COMUNICACION_NEW.getValue() + "\n " + params);
 		mockMvc.perform(MockMvcRequestBuilders.post(verbs.MEDIOS_COMUNICACION_NEW.getValue())
@@ -211,7 +211,7 @@ public class ComunicacionTests {
 		parameters.put("fechaInicioObra", "2017-06-20");
 		parameters.put("mensaje", "EN LA FECHA INDICADA COMENZAREMOS LA OBRA");
 
-		String params = json(parameters);
+		String params = toJson(parameters);
 
 		log.info("Method: post\nURL: " + verbs.AVISOS_NEW.getValue() + "\n " + params);
 		mockMvc.perform(MockMvcRequestBuilders.post(verbs.AVISOS_NEW.getValue())
@@ -232,7 +232,7 @@ public class ComunicacionTests {
 		parameters.put("idCliente", "1");
 		parameters.put("fechaInicioObra", "2017-06-20");
 
-		String params = json(parameters);
+		String params = toJson(parameters);
 
 		log.info("Method: post\nURL: " + verbs.AVISOS_NEW.getValue() + "\n " + params);
 		mockMvc.perform(MockMvcRequestBuilders.post(verbs.AVISOS_NEW.getValue())
@@ -252,7 +252,7 @@ public class ComunicacionTests {
 		parameters.put("idAviso", "1");
 		parameters.put("idTipoMedio", "1");
 
-		String params = json(parameters);
+		String params = toJson(parameters);
 
 		log.info("Method: post\nURL: " + verbs.NOTIFICACIONES_NEW.getValue() + "\n " + params);
 		mockMvc.perform(MockMvcRequestBuilders.post(verbs.NOTIFICACIONES_NEW.getValue())
@@ -272,7 +272,7 @@ public class ComunicacionTests {
 		parameters.put("idAviso", "1");
 		parameters.put("idTipoMedio", "2");
 
-		String params = json(parameters);
+		String params = toJson(parameters);
 
 		log.info("Method: post\nURL: " + verbs.NOTIFICACIONES_NEW.getValue() + "\n " + params);
 		mockMvc.perform(MockMvcRequestBuilders.post(verbs.NOTIFICACIONES_NEW.getValue())
@@ -291,7 +291,7 @@ public class ComunicacionTests {
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("idNotificacion", "1");
 
-		String notificacion = json(parameters);
+		String notificacion = toJson(parameters);
 
 		log.info("Method: put\nURL: " + verbs.NOTIFICACIONES_SEND.getValue() + "\n " + notificacion);
 		mockMvc.perform(MockMvcRequestBuilders.put(verbs.NOTIFICACIONES_SEND.getValue())
@@ -322,7 +322,7 @@ public class ComunicacionTests {
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("idNotificacion", "2");
 
-		String notificacion = json(parameters);
+		String notificacion = toJson(parameters);
 
 		log.info("Method: put\nURL: " + verbs.NOTIFICACIONES_SEND.getValue() + "\n " + notificacion);
 		mockMvc.perform(MockMvcRequestBuilders.put(verbs.NOTIFICACIONES_SEND.getValue())
@@ -356,7 +356,7 @@ public class ComunicacionTests {
         parameters.put("idTipo", "2");
         parameters.put("valor", "910000000");
 
-        String params = json(parameters);
+        String params = toJson(parameters);
 
         log.info("Method: put\nURL: " + verbs.MEDIOS_COMUNICACION_UPDATE.getValue() + "\n " + params);
         mockMvc.perform(MockMvcRequestBuilders.put(verbs.MEDIOS_COMUNICACION_UPDATE.getValue())
@@ -370,7 +370,7 @@ public class ComunicacionTests {
         parameters.put("idAviso", "1");
 		parameters.put("idTipoMedio", "2");
 
-		params = json(parameters);
+		params = toJson(parameters);
 
 		log.info("Method: post\nURL: " + verbs.NOTIFICACIONES_NEW.getValue() + "\n " + params);
 		mockMvc.perform(MockMvcRequestBuilders.post(verbs.NOTIFICACIONES_NEW.getValue())
@@ -383,7 +383,7 @@ public class ComunicacionTests {
 		// Envía la nueva notificación
 		parameters.put("idNotificacion", "3");
 
-		String notificacion = json(parameters);
+		String notificacion = toJson(parameters);
 
 		log.info("Method: put\nURL: " + verbs.NOTIFICACIONES_SEND.getValue() + "\n " + notificacion);
 		mockMvc.perform(MockMvcRequestBuilders.put(verbs.NOTIFICACIONES_SEND.getValue())
@@ -411,7 +411,7 @@ public class ComunicacionTests {
 	 * @throws IOException
 	 */
 	@SuppressWarnings("unchecked")
-	private String json(Object o) throws IOException {
+	private String toJson(Object o) throws IOException {
 		MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
 		mappingJackson2HttpMessageConverter.write(o, MediaType.APPLICATION_JSON, mockHttpOutputMessage);
 		return mockHttpOutputMessage.getBodyAsString();

@@ -2,6 +2,7 @@ package net.bounceme.chronos.comunicacion.services.impl;
 
 import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -32,6 +33,7 @@ import net.bounceme.chronos.comunicacion.utils.Constantes.ResultadoEnvio;
 @Service(NotificacionesService.NAME)
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class NotificacionesServiceImpl implements NotificacionesService {
+	private static final Logger log = Logger.getLogger(NotificacionesServiceImpl.class);
 
 	@Autowired
 	@Qualifier(AppConfig.AVISOS_REPOSITORY)
@@ -63,21 +65,25 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public Notificacion notificarAviso(Long idAviso, Long idTipoMedio) {
-		Aviso aviso = avisosRepository.getObject(idAviso);
-		TipoComunicacion tipo = tiposComunicacionRepository.getObject(idTipoMedio);
+	public Notificacion notificarAviso(Long idAviso, Long idTipoMedio) throws ServiceException {
+		try {
+			Aviso aviso = avisosRepository.getObject(idAviso);
+			TipoComunicacion tipo = tiposComunicacionRepository.getObject(idTipoMedio);
 
-		// Establece el aviso origen de esta notificación
-		Notificacion notificacion = new Notificacion();
-		notificacion.setAviso(aviso);
+			// Establece el aviso origen de esta notificación
+			Notificacion notificacion = new Notificacion();
+			notificacion.setAviso(aviso);
 
-		// Establece el medio de comunicación
-		MedioComunicacionClienteId medioComunicacionClienteId = getIdentificadorMedio(aviso.getCliente(), tipo);
-		MedioComunicacionCliente medio = mediosComunicacionClienteRepository.getObject(medioComunicacionClienteId);
-		notificacion.setDatosMedioComunicacion(medio);
+			// Establece el medio de comunicación
+			MedioComunicacionClienteId medioComunicacionClienteId = getIdentificadorMedio(aviso.getCliente(), tipo);
+			MedioComunicacionCliente medio = mediosComunicacionClienteRepository.getObject(medioComunicacionClienteId);
+			notificacion.setDatosMedioComunicacion(medio);
 
-		return notificacionesRepository.saveObject(notificacion);
-
+			return notificacionesRepository.saveObject(notificacion);
+		} catch (Exception e) {
+			log.error(e);
+			throw new ServiceException(e);
+		}
 	}
 
 	/*
@@ -90,10 +96,10 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public void prepararNotificacionParaEnvio(Long idNotificacion) throws ServiceException {
 		/**
-		 * En lugar de realizar el envío directamente al cliente, envía el
-		 * identificador de la notificación a la cola de mensajes.
-		 * Posteriormente y en paralelo un receptor al otro lado de la cola
-		 * recoge el identificador, obtiene la notificación y la envía
+		 * En lugar de realizar el envío directamente al cliente, envía el identificador
+		 * de la notificación a la cola de mensajes. Posteriormente y en paralelo un
+		 * receptor al otro lado de la cola recoge el identificador, obtiene la
+		 * notificación y la envía
 		 */
 		rabbitTemplate.convertAndSend(AppConfig.QUEUE_NAME, idNotificacion.toString());
 	}
@@ -106,37 +112,41 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public void enviarNotificacion(Long idNotificacion) {
-		Notificacion notificacion = notificacionesRepository.getObject(idNotificacion);
+	public void enviarNotificacion(Long idNotificacion) throws ServiceException {
+		try {
+			Notificacion notificacion = notificacionesRepository.getObject(idNotificacion);
 
-		// Obtiene el medio de comunicación
-		MedioComunicacionCliente medio = notificacion.getDatosMedioComunicacion();
-		TipoComunicacion tipo = medio.getId().getTipoComunicacion();
+			// Obtiene el medio de comunicación
+			MedioComunicacionCliente medio = notificacion.getDatosMedioComunicacion();
+			TipoComunicacion tipo = medio.getId().getTipoComunicacion();
 
-		// Obtiene el aviso a enviar
-		Aviso aviso = notificacion.getAviso();
+			// Obtiene el aviso a enviar
+			Aviso aviso = notificacion.getAviso();
 
-		// Obtiene el emisor
-		Emisor emisor = emisorFactory.getEmisor(tipo);
+			// Obtiene el emisor
+			Emisor emisor = emisorFactory.getEmisor(tipo);
 
-		// Construye el mensaje a enviar
-		StringBuilder mensaje = new StringBuilder();
-		mensaje.append(aviso.getMensaje());
-		mensaje.append(" (" + aviso.getFechaInicioObra() + ")");
+			// Construye el mensaje a enviar
+			StringBuilder mensaje = new StringBuilder();
+			mensaje.append(aviso.getMensaje());
+			mensaje.append(" (" + aviso.getFechaInicioObra() + ")");
 
-		// Envía el mensaje a través del medio seleccionado
-		notificacion.setFechaHoraEnvio(new Date());
-		ResultadoEnvio resultado = emisor.enviar(mensaje.toString(), medio.getValor());
-		
-		// El aviso ha sido enviado
-		if (resultado.equals(ResultadoEnvio.OK)) {
-			aviso.setEstaNotificado(Boolean.TRUE);
-			avisosRepository.updateObject(aviso);
+			// Envía el mensaje a través del medio seleccionado
+			notificacion.setFechaHoraEnvio(new Date());
+			ResultadoEnvio resultado = emisor.enviar(mensaje.toString(), medio.getValor());
+
+			// El aviso ha sido enviado
+			if (resultado.equals(ResultadoEnvio.OK)) {
+				aviso.setEstaNotificado(Boolean.TRUE);
+				avisosRepository.updateObject(aviso);
+			}
+
+			notificacion.setResultado(resultado.name());
+			notificacionesRepository.updateObject(notificacion);
+		} catch (Exception e) {
+			log.error(e);
+			throw new ServiceException(e);
 		}
-
-		notificacion.setResultado(resultado.name());
-		notificacionesRepository.updateObject(notificacion);
-
 	}
 
 	/**

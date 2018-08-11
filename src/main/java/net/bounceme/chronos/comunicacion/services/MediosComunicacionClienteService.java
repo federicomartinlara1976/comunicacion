@@ -2,6 +2,7 @@ package net.bounceme.chronos.comunicacion.services;
 
 import java.util.List;
 
+import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
 
 /**
@@ -20,8 +21,9 @@ public interface MediosComunicacionClienteService {
 	 * @param idTipo tipo de medio de comunicación
 	 * @param valor
 	 * @return Medio de comunicación creado
+	 * @throws ServiceException 
 	 */
-	MedioComunicacionCliente nuevo(Long idCliente, Long idTipo, String valor);
+	MedioComunicacionCliente nuevo(Long idCliente, Long idTipo, String valor) throws ServiceException;
 
 	/**
 	 * Obtiene un medio de comunicación de un cliente
@@ -38,16 +40,18 @@ public interface MediosComunicacionClienteService {
 	 * @param idCliente identificador del cliente
      * @param idTipo tipo de medio de comunicación
 	 * @param valor
+	 * @throws ServiceException 
 	 */
-	void actualizar(Long idCliente, Long idTipo, String valor);
+	void actualizar(Long idCliente, Long idTipo, String valor) throws ServiceException;
 
 	/**
 	 * Borra un medio de comunicación de un cliente
 	 * 
 	 * @param idCliente identificador del cliente
      * @param idTipo tipo de medio de comunicación
+	 * @throws ServiceException 
 	 */
-	void borrar(Long idCliente, Long idTipo);
+	void borrar(Long idCliente, Long idTipo) throws ServiceException;
 	
 	/**
 	 * Lista todos los medios de comunicación de un cliente

@@ -15,6 +15,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.services.TiposComunicacionService;
 
 /**
@@ -30,8 +31,8 @@ public class ComunicacionApplication {
 
 	/**
 	 * Este método alimenta la base de datos con datos iniciales, en concreto la
-	 * tabla de tipos de comunicaciones. Si hay un fallo, termina el arranque de
-	 * la aplicación con error
+	 * tabla de tipos de comunicaciones. Si hay un fallo, termina el arranque de la
+	 * aplicación con error
 	 * 
 	 * @param tipoComunicacionRepository
 	 * @return
@@ -46,8 +47,12 @@ public class ComunicacionApplication {
 		medios.put("EMAIL", "EMAIL_Emisor");
 
 		return (evt) -> Arrays.asList(new String[] { "SMS", "FAX", "EMAIL" }).forEach(a -> {
-			String emisor = medios.get(a);
-			tiposComunicacionService.nuevo(a, emisor);
+			try {
+				String emisor = medios.get(a);
+				tiposComunicacionService.nuevo(a, emisor);
+			} catch (ServiceException e) {
+				log.error(e);
+			}
 		});
 	}
 

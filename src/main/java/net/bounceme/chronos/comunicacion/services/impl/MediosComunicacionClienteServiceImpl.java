@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import net.bounceme.chronos.comunicacion.config.AppConfig;
 import net.bounceme.chronos.comunicacion.data.dao.DaoPersistence;
 import net.bounceme.chronos.comunicacion.data.dao.DaoQueries;
+import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.Cliente;
 import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
 import net.bounceme.chronos.comunicacion.model.MedioComunicacionClienteId;
@@ -31,6 +33,8 @@ import net.bounceme.chronos.comunicacion.services.MediosComunicacionClienteServi
 @Service(MediosComunicacionClienteService.NAME)
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class MediosComunicacionClienteServiceImpl implements MediosComunicacionClienteService {
+
+	private static final Logger log = Logger.getLogger(MediosComunicacionClienteServiceImpl.class);
 
 	@Autowired
 	@Qualifier(AppConfig.MEDIOS_COMUNICACION_CLIENTE_REPOSITORY)
@@ -57,16 +61,22 @@ public class MediosComunicacionClienteServiceImpl implements MediosComunicacionC
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public MedioComunicacionCliente nuevo(Long idCliente, Long idTipo, String valor) {
-		MedioComunicacionClienteId id = getIdentificador(idCliente, idTipo);
+	public MedioComunicacionCliente nuevo(Long idCliente, Long idTipo, String valor) throws ServiceException {
+		try {
+			MedioComunicacionClienteId id = getIdentificador(idCliente, idTipo);
 
-		MedioComunicacionCliente medioComunicacion = new MedioComunicacionCliente();
+			MedioComunicacionCliente medioComunicacion = new MedioComunicacionCliente();
 
-		medioComunicacion.setId(id);
-		medioComunicacion.setCliente(id.getCliente());
-		medioComunicacion.setValor(valor);
+			medioComunicacion.setId(id);
+			medioComunicacion.setCliente(id.getCliente());
+			medioComunicacion.setTipoComunicacion(id.getTipoComunicacion());
+			medioComunicacion.setValor(valor);
 
-		return mediosComunicacionClienteRepository.saveObject(medioComunicacion);
+			return mediosComunicacionClienteRepository.saveObject(medioComunicacion);
+		} catch (Exception e) {
+			log.error(e);
+			throw new ServiceException(e);
+		}
 
 	}
 
@@ -86,21 +96,25 @@ public class MediosComunicacionClienteServiceImpl implements MediosComunicacionC
 	 * (non-Javadoc)
 	 * 
 	 * @see net.bounceme.chronos.comunicacion.services.
-	 * MediosComunicacionClienteService#actualizar(java.lang.Long,
-	 * java.lang.Long, java.lang.String)
+	 * MediosComunicacionClienteService#actualizar(java.lang.Long, java.lang.Long,
+	 * java.lang.String)
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public void actualizar(Long idCliente, Long idTipo, String valor) {
-		MedioComunicacionClienteId id = getIdentificador(idCliente, idTipo);
-		MedioComunicacionCliente medio = mediosComunicacionClienteRepository.getObject(id);
+	public void actualizar(Long idCliente, Long idTipo, String valor) throws ServiceException {
+		try {
+			MedioComunicacionClienteId id = getIdentificador(idCliente, idTipo);
+			MedioComunicacionCliente medio = mediosComunicacionClienteRepository.getObject(id);
 
-		if (StringUtils.isNotBlank(valor)) {
-			medio.setValor(valor);
+			if (StringUtils.isNotBlank(valor)) {
+				medio.setValor(valor);
+			}
+
+			mediosComunicacionClienteRepository.updateObject(medio);
+		} catch (Exception e) {
+			log.error(e);
+			throw new ServiceException(e);
 		}
-
-		mediosComunicacionClienteRepository.updateObject(medio);
-
 	}
 
 	/*
@@ -111,10 +125,14 @@ public class MediosComunicacionClienteServiceImpl implements MediosComunicacionC
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public void borrar(Long idCliente, Long idTipo) {
-		MedioComunicacionClienteId id = getIdentificador(idCliente, idTipo);
-		mediosComunicacionClienteRepository.removeObject(id);
-
+	public void borrar(Long idCliente, Long idTipo) throws ServiceException {
+		try {
+			MedioComunicacionClienteId id = getIdentificador(idCliente, idTipo);
+			mediosComunicacionClienteRepository.removeObject(id);
+		} catch (Exception e) {
+			log.error(e);
+			throw new ServiceException(e);
+		}
 	}
 
 	/*

@@ -2,6 +2,7 @@ package net.bounceme.chronos.comunicacion.controllers;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.bounceme.chronos.comunicacion.exceptions.ControllerException;
+import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
 import net.bounceme.chronos.comunicacion.services.TiposComunicacionService;
 
@@ -27,6 +29,7 @@ import net.bounceme.chronos.comunicacion.services.TiposComunicacionService;
 @RestController
 @RequestMapping("/tiposComunicacion")
 public class TiposComunicacionController {
+	Logger log = Logger.getLogger(TiposComunicacionController.class);
 
 	@Autowired
 	@Qualifier(TiposComunicacionService.NAME)
@@ -46,8 +49,7 @@ public class TiposComunicacionController {
 	/**
 	 * Crea un nuevo tipo de comunicación
 	 * 
-	 * @param denominacion
-	 *            nombre del tipo
+	 * @param denominacion nombre del tipo
 	 * @return el tipo creado
 	 * @throws ControllerException
 	 */
@@ -55,14 +57,18 @@ public class TiposComunicacionController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public TipoComunicacion nuevo(@RequestBody TipoComunicacion tipo) throws ControllerException {
-		return tiposComunicacionService.nuevo(tipo.getDenominacion(), tipo.getNombreClaseEmisora());
+		try {
+			return tiposComunicacionService.nuevo(tipo.getDenominacion(), tipo.getNombreClaseEmisora());
+		} catch (ServiceException e) {
+			log.error(e);
+			throw new ControllerException(e);
+		}
 	}
 
 	/**
 	 * Obtiene un tipo de comunicación
 	 * 
-	 * @param id
-	 *            identificador
+	 * @param id identificador
 	 * @return el tipo
 	 */
 	@CrossOrigin
@@ -76,30 +82,37 @@ public class TiposComunicacionController {
 	/**
 	 * Actualiza un tipo de comunicación
 	 * 
-	 * @param id
-	 *            identificador
-	 * @param tipo
-	 *            Los datos modificados del tipo (denominacion)
+	 * @param id   identificador
+	 * @param tipo Los datos modificados del tipo (denominacion)
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
 	@RequestMapping(value = "/{id}/update", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	public void actualizar(@PathVariable Long id, @RequestBody TipoComunicacion tipo) throws ControllerException {
-		tiposComunicacionService.actualizar(id, tipo.getDenominacion(), tipo.getNombreClaseEmisora());
+		try {
+			tiposComunicacionService.actualizar(id, tipo.getDenominacion(), tipo.getNombreClaseEmisora());
+		} catch (ServiceException e) {
+			log.error(e);
+			throw new ControllerException(e);
+		}
 	}
 
 	/**
 	 * Borra un tipo de comunicación
 	 * 
-	 * @param id
-	 *            identificador
+	 * @param id identificador
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
 	@RequestMapping(value = "/{id}/delete", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
 	public void borrar(@PathVariable Long id) throws ControllerException {
-		tiposComunicacionService.borrar(id);
+		try {
+			tiposComunicacionService.borrar(id);
+		} catch (ServiceException e) {
+			log.error(e);
+			throw new ControllerException(e);
+		}
 	}
 }

@@ -9,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -73,10 +72,6 @@ public class Notificacion implements Serializable {
      */
     @JsonIgnore
     @OneToOne
-    @JoinColumns({
-        @JoinColumn(name = "idCliente"),
-        @JoinColumn(name = "idTipoComunicacion")
-    })
     private MedioComunicacionCliente datosMedioComunicacion;
 
 	/**

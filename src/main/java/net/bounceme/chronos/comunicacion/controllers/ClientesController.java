@@ -2,6 +2,7 @@ package net.bounceme.chronos.comunicacion.controllers;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,7 @@ import net.bounceme.chronos.comunicacion.services.ClientesService;
 @RestController
 @RequestMapping("/clientes")
 public class ClientesController {
+	Logger log = Logger.getLogger(ClientesController.class);
 
 	@Autowired
 	@Qualifier(ClientesService.NAME)
@@ -57,7 +59,12 @@ public class ClientesController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cliente nuevo(@RequestBody Cliente cliente) throws ControllerException {
-		return clientesService.nuevo(cliente.getNombre(), cliente.getApellidos(), cliente.getDni());
+		try {
+			return clientesService.nuevo(cliente.getNombre(), cliente.getApellidos(), cliente.getDni());
+		} catch (ServiceException e) {
+			log.error(e);
+			throw new ControllerException(e);
+		}
 	}
 
 	/**
@@ -77,8 +84,7 @@ public class ClientesController {
 	/**
 	 * Actualiza un cliente.
 	 * 
-	 * @param id
-	 *            identificador del cliente
+	 * @param id        identificador del cliente
 	 * @param nombre
 	 * @param apellidos
 	 * @param dni
@@ -88,20 +94,29 @@ public class ClientesController {
 	@RequestMapping(value = "/{id}/update", method = RequestMethod.PUT, consumes = "application/json")
 	@ResponseStatus(HttpStatus.OK)
 	public void actualizar(@PathVariable Long id, @RequestBody Cliente cliente) throws ControllerException {
-		clientesService.actualizar(id, cliente.getNombre(), cliente.getApellidos(), cliente.getDni());
+		try {
+			clientesService.actualizar(id, cliente.getNombre(), cliente.getApellidos(), cliente.getDni());
+		} catch (ServiceException e) {
+			log.error(e);
+			throw new ControllerException(e);
+		}
 	}
 
 	/**
 	 * Borra un cliente.
 	 * 
-	 * @param id
-	 *            identificador del cliente
+	 * @param id identificador del cliente
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
 	@RequestMapping(value = "/{id}/delete", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
 	public void borrar(@PathVariable Long id) throws ControllerException {
-		clientesService.borrar(id);
+		try {
+			clientesService.borrar(id);
+		} catch (ServiceException e) {
+			log.error(e);
+			throw new ControllerException(e);
+		}
 	}
 }

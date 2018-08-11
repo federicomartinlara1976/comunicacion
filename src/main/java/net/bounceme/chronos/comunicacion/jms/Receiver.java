@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.services.NotificacionesService;
 
 /**
@@ -29,7 +30,11 @@ public class Receiver {
 	 * @param message
 	 */
 	public void receiveMessage(String message) {
-		log.info("Received <" + message + ">");
-		notificacionesService.enviarNotificacion(Long.valueOf(message));
+		try {
+			log.info("Received <" + message + ">");
+			notificacionesService.enviarNotificacion(Long.valueOf(message));
+		} catch (ServiceException e) {
+			log.error(e);
+		}
 	}
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  */
 public class DaoPersistence<T> {
+	private static final Logger log = Logger.getLogger(DaoPersistence.class);
 	
 	@Autowired
 	private EntityManager entityManager;
@@ -36,9 +38,14 @@ public class DaoPersistence<T> {
 	/* (non-Javadoc)
 	 * @see net.bounceme.chronos.utils.data.dao.DaoPersistence#saveObject(T)
 	 */
-	public T saveObject(final T object) {
-		entityManager.persist(object);
-		return object;
+	public T saveObject(final T object) throws Exception {
+		try {
+			entityManager.persist(object);
+			return object;
+		} catch (Exception e) {
+			log.error(e);
+			throw e;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -60,22 +67,37 @@ public class DaoPersistence<T> {
 	/**
 	 * @param identifier
 	 */
-	public void removeObjectById(final Serializable identifier) {
-		Object object = entityManager.find(clazz, identifier);
-		entityManager.remove(object);
+	public void removeObjectById(final Serializable identifier) throws Exception {
+		try {
+			Object object = entityManager.find(clazz, identifier);
+			entityManager.remove(object);
+		} catch (Exception e) {
+			log.error(e);
+			throw e;
+		}
 	}
 	
 	/* (non-Javadoc)
 	 * @see net.bounceme.chronos.utils.data.dao.DaoPersistence#removeObject(java.io.Serializable)
 	 */
-	public void removeObject(Object object) {
-		entityManager.remove(object);
+	public void removeObject(Object object) throws Exception {
+		try {
+			entityManager.remove(object);
+		} catch (Exception e) {
+			log.error(e);
+			throw e;
+		}
 	}
 
 	/* (non-Javadoc)
 	 * @see net.bounceme.chronos.utils.data.dao.DaoPersistence#updateObject(T)
 	 */
-	public void updateObject(final T object) {
-		entityManager.merge(object);
+	public void updateObject(final T object) throws Exception {
+		try {
+			entityManager.merge(object);
+		} catch (Exception e) {
+			log.error(e);
+			throw e;
+		}
 	}
 }

@@ -1,5 +1,6 @@
 package net.bounceme.chronos.comunicacion.controllers;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -25,11 +26,12 @@ import net.bounceme.chronos.comunicacion.services.NotificacionesService;
 @RestController
 @RequestMapping("/notificaciones")
 public class NotificacionesController {
+	Logger log = Logger.getLogger(NotificacionesController.class);
 
 	@Autowired
 	@Qualifier(NotificacionesService.NAME)
 	private NotificacionesService notificacionesService;
-	
+
 	/**
 	 * Crea una nueva notificación
 	 * 
@@ -38,16 +40,17 @@ public class NotificacionesController {
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
-	@RequestMapping(
-			value="/new", 
-			method = RequestMethod.POST)
+	@RequestMapping(value = "/new", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Notificacion nuevo(
-			@RequestBody ParamsNotificacion notificacion) throws ControllerException {
+	public Notificacion nuevo(@RequestBody ParamsNotificacion notificacion) throws ControllerException {
+		try {
 			return notificacionesService.notificarAviso(notificacion.getIdAviso(), notificacion.getIdTipoMedio());
-		
+		} catch (ServiceException e) {
+			log.error(e);
+			throw new ControllerException(e);
+		}
 	}
-	
+
 	/**
 	 * Envia una notificación.
 	 * 
@@ -55,16 +58,14 @@ public class NotificacionesController {
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
-	@RequestMapping(value="/send", 
-			method = RequestMethod.PUT,
-			consumes = "application/json")
+	@RequestMapping(value = "/send", method = RequestMethod.PUT, consumes = "application/json")
 	@ResponseStatus(HttpStatus.OK)
-	public void enviar(
-			@RequestBody ParamsNotificacion notificacion) throws ControllerException {
+	public void enviar(@RequestBody ParamsNotificacion notificacion) throws ControllerException {
 		try {
 			notificacionesService.prepararNotificacionParaEnvio(notificacion.getIdNotificacion());
-		} catch (ServiceException exception) {
-			throw new ControllerException(exception);
+		} catch (ServiceException e) {
+			log.error(e);
+			throw new ControllerException(e);
 		}
 	}
 }

@@ -29,9 +29,14 @@ public class MedioComunicacionCliente implements Serializable {
 	@EmbeddedId
 	private MedioComunicacionClienteId id;
 	
+	/**
+	 * El tipo de comunicación (SMS, FAX, email)
+	 */
+	@ManyToOne
+	private TipoComunicacion tipoComunicacion;
+	
 	@JsonIgnore // Con esto evitamos recursión infinita a la hora de construir la salida json
 	@ManyToOne
-	@JoinColumn(name="idCliente", insertable = false, updatable = false)
 	private Cliente cliente;
 
 	/**
@@ -52,6 +57,20 @@ public class MedioComunicacionCliente implements Serializable {
 	 */
 	public void setId(MedioComunicacionClienteId id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return
+	 */
+	public TipoComunicacion getTipoComunicacion() {
+		return tipoComunicacion;
+	}
+
+	/**
+	 * @param tipoComunicacion
+	 */
+	public void setTipoComunicacion(TipoComunicacion tipoComunicacion) {
+		this.tipoComunicacion = tipoComunicacion;
 	}
 
 	/**

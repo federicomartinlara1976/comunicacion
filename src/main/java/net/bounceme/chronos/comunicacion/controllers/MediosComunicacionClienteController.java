@@ -2,6 +2,7 @@ package net.bounceme.chronos.comunicacion.controllers;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import net.bounceme.chronos.comunicacion.controllers.params.ParamsMedioComunicacion;
 import net.bounceme.chronos.comunicacion.exceptions.ControllerException;
+import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
 import net.bounceme.chronos.comunicacion.services.MediosComunicacionClienteService;
 
@@ -28,7 +30,8 @@ import net.bounceme.chronos.comunicacion.services.MediosComunicacionClienteServi
 @RestController
 @RequestMapping("/mediosComunicacionCliente")
 public class MediosComunicacionClienteController {
-
+	Logger log = Logger.getLogger(MediosComunicacionClienteController.class);
+	
 	@Autowired
 	@Qualifier(MediosComunicacionClienteService.NAME)
 	private MediosComunicacionClienteService mediosComunicacionClienteService;
@@ -46,8 +49,7 @@ public class MediosComunicacionClienteController {
 	}
 
 	/**
-	 * @param medio
-	 *            parámetros de entrada [idCliente, idTipo, valor]
+	 * @param medio parámetros de entrada [idCliente, idTipo, valor]
 	 * @return medio creado
 	 * @throws ControllerException
 	 */
@@ -55,7 +57,12 @@ public class MediosComunicacionClienteController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public MedioComunicacionCliente nuevo(@RequestBody ParamsMedioComunicacion medio) throws ControllerException {
-		return mediosComunicacionClienteService.nuevo(medio.getIdCliente(), medio.getIdTipo(), medio.getValor());
+		try {
+			return mediosComunicacionClienteService.nuevo(medio.getIdCliente(), medio.getIdTipo(), medio.getValor());
+		} catch (ServiceException e) {
+			log.error(e);
+			throw new ControllerException(e);
+		}
 	}
 
 	/**
@@ -77,26 +84,34 @@ public class MediosComunicacionClienteController {
 	/**
 	 * Actualiza un medio de comunicación de un cliente
 	 * 
-	 * @param medio
-	 *            parámetros de entrada [idCliente, idTipo, valor]
+	 * @param medio parámetros de entrada [idCliente, idTipo, valor]
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
 	@RequestMapping(value = "/update", method = RequestMethod.PUT)
 	public void actualizar(@RequestBody ParamsMedioComunicacion medio) throws ControllerException {
-		mediosComunicacionClienteService.actualizar(medio.getIdCliente(), medio.getIdTipo(), medio.getValor());
+		try {
+			mediosComunicacionClienteService.actualizar(medio.getIdCliente(), medio.getIdTipo(), medio.getValor());
+		} catch (ServiceException e) {
+			log.error(e);
+			throw new ControllerException(e);
+		}
 	}
 
 	/**
 	 * Borra un medio de comunicación de un cliente
 	 * 
-	 * @param medio
-	 *            parámetros de entrada [idCliente, idTipo]
+	 * @param medio parámetros de entrada [idCliente, idTipo]
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
 	public void borrar(@RequestBody ParamsMedioComunicacion medio) throws ControllerException {
-		mediosComunicacionClienteService.borrar(medio.getIdCliente(), medio.getIdTipo());
+		try {
+			mediosComunicacionClienteService.borrar(medio.getIdCliente(), medio.getIdTipo());
+		} catch (ServiceException e) {
+			log.error(e);
+			throw new ControllerException(e);
+		}
 	}
 }

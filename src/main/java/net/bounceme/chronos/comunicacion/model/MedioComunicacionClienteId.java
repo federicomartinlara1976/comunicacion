@@ -2,9 +2,8 @@ package net.bounceme.chronos.comunicacion.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -29,15 +28,13 @@ public class MedioComunicacionClienteId implements Serializable {
 	 * Cliente al que pertenece este medio
 	 */
 	@JsonIgnore
-	@ManyToOne
-	@JoinColumn(name="idCliente", nullable = true)
+	@Column(name="idCliente", insertable = false, updatable = false)
 	private Cliente cliente;
 	
 	/**
 	 * El tipo de comunicación (SMS, FAX, email)
 	 */
-	@ManyToOne
-	@JoinColumn(name="idTipoComunicacion")
+	@Column(name="idTipoComunicacion", insertable = false, updatable = false)
 	private TipoComunicacion tipoComunicacion;
 
 	/**

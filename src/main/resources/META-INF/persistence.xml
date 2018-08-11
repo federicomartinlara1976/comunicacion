@@ -9,7 +9,11 @@
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<mapping-file>META-INF/orm.xml</mapping-file>
 		
-		<class>net.bounceme.chronos.logging.model.RegistroInfo</class>
+		<class>net.bounceme.chronos.comunicacion.model.Aviso</class>
+		<class>net.bounceme.chronos.comunicacion.model.Cliente</class>
+		<class>net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente</class>
+		<class>net.bounceme.chronos.comunicacion.model.Notificacion</class>
+		<class>net.bounceme.chronos.comunicacion.model.TipoComunicacion</class>
 		
 		<properties>
 			<property name="hibernate.show_sql" value="true"/>

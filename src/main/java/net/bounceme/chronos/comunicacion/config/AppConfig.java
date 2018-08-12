@@ -1,5 +1,6 @@
 package net.bounceme.chronos.comunicacion.config;
 
+import org.apache.catalina.connector.Connector;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
@@ -7,6 +8,9 @@ import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
+import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -35,6 +39,15 @@ public class AppConfig {
 	public static final String QUEUE_NAME = "notificaciones";
 	
 	public static final String TOPIC_NAME = "spring-boot-exchange";
+	
+	@Value("${tomcat.ajp.port}")
+	int ajpPort;
+
+	@Value("${tomcat.ajp.remoteauthentication}")
+	String remoteAuthentication;
+
+	@Value("${tomcat.ajp.enabled}")
+	boolean tomcatAjpEnabled;
 	
 	/**
 	 * Crea el repositorio para la entidad Cliente
@@ -126,5 +139,22 @@ public class AppConfig {
     @Bean
     public MessageListenerAdapter listenerAdapter(Receiver receiver) {
         return new MessageListenerAdapter(receiver, "receiveMessage");
+    }
+    
+    @Bean
+    public EmbeddedServletContainerFactory servletContainer() {
+
+        TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory();
+        if (tomcatAjpEnabled)
+        {
+            Connector ajpConnector = new Connector("AJP/1.3");
+            ajpConnector.setPort(ajpPort);
+            ajpConnector.setSecure(false);
+            ajpConnector.setAllowTrace(false);
+            ajpConnector.setScheme("http");
+            tomcat.addAdditionalTomcatConnectors(ajpConnector);
+        }
+
+        return tomcat;
     }
 }

@@ -1,6 +1,8 @@
 package net.bounceme.chronos.comunicacion.services.impl;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -12,11 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import net.bounceme.chronos.comunicacion.config.AppConfig;
 import net.bounceme.chronos.comunicacion.data.dao.DaoPersistence;
+import net.bounceme.chronos.comunicacion.data.dao.DaoQueries;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.Aviso;
 import net.bounceme.chronos.comunicacion.model.Cliente;
 import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
-import net.bounceme.chronos.comunicacion.model.MedioComunicacionClienteId;
 import net.bounceme.chronos.comunicacion.model.Notificacion;
 import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
 import net.bounceme.chronos.comunicacion.services.NotificacionesService;
@@ -50,6 +52,10 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 	@Autowired
 	@Qualifier(AppConfig.MEDIOS_COMUNICACION_CLIENTE_REPOSITORY)
 	private DaoPersistence<MedioComunicacionCliente> mediosComunicacionClienteRepository;
+	
+	@Autowired
+	@Qualifier(DaoQueries.NAME)
+	private DaoQueries daoQueries;
 
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
@@ -75,8 +81,7 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 			notificacion.setAviso(aviso);
 
 			// Establece el medio de comunicación
-			MedioComunicacionClienteId medioComunicacionClienteId = getIdentificadorMedio(aviso.getCliente(), tipo);
-			MedioComunicacionCliente medio = mediosComunicacionClienteRepository.getObject(medioComunicacionClienteId);
+			MedioComunicacionCliente medio = getMedioComunicacion(aviso.getCliente(), tipo);
 			notificacion.setDatosMedioComunicacion(medio);
 
 			return notificacionesRepository.saveObject(notificacion);
@@ -118,7 +123,7 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 
 			// Obtiene el medio de comunicación
 			MedioComunicacionCliente medio = notificacion.getDatosMedioComunicacion();
-			TipoComunicacion tipo = medio.getId().getTipoComunicacion();
+			TipoComunicacion tipo = medio.getTipoComunicacion();
 
 			// Obtiene el aviso a enviar
 			Aviso aviso = notificacion.getAviso();
@@ -150,15 +155,16 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 	}
 
 	/**
-	 * Método de conveniencia que construye el identificador para un medio de
-	 * comunicación
-	 * 
 	 * @param cliente
 	 * @param tipo
 	 * @return
 	 */
-	private MedioComunicacionClienteId getIdentificadorMedio(Cliente cliente, TipoComunicacion tipo) {
-		return new MedioComunicacionClienteId(cliente, tipo);
+	private MedioComunicacionCliente getMedioComunicacion(Cliente cliente, TipoComunicacion tipo) {
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("cliente", cliente);
+		parameters.put("tipo", tipo);
+		return (MedioComunicacionCliente) daoQueries.executeScalarNamedQuery("medioComunicacionCliente", parameters,
+				Boolean.TRUE);
 	}
 
 }

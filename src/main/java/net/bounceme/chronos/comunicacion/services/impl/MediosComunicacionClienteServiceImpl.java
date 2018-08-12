@@ -19,7 +19,6 @@ import net.bounceme.chronos.comunicacion.data.dao.DaoQueries;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.Cliente;
 import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
-import net.bounceme.chronos.comunicacion.model.MedioComunicacionClienteId;
 import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
 import net.bounceme.chronos.comunicacion.services.MediosComunicacionClienteService;
 
@@ -63,13 +62,10 @@ public class MediosComunicacionClienteServiceImpl implements MediosComunicacionC
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public MedioComunicacionCliente nuevo(Long idCliente, Long idTipo, String valor) throws ServiceException {
 		try {
-			MedioComunicacionClienteId id = getIdentificador(idCliente, idTipo);
-
 			MedioComunicacionCliente medioComunicacion = new MedioComunicacionCliente();
 
-			medioComunicacion.setId(id);
-			medioComunicacion.setCliente(id.getCliente());
-			medioComunicacion.setTipoComunicacion(id.getTipoComunicacion());
+			medioComunicacion.setCliente(clientesRepository.getObject(idCliente));
+			medioComunicacion.setTipoComunicacion(tiposComunicacionRepository.getObject(idTipo));
 			medioComunicacion.setValor(valor);
 
 			return mediosComunicacionClienteRepository.saveObject(medioComunicacion);
@@ -88,8 +84,10 @@ public class MediosComunicacionClienteServiceImpl implements MediosComunicacionC
 	 */
 	@Override
 	public MedioComunicacionCliente get(Long idCliente, Long idTipo) {
-		MedioComunicacionClienteId id = getIdentificador(idCliente, idTipo);
-		return mediosComunicacionClienteRepository.getObject(id);
+		Cliente cliente = clientesRepository.getObject(idCliente);
+		TipoComunicacion tipo = tiposComunicacionRepository.getObject(idTipo);
+
+		return getMedioComunicacion(cliente, tipo);
 	}
 
 	/*
@@ -103,8 +101,10 @@ public class MediosComunicacionClienteServiceImpl implements MediosComunicacionC
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public void actualizar(Long idCliente, Long idTipo, String valor) throws ServiceException {
 		try {
-			MedioComunicacionClienteId id = getIdentificador(idCliente, idTipo);
-			MedioComunicacionCliente medio = mediosComunicacionClienteRepository.getObject(id);
+			Cliente cliente = clientesRepository.getObject(idCliente);
+			TipoComunicacion tipo = tiposComunicacionRepository.getObject(idTipo);
+
+			MedioComunicacionCliente medio = getMedioComunicacion(cliente, tipo);
 
 			if (StringUtils.isNotBlank(valor)) {
 				medio.setValor(valor);
@@ -127,8 +127,12 @@ public class MediosComunicacionClienteServiceImpl implements MediosComunicacionC
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public void borrar(Long idCliente, Long idTipo) throws ServiceException {
 		try {
-			MedioComunicacionClienteId id = getIdentificador(idCliente, idTipo);
-			mediosComunicacionClienteRepository.removeObject(id);
+			Cliente cliente = clientesRepository.getObject(idCliente);
+			TipoComunicacion tipo = tiposComunicacionRepository.getObject(idTipo);
+			
+			MedioComunicacionCliente medio = getMedioComunicacion(cliente, tipo);
+
+			mediosComunicacionClienteRepository.removeObject(medio.getId());
 		} catch (Exception e) {
 			log.error(e);
 			throw new ServiceException(e);
@@ -151,14 +155,17 @@ public class MediosComunicacionClienteServiceImpl implements MediosComunicacionC
 		return new ArrayList<MedioComunicacionCliente>(
 				daoQueries.executeNamedQuery("mediosComunicacionCliente", parameters, Boolean.TRUE));
 	}
-
+	
 	/**
-	 * @param idCliente
-	 * @param idTipo
+	 * @param cliente
+	 * @param tipo
 	 * @return
 	 */
-	private MedioComunicacionClienteId getIdentificador(Long idCliente, Long idTipo) {
-		return new MedioComunicacionClienteId(clientesRepository.getObject(idCliente),
-				tiposComunicacionRepository.getObject(idTipo));
+	private MedioComunicacionCliente getMedioComunicacion(Cliente cliente, TipoComunicacion tipo) {
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("cliente", cliente);
+		parameters.put("tipo", tipo);
+		return (MedioComunicacionCliente) daoQueries.executeScalarNamedQuery("medioComunicacionCliente", parameters,
+				Boolean.TRUE);
 	}
 }

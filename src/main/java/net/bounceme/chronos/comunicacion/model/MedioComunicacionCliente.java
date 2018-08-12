@@ -3,8 +3,10 @@ package net.bounceme.chronos.comunicacion.model;
 import java.io.Serializable;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -26,17 +28,23 @@ public class MedioComunicacionCliente implements Serializable {
 	 */
 	private static final long serialVersionUID = -2396223420414145945L;
 	
-	@EmbeddedId
-	private MedioComunicacionClienteId id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 	
 	/**
 	 * El tipo de comunicación (SMS, FAX, email)
 	 */
 	@ManyToOne
+	@JoinColumn(name="idTipoComunicacion")
 	private TipoComunicacion tipoComunicacion;
 	
-	@JsonIgnore // Con esto evitamos recursión infinita a la hora de construir la salida json
+	/**
+	 * Cliente al que pertenece este medio
+	 */
+	@JsonIgnore
 	@ManyToOne
+	@JoinColumn(name="idCliente")
 	private Cliente cliente;
 
 	/**
@@ -45,17 +53,18 @@ public class MedioComunicacionCliente implements Serializable {
 	@Column
 	private String valor;
 	
+
 	/**
-	 * @return the id
+	 * @return
 	 */
-	public MedioComunicacionClienteId getId() {
+	public Long getId() {
 		return id;
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
 	 */
-	public void setId(MedioComunicacionClienteId id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

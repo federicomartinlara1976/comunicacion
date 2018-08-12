@@ -30,7 +30,19 @@
 			<![CDATA[
     		select m
     		from MedioComunicacionCliente m
-    		where m.id.cliente = :cliente	
+    		where m.cliente = :cliente	
+    		 ]]>
+		</query>
+    </named-query>
+    
+    <!-- Consulta de todos los medios de comunicacion de un cliente -->
+    <named-query name="medioComunicacionCliente">
+    	<query>
+			<![CDATA[
+    		select m
+    		from MedioComunicacionCliente m
+    		where m.cliente = :cliente	
+    		and m.tipoComunicacion = :tipo
     		 ]]>
 		</query>
     </named-query>

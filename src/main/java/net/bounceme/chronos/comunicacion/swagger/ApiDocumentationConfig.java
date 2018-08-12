@@ -14,7 +14,7 @@ import io.swagger.annotations.SwaggerDefinition;
                 contact = @Contact(
                    name = "Federico Martín Lara", 
                    email = "federicomartinlara1976@gmail.com", 
-                   url = "http://www.github.com/federicomartinlara1976"
+                   url = "http://www.github.com/federicomartinlara1976/comunicacion"
                 ),
                 license = @License(
                    name = "Apache 2.0", 

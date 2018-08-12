@@ -17,7 +17,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
 
-	public static final Contact DEFAULT_CONTACT = new Contact("Federico Martin Lara", "http://www.github.com/federicomartinlara1976",
+	public static final Contact DEFAULT_CONTACT = new Contact("Federico Martin Lara", "http://www.github.com/federicomartinlara1976/comunicacion",
 			"federicomartinlara1976@gmail.com");
 
 	public static final ApiInfo DEFAULT_API_INFO = new ApiInfo("Comunicacion", "Prueba de API para Tinsa", "1.0",

@@ -8,8 +8,10 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.hamcrest.Matchers;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
@@ -76,6 +78,8 @@ public class ComunicacionTests {
         }
     }
     
+    private static BrokerManager brokerStarter;
+    
 	private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
 			MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
 
@@ -106,6 +110,17 @@ public class ComunicacionTests {
 	public void setup() throws Exception {
 		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 	}
+	
+	@BeforeClass
+    public static void startup() throws Exception {
+        brokerStarter = new BrokerManager();
+        brokerStarter.startBroker();
+    }
+ 
+    @AfterClass
+    public static void tearDown() throws Exception {
+        brokerStarter.stopBroker();
+    }
 
 	/**
 	 * Prueba de creación de un cliente

@@ -1,22 +1,7 @@
 package net.bounceme.chronos.comunicacion;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
-import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
-import net.bounceme.chronos.comunicacion.services.TiposComunicacionService;
 
 /**
  * Clase que inicia la aplicaci贸n y configura los repositoriuos y algunos beans
@@ -27,52 +12,8 @@ import net.bounceme.chronos.comunicacion.services.TiposComunicacionService;
 @SpringBootApplication
 public class ComunicacionApplication {
 
-	Logger log = Logger.getLogger(ComunicacionApplication.class);
-
 	/**
-	 * Este m茅todo alimenta la base de datos con datos iniciales, en concreto la
-	 * tabla de tipos de comunicaciones. Si hay un fallo, termina el arranque de la
-	 * aplicaci贸n con error
-	 * 
-	 * @param tipoComunicacionRepository
-	 * @return
-	 */
-	@Bean
-	CommandLineRunner init(
-			@Autowired @Qualifier(TiposComunicacionService.NAME) TiposComunicacionService tiposComunicacionService) {
-
-		Map<String, String> medios = new HashMap<String, String>();
-		medios.put("SMS", "SMS_Emisor");
-		medios.put("FAX", "FAX_Emisor");
-		medios.put("EMAIL", "EMAIL_Emisor");
-
-		return (evt) -> Arrays.asList(new String[] { "SMS", "FAX", "EMAIL" }).forEach(a -> {
-			try {
-				String emisor = medios.get(a);
-				tiposComunicacionService.nuevo(a, emisor);
-			} catch (ServiceException e) {
-				log.error(e);
-			}
-		});
-	}
-
-	/**
-	 * Configuraci贸n para el cross-origin
-	 * 
-	 * @return
-	 */
-	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurerAdapter() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**");
-			}
-		};
-	}
-
-	/**
-	 * M茅todo de arranque de la aplicaci贸n
+	 * M閠odo de arranque de la aplicaci髇
 	 * 
 	 * @param args
 	 */

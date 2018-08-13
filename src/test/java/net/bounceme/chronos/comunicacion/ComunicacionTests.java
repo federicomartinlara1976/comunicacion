@@ -10,7 +10,9 @@ import org.apache.log4j.Logger;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.FixMethodOrder;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -28,8 +30,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
+
 /**
- * Tests de la aplicación. Los tests se ejecutan en una
+ * Tests de la aplicaciï¿½n. Los tests se ejecutan en una
  * secuencia ordenada por el nombre
  * 
  * @author frederik
@@ -76,6 +80,12 @@ public class ComunicacionTests {
 			MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
 
 	private MockMvc mockMvc;
+	
+	@ClassRule
+	public static WireMockClassRule wireMockRule = new WireMockClassRule(9100);
+
+	@Rule
+	public WireMockClassRule instanceRule = wireMockRule;
 
 	@SuppressWarnings("rawtypes")
 	private HttpMessageConverter mappingJackson2HttpMessageConverter;

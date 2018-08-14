@@ -5,3 +5,4 @@
 .settings
 .clover
 /target/
+/.apt_generated/

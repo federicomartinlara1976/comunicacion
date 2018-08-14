@@ -8,9 +8,13 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.hamcrest.Matchers;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.FixMethodOrder;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -20,22 +24,26 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.mock.http.MockHttpOutputMessage;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
+
 /**
- * Tests de la aplicación. Los tests se ejecutan en una
+ * Tests de la aplicaci�n. Los tests se ejecutan en una
  * secuencia ordenada por el nombre
  * 
  * @author frederik
  *
  * Para hacer los tests: http://spring.io/guides/tutorials/bookmarks/
  */
-@RunWith(SpringRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+@ActiveProfiles("test")
 @SpringBootTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ComunicacionTests {
@@ -70,10 +78,18 @@ public class ComunicacionTests {
         }
     }
     
+    private static BrokerManager brokerStarter;
+    
 	private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
 			MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
 
 	private MockMvc mockMvc;
+	
+	@ClassRule
+	public static WireMockClassRule wireMockRule = new WireMockClassRule(9100);
+
+	@Rule
+	public WireMockClassRule instanceRule = wireMockRule;
 
 	@SuppressWarnings("rawtypes")
 	private HttpMessageConverter mappingJackson2HttpMessageConverter;
@@ -94,6 +110,17 @@ public class ComunicacionTests {
 	public void setup() throws Exception {
 		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 	}
+	
+	@BeforeClass
+    public static void startup() throws Exception {
+        brokerStarter = new BrokerManager();
+        brokerStarter.startBroker();
+    }
+ 
+    @AfterClass
+    public static void tearDown() throws Exception {
+        //brokerStarter.stopBroker();
+    }
 
 	/**
 	 * Prueba de creación de un cliente

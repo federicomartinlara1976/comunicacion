@@ -119,7 +119,7 @@ public class ComunicacionTests {
  
     @AfterClass
     public static void tearDown() throws Exception {
-        brokerStarter.stopBroker();
+        //brokerStarter.stopBroker();
     }
 
 	/**

@@ -3,16 +3,24 @@ package net.bounceme.chronos.comunicacion;
 import org.apache.qpid.server.Broker;
 import org.apache.qpid.server.BrokerOptions;
 
+import com.google.common.io.Files;
+
 public class BrokerManager {
 	 
-    private static final String INITIAL_CONFIG_PATH = "<your_path_to_the_above_json_file>";
-    private static final String PORT = "<your_port>";
+	public static final int BROKER_PORT = 5672;
+	
     private final Broker broker = new Broker();
      
     public void startBroker() throws Exception {
+        final String configFileName = "qpid-config.json";
+        final String passwordFileName = "passwd.properties";
+
+        // prepare options
         final BrokerOptions brokerOptions = new BrokerOptions();
-        brokerOptions.setConfigProperty("qpid.amqp_port", PORT);
-        brokerOptions.setInitialConfigurationLocation(INITIAL_CONFIG_PATH);
+        brokerOptions.setConfigProperty("qpid.amqp_port", String.valueOf(BROKER_PORT));
+        brokerOptions.setConfigProperty("qpid.pass_file", passwordFileName);
+        brokerOptions.setConfigProperty("qpid.work_dir", Files.createTempDir().getAbsolutePath());
+        brokerOptions.setInitialConfigurationLocation(configFileName);
          
         broker.startup(brokerOptions);
     }

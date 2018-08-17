@@ -1,4 +1,4 @@
-package net.bounceme.chronos.comunicacion;
+package net.bounceme.chronos.comunicacion.helpers;
 
 import org.apache.qpid.server.Broker;
 import org.apache.qpid.server.BrokerOptions;

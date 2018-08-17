@@ -34,6 +34,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 
+import net.bounceme.chronos.comunicacion.helpers.BrokerManager;
+
 /**
  * Tests de la aplicaci�n. Los tests se ejecutan en una
  * secuencia ordenada por el nombre

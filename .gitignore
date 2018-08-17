@@ -6,3 +6,4 @@
 .clover
 /target/
 /.apt_generated/
+/.factorypath

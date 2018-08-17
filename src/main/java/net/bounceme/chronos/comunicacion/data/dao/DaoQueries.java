@@ -33,10 +33,10 @@ public class DaoQueries {
 	 */
 	@SuppressWarnings("rawtypes")
 	public Collection executeNamedQuery(String queryName) {
-		Query query = entityManager.createNamedQuery(queryName);
-		query.setHint(Constantes.HINT_CACHEABLE, Boolean.TRUE);
-		return query.getResultList();
+		return executeNamedQuery(queryName, Boolean.TRUE);
 	}
+
+	
 	
 	/**
 	 * Ejecuta una consulta determinada por su nombre
@@ -47,17 +47,17 @@ public class DaoQueries {
 	 */
 	@SuppressWarnings("rawtypes")
 	public Collection executeNamedQuery(String queryName, Boolean cacheable) {
-		Query query = entityManager.createNamedQuery(queryName);
-		query.setHint(Constantes.HINT_CACHEABLE, cacheable);
-		return query.getResultList();
+		return executeNamedQuery(queryName, null, cacheable);
 	}
 	
+	/**
+	 * @param queryName
+	 * @param parameters
+	 * @return
+	 */
 	@SuppressWarnings("rawtypes")
 	public Collection executeNamedQuery(String queryName, Map<String, Object> parameters) {
-		Query query = entityManager.createNamedQuery(queryName);
-		query.setHint(Constantes.HINT_CACHEABLE, Boolean.TRUE);
-		setParameters(query, parameters);
-		return query.getResultList();
+		return executeNamedQuery(queryName, parameters, Boolean.TRUE);
 	}
 	
 	/**
@@ -70,9 +70,10 @@ public class DaoQueries {
 	 */
 	@SuppressWarnings("rawtypes")
 	public Collection executeNamedQuery(String queryName, Map<String, Object> parameters, Boolean cacheable) {
-		Query query = entityManager.createNamedQuery(queryName);
-		query.setHint(Constantes.HINT_CACHEABLE, cacheable);
-		setParameters(query, parameters);
+		Query query = createQuery(queryName, cacheable);
+		if (parameters!=null) {
+			setParameters(query, parameters);
+		}
 		return query.getResultList();
 	}
 	
@@ -85,8 +86,7 @@ public class DaoQueries {
 	 * @return resultados
 	 */
 	public Object executeScalarNamedQuery(String queryName, Map<String, Object> parameters, Boolean cacheable) {
-		Query query = entityManager.createNamedQuery(queryName);
-		query.setHint(Constantes.HINT_CACHEABLE, cacheable);
+		Query query = createQuery(queryName, cacheable);
 		setParameters(query, parameters);
 		return query.getSingleResult();
 	}
@@ -101,6 +101,17 @@ public class DaoQueries {
 		for (String name : parameters.keySet()) {
 			query.setParameter(name, parameters.get(name));
 		}
+	}
+	
+	/**
+	 * @param queryName
+	 * @param cacheable
+	 * @return
+	 */
+	private Query createQuery(String queryName, Boolean cacheable) {
+		Query query = entityManager.createNamedQuery(queryName);
+		query.setHint(Constantes.HINT_CACHEABLE, cacheable);
+		return query;
 	}
 
 }

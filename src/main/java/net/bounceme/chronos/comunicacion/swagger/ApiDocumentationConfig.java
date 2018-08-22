@@ -9,7 +9,7 @@ import io.swagger.annotations.SwaggerDefinition;
 @SwaggerDefinition(
         info = @Info(
                 description = "Prueba de API para Tinsa",
-                version = "V12.0.12",
+                version = "1.0.5-SNAPSHOT",
                 title = "Comunicacion",
                 contact = @Contact(
                    name = "Federico Martín Lara", 

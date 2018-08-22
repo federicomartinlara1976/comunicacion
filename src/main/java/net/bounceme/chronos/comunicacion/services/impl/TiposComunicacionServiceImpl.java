@@ -1,7 +1,10 @@
 package net.bounceme.chronos.comunicacion.services.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -69,6 +72,16 @@ public class TiposComunicacionServiceImpl implements TiposComunicacionService {
 	@Override
 	public TipoComunicacion get(Long id) {
 		return tiposComunicacionRepository.getObject(id);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public TipoComunicacion get(String name) {
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("denominacion", name);
+		Optional<TipoComunicacion> oResult = daoQueries.executeScalarNamedQuery("tipoComunicacion", parameters, Boolean.TRUE);
+		
+		return (oResult.isPresent()) ? oResult.get() : null;
 	}
 
 	/*

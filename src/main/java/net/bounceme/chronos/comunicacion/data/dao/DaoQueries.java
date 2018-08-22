@@ -2,10 +2,14 @@ package net.bounceme.chronos.comunicacion.data.dao;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
+import org.apache.log4j.Logger;
 
 import net.bounceme.chronos.comunicacion.utils.Constantes;
 
@@ -20,6 +24,8 @@ import net.bounceme.chronos.comunicacion.utils.Constantes;
 public class DaoQueries {
 	
 	public static final String NAME = "daoQueries"; 
+	
+	private static final Logger log = Logger.getLogger(DaoQueries.class);
 	
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -85,10 +91,16 @@ public class DaoQueries {
 	 * @param cacheable indica si la consulta se va a cachear o no
 	 * @return resultados
 	 */
-	public Object executeScalarNamedQuery(String queryName, Map<String, Object> parameters, Boolean cacheable) {
-		Query query = createQuery(queryName, cacheable);
-		setParameters(query, parameters);
-		return query.getSingleResult();
+	@SuppressWarnings("rawtypes")
+	public Optional executeScalarNamedQuery(String queryName, Map<String, Object> parameters, Boolean cacheable) {
+		try {
+			Query query = createQuery(queryName, cacheable);
+			setParameters(query, parameters);
+			return Optional.ofNullable(query.getSingleResult());
+		} catch (NoResultException e) {
+			log.warn("No se ha encontrado la entidad");
+			return Optional.empty();
+		}
 	}
 	
 	/**

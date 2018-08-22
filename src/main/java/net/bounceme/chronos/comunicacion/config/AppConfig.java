@@ -21,7 +21,6 @@ import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -174,7 +173,7 @@ public class AppConfig {
     }
     
     /**
-	 * Configuración para el cross-origin
+	 * Configuraciï¿½n para el cross-origin
 	 * 
 	 * @return
 	 */
@@ -189,15 +188,14 @@ public class AppConfig {
 	}
 	
 	/**
-	 * Este método alimenta la base de datos con datos iniciales, en concreto la
+	 * Este mï¿½todo alimenta la base de datos con datos iniciales, en concreto la
 	 * tabla de tipos de comunicaciones. Si hay un fallo, termina el arranque de la
-	 * aplicación con error
+	 * aplicaciï¿½n con error
 	 * 
 	 * @param tipoComunicacionRepository
 	 * @return
 	 */
 	@Bean
-	@Profile("test")
 	public CommandLineRunner init(
 			@Autowired @Qualifier(TiposComunicacionService.NAME) TiposComunicacionService tiposComunicacionService) {
 
@@ -209,8 +207,11 @@ public class AppConfig {
 		return (evt) -> Arrays.asList(new String[] { "SMS", "FAX", "EMAIL" }).forEach(a -> {
 			try {
 				String emisor = medios.get(a);
-				tiposComunicacionService.nuevo(a, emisor);
-			} catch (ServiceException e) {
+				
+				if (tiposComunicacionService.get(a) == null) {
+					tiposComunicacionService.nuevo(a, emisor);
+
+				}} catch (ServiceException e) {
 				log.error(e);
 			}
 		});

@@ -33,6 +33,14 @@ public interface TiposComunicacionService {
 	TipoComunicacion get(Long id);
 	
 	/**
+	 * Obtiene un tipo de comunicación
+	 * 
+	 * @param name
+	 * @return el tipo
+	 */
+	TipoComunicacion get(String name);
+	
+	/**
 	 * Actualiza un tipo de comunicación
 	 * 
 	 * @param id

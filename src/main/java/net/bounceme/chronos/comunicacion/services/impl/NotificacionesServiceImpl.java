@@ -3,6 +3,7 @@ package net.bounceme.chronos.comunicacion.services.impl;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -159,12 +160,15 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 	 * @param tipo
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	private MedioComunicacionCliente getMedioComunicacion(Cliente cliente, TipoComunicacion tipo) {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("cliente", cliente);
 		parameters.put("tipo", tipo);
-		return (MedioComunicacionCliente) daoQueries.executeScalarNamedQuery("medioComunicacionCliente", parameters,
+		Optional<MedioComunicacionCliente> oResult = daoQueries.executeScalarNamedQuery("medioComunicacionCliente", parameters,
 				Boolean.TRUE);
+		
+		return (oResult.isPresent()) ? oResult.get() : null;
 	}
 
 }

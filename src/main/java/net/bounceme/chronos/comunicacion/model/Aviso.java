@@ -64,7 +64,7 @@ public class Aviso implements Serializable {
 	 * la notificación indicará el fallo, con lo que se deberá
 	 * escoger otro medio y volver a enviar el aviso
 	 */
-	@Cache(usage = CacheConcurrencyStrategy.READ_ONLY, region = "NOTIFICACIONES_AVISO")
+	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "NOTIFICACIONES_AVISO")
 	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, mappedBy = "aviso", targetEntity = Notificacion.class)
 	private List<Notificacion> notificaciones;
 

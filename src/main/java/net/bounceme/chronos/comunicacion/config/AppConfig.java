@@ -3,6 +3,7 @@ package net.bounceme.chronos.comunicacion.config;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.catalina.connector.Connector;
 import org.apache.log4j.Logger;
@@ -208,10 +209,11 @@ public class AppConfig {
 			try {
 				String emisor = medios.get(a);
 				
-				if (tiposComunicacionService.get(a) == null) {
+				if (Objects.isNull(tiposComunicacionService.get(a))) {
 					tiposComunicacionService.nuevo(a, emisor);
 
-				}} catch (ServiceException e) {
+				}
+			} catch (ServiceException e) {
 				log.error(e);
 			}
 		});

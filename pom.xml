@@ -6,7 +6,7 @@
 
 	<groupId>net.bounceme.chronos</groupId>
 	<artifactId>comunicacion</artifactId>
-	<version>1.0.5-SNAPSHOT</version>
+	<version>1.0.5-RELEASE</version>
 	<packaging>jar</packaging>
 
 	<name>Comunicacion</name>

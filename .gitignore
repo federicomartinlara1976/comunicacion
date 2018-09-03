@@ -7,3 +7,4 @@
 /target/
 /.apt_generated/
 /.factorypath
+/*.log

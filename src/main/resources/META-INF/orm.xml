@@ -24,6 +24,17 @@
 		</query>
     </named-query>
     
+    <!-- Consulta de un tipo de comunicacion por su nombre -->
+    <named-query name="tipoComunicacion">
+    	<query>
+			<![CDATA[
+    		select t
+    		from TipoComunicacion t	
+    		where t.denominacion = :denominacion
+    		 ]]>
+		</query>
+    </named-query>
+    
     <!-- Consulta de todos los medios de comunicacion de un cliente -->
     <named-query name="mediosComunicacionCliente">
     	<query>

@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,7 +25,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
  */
 @Entity
 @Table(name = "CLIENTES")
-@Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "CLIENTES")
 public class Cliente implements Serializable {
 

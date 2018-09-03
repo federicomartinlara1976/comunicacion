@@ -44,6 +44,9 @@ public class TipoComunicacion implements Serializable {
 	@Column
 	private String nombreClaseEmisora;
 	
+	@Column
+	private String icono;
+	
 	/**
 	 * 
 	 */
@@ -99,8 +102,24 @@ public class TipoComunicacion implements Serializable {
     public void setNombreClaseEmisora(String nombreClaseEmisora) {
         this.nombreClaseEmisora = nombreClaseEmisora;
     }
+    
+    
 
-    /* (non-Javadoc)
+    /**
+	 * @return the icono
+	 */
+	public String getIcono() {
+		return icono;
+	}
+
+	/**
+	 * @param icono the icono to set
+	 */
+	public void setIcono(String icono) {
+		this.icono = icono;
+	}
+
+	/* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     @Override
@@ -109,50 +128,65 @@ public class TipoComunicacion implements Serializable {
             + ", nombreClaseEmisora=" + nombreClaseEmisora + "]";
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((denominacion == null) ? 0 : denominacion.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result
-            + ((nombreClaseEmisora == null) ? 0 : nombreClaseEmisora.hashCode());
-        return result;
-    }
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((denominacion == null) ? 0 : denominacion.hashCode());
+		result = prime * result + ((icono == null) ? 0 : icono.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((nombreClaseEmisora == null) ? 0 : nombreClaseEmisora.hashCode());
+		return result;
+	}
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        TipoComunicacion other = (TipoComunicacion) obj;
-        if (denominacion == null) {
-            if (other.denominacion != null)
-                return false;
-        }
-        else if (!denominacion.equals(other.denominacion))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!id.equals(other.id))
-            return false;
-        if (nombreClaseEmisora == null) {
-            if (other.nombreClaseEmisora != null)
-                return false;
-        }
-        else if (!nombreClaseEmisora.equals(other.nombreClaseEmisora))
-            return false;
-        return true;
-    }
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof TipoComunicacion)) {
+			return false;
+		}
+		TipoComunicacion other = (TipoComunicacion) obj;
+		if (denominacion == null) {
+			if (other.denominacion != null) {
+				return false;
+			}
+		} else if (!denominacion.equals(other.denominacion)) {
+			return false;
+		}
+		if (icono == null) {
+			if (other.icono != null) {
+				return false;
+			}
+		} else if (!icono.equals(other.icono)) {
+			return false;
+		}
+		if (id == null) {
+			if (other.id != null) {
+				return false;
+			}
+		} else if (!id.equals(other.id)) {
+			return false;
+		}
+		if (nombreClaseEmisora == null) {
+			if (other.nombreClaseEmisora != null) {
+				return false;
+			}
+		} else if (!nombreClaseEmisora.equals(other.nombreClaseEmisora)) {
+			return false;
+		}
+		return true;
+	}
+
+    
 }

@@ -2,7 +2,6 @@ package net.bounceme.chronos.comunicacion.services.emisores.impl;
 
 import org.springframework.stereotype.Component;
 
-import net.bounceme.chronos.comunicacion.services.emisores.Emisor;
 import net.bounceme.chronos.comunicacion.utils.Constantes.ResultadoEnvio;
 
 /**
@@ -12,7 +11,7 @@ import net.bounceme.chronos.comunicacion.utils.Constantes.ResultadoEnvio;
  *
  */
 @Component("EMAIL_Emisor")
-public class EMAILEmisor extends EmisorBase implements Emisor {
+public class EMAILEmisor extends EmisorBase {
 
     public EMAILEmisor() {
         // TODO Auto-generated constructor stub

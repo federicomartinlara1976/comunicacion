@@ -1,7 +1,9 @@
 package net.bounceme.chronos.comunicacion.services.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -179,6 +181,12 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 			throw new ServiceException(e);
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Notificacion> getNotificacionesNoEnviadas() {
+		return new ArrayList<Notificacion>(daoQueries.executeNamedQuery("notificacionesPendientes", Boolean.TRUE));
+	}
 
 	/**
 	 * @param cliente
@@ -195,5 +203,4 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 		
 		return (oResult.isPresent()) ? oResult.get() : null;
 	}
-
 }

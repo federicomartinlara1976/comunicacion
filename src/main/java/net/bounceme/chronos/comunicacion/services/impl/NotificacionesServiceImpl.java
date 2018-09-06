@@ -3,12 +3,14 @@ package net.bounceme.chronos.comunicacion.services.impl;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +27,7 @@ import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
 import net.bounceme.chronos.comunicacion.services.NotificacionesService;
 import net.bounceme.chronos.comunicacion.services.emisores.Emisor;
 import net.bounceme.chronos.comunicacion.services.emisores.EmisorFactory;
+import net.bounceme.chronos.comunicacion.utils.Constantes.EstadoNotificacion;
 import net.bounceme.chronos.comunicacion.utils.Constantes.ResultadoEnvio;
 
 /**
@@ -63,6 +66,9 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 
 	@Autowired
 	private EmisorFactory emisorFactory;
+	
+	@Value("${envio.reintentos}")
+	int maxNumReintentos;
 
 	/*
 	 * (non-Javadoc)
@@ -141,14 +147,33 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 			notificacion.setFechaHoraEnvio(new Date());
 			ResultadoEnvio resultado = emisor.enviar(mensaje.toString(), medio.getValor());
 
+			// Obtiene el numero de reintentos de la notificacion
+			Integer reintentos = Objects.isNull(notificacion.getReintentos()) ? 0 : notificacion.getReintentos();
+			reintentos += 1;
+			notificacion.setReintentos(reintentos);
+			
 			// El aviso ha sido enviado
 			if (resultado.equals(ResultadoEnvio.OK)) {
 				aviso.setEstaNotificado(Boolean.TRUE);
-				avisosRepository.updateObject(aviso);
+				notificacion.setEstado(EstadoNotificacion.ENVIADA.name());
+			}
+			else {
+				
+				aviso.setEstaNotificado(Boolean.FALSE);
+				
+				if (reintentos < maxNumReintentos) {
+					// Si no ha llegado al número de reintentos, estado no enviada
+					notificacion.setEstado(EstadoNotificacion.NO_ENVIADA.name());
+				}
+				else {
+					// Si ha llegado al número de reintentos, estado a fallido
+					notificacion.setEstado(EstadoNotificacion.FALLIDA.name());
+				}
 			}
 
 			notificacion.setResultado(resultado.name());
 			notificacionesRepository.updateObject(notificacion);
+			avisosRepository.updateObject(aviso);
 		} catch (Exception e) {
 			log.error(e);
 			throw new ServiceException(e);

@@ -58,6 +58,12 @@ public class Notificacion implements Serializable {
 	@Column
 	private String resultado;
 	
+	@Column
+	private Integer reintentos;
+	
+	@Column
+	private String estado;
+	
 	/**
 	 * El aviso con la fecha de inicio de la obra
 	 * y el medio de comunicación
@@ -100,6 +106,48 @@ public class Notificacion implements Serializable {
 	 */
 	public void setFechaHoraEnvio(Date fechaHoraEnvio) {
 		this.fechaHoraEnvio = fechaHoraEnvio;
+	}
+
+	/**
+	 * @return the reintentos
+	 */
+	public Integer getReintentos() {
+		return reintentos;
+	}
+
+	/**
+	 * @param reintentos the reintentos to set
+	 */
+	public void setReintentos(Integer reintentos) {
+		this.reintentos = reintentos;
+	}
+
+	/**
+	 * @return the fechaHoraCreacion
+	 */
+	public Date getFechaHoraCreacion() {
+		return fechaHoraCreacion;
+	}
+
+	/**
+	 * @param fechaHoraCreacion the fechaHoraCreacion to set
+	 */
+	public void setFechaHoraCreacion(Date fechaHoraCreacion) {
+		this.fechaHoraCreacion = fechaHoraCreacion;
+	}
+
+	/**
+	 * @return the estado
+	 */
+	public String getEstado() {
+		return estado;
+	}
+
+	/**
+	 * @param estado the estado to set
+	 */
+	public void setEstado(String estado) {
+		this.estado = estado;
 	}
 
 	/**

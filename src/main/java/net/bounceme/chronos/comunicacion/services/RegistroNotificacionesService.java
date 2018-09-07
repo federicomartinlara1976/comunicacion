@@ -21,5 +21,9 @@ public interface RegistroNotificacionesService {
      */
     List<RegistroNotificacion> searchByDates(Date from, Date to);
     
+    /**
+     * @param idClient
+     * @return
+     */
     List<RegistroNotificacion> searchByClient(Long idClient);
 }

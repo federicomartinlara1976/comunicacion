@@ -25,6 +25,7 @@ import net.bounceme.chronos.comunicacion.model.Aviso;
 import net.bounceme.chronos.comunicacion.model.Cliente;
 import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
 import net.bounceme.chronos.comunicacion.model.Notificacion;
+import net.bounceme.chronos.comunicacion.model.RegistroNotificacion;
 import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
 import net.bounceme.chronos.comunicacion.services.NotificacionesService;
 import net.bounceme.chronos.comunicacion.services.emisores.Emisor;
@@ -58,6 +59,10 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 	@Autowired
 	@Qualifier(AppConfig.MEDIOS_COMUNICACION_CLIENTE_REPOSITORY)
 	private DaoPersistence<MedioComunicacionCliente> mediosComunicacionClienteRepository;
+	
+	@Autowired
+	@Qualifier(AppConfig.REGISTRO_NOTIFICACIONES_REPOSITORY)
+	private DaoPersistence<RegistroNotificacion> registroNotificacionRepository;
 	
 	@Autowired
 	@Qualifier(DaoQueries.NAME)
@@ -136,6 +141,7 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 
 			// Obtiene el aviso a enviar
 			Aviso aviso = notificacion.getAviso();
+			Cliente cliente = aviso.getCliente();
 
 			// Obtiene el emisor
 			Emisor emisor = emisorFactory.getEmisor(tipo);
@@ -176,12 +182,28 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 			notificacion.setResultado(resultado.name());
 			notificacionesRepository.updateObject(notificacion);
 			avisosRepository.updateObject(aviso);
+			registraNotificacion(notificacion, cliente);
 		} catch (Exception e) {
 			log.error(e);
 			throw new ServiceException(e);
 		}
 	}
 	
+	/**
+	 * @param notificacion
+	 * @param cliente
+	 * @throws Exception
+	 */
+	private void registraNotificacion(Notificacion notificacion, Cliente cliente) throws Exception {
+		RegistroNotificacion registroNotificacion = new RegistroNotificacion();
+		registroNotificacion.setNotificacion(notificacion);
+		registroNotificacion.setCliente(cliente);
+		registroNotificacion.setResultado(notificacion.getResultado());
+		registroNotificacion.setFechaHoraNotificacion(notificacion.getFechaHoraEnvio());
+		
+		registroNotificacionRepository.saveObject(registroNotificacion);
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Notificacion> getNotificacionesNoEnviadas() {

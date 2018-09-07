@@ -34,6 +34,7 @@ import net.bounceme.chronos.comunicacion.model.Aviso;
 import net.bounceme.chronos.comunicacion.model.Cliente;
 import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
 import net.bounceme.chronos.comunicacion.model.Notificacion;
+import net.bounceme.chronos.comunicacion.model.RegistroNotificacion;
 import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
 import net.bounceme.chronos.comunicacion.services.TiposComunicacionService;
 
@@ -51,6 +52,8 @@ public class AppConfig {
 	
 	public static final String NOTIFICACIONES_REPOSITORY = "notificacionesRepository";
 	
+	public static final String REGISTRO_NOTIFICACIONES_REPOSITORY = "registroNotificacionesRepository";
+	
 	public static final String QUEUE_NAME = "notificaciones";
 	
 	public static final String TOPIC_NAME = "spring-boot-exchange";
@@ -64,6 +67,11 @@ public class AppConfig {
 	@Value("${tomcat.ajp.enabled}")
 	boolean tomcatAjpEnabled;
 	
+	@Bean(name = DaoQueries.NAME)
+	public DaoQueries daoQueries() {
+		return new DaoQueries();
+	}
+	
 	/**
 	 * Crea el repositorio para la entidad Cliente
 	 * 
@@ -72,11 +80,6 @@ public class AppConfig {
 	@Bean(name = CLIENTE_REPOSITORY)
 	public DaoPersistence<Cliente> clienteRepository() {
 		return new DaoPersistence<Cliente>(Cliente.class);
-	}
-	
-	@Bean(name = DaoQueries.NAME)
-	public DaoQueries daoQueries() {
-		return new DaoQueries();
 	}
 	
 	/**
@@ -121,6 +124,17 @@ public class AppConfig {
 	@Bean(name = NOTIFICACIONES_REPOSITORY)
 	public DaoPersistence<Notificacion> notificacionesRepository() {
 		return new DaoPersistence<Notificacion>(Notificacion.class);
+	}
+	
+	/**
+     * Crea el repositorio para el registro de las notificaciones,
+     * independientemente del medio que se use
+     * 
+     * @return bean del repositorio
+     */
+	@Bean(name = REGISTRO_NOTIFICACIONES_REPOSITORY)
+	public DaoPersistence<RegistroNotificacion> registroNotificacionesRepository() {
+		return new DaoPersistence<RegistroNotificacion>(RegistroNotificacion.class);
 	}
 	
 	/**

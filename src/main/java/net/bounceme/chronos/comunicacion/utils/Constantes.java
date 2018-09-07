@@ -12,4 +12,8 @@ public class Constantes {
 	public enum ResultadoEnvio {
 		OK, FALLO
 	}
+	
+	public enum EstadoNotificacion {
+		ENVIADA, NO_ENVIADA, FALLIDA
+	}
 }

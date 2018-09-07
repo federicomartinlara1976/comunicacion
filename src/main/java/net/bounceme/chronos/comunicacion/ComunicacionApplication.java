@@ -2,6 +2,7 @@ package net.bounceme.chronos.comunicacion;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * Clase que inicia la aplicaciÃ³n y configura los repositoriuos y algunos beans
@@ -10,10 +11,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  */
 @SpringBootApplication
+@EnableScheduling
 public class ComunicacionApplication {
 
 	/**
-	 * Método de arranque de la aplicación
+	 * Mï¿½todo de arranque de la aplicaciï¿½n
 	 * 
 	 * @param args
 	 */

@@ -12,6 +12,7 @@
 		<class>net.bounceme.chronos.comunicacion.model.Aviso</class>
 		<class>net.bounceme.chronos.comunicacion.model.Cliente</class>
 		<class>net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente</class>
+		<class>net.bounceme.chronos.comunicacion.model.DireccionCliente</class>
 		<class>net.bounceme.chronos.comunicacion.model.Notificacion</class>
 		<class>net.bounceme.chronos.comunicacion.model.RegistroNotificacion</class>
 		<class>net.bounceme.chronos.comunicacion.model.TipoComunicacion</class>

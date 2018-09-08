@@ -81,5 +81,41 @@
     		 ]]>
 		</query>
     </named-query>
+    
+    <!-- Consulta de todas las notificaciones pendientes -->
+    <named-query name="notificacionesPendientes">
+    	<query>
+			<![CDATA[
+    		select n
+    		from Notificacion n
+    		where n.estado = 'NO_ENVIADA'
+    		order by n.fechaHoraEnvio	
+    		 ]]>
+		</query>
+    </named-query>
+    
+    <!-- Consulta de registros por fechas -->
+    <named-query name="registrosNotificacionesPorFecha">
+    	<query>
+			<![CDATA[
+    		select r
+    		from RegistroNotificacion r
+    		where r.fechaHoraNotificacion between :from and :to
+    		order by r.fechaHoraNotificacion	
+    		 ]]>
+		</query>
+    </named-query>
+    
+    <!-- Consulta de registros por fechas -->
+    <named-query name="registrosNotificacionesPorCliente">
+    	<query>
+			<![CDATA[
+    		select r
+    		from RegistroNotificacion r
+    		where r.cliente = :cliente
+    		order by r.fechaHoraNotificacion	
+    		 ]]>
+		</query>
+    </named-query>
 
 </entity-mappings>

@@ -21,13 +21,15 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
+import net.bounceme.chronos.comunicacion.services.emisores.Emisor;
+
 /**
  * Clase base con funcionalidades comunes a todos los emisores
  * 
  * @author frederik
  *
  */
-public abstract class EmisorBase {
+public abstract class EmisorBase implements Emisor {
 	
 	private static final Logger log = Logger.getLogger(EmisorBase.class);
 	

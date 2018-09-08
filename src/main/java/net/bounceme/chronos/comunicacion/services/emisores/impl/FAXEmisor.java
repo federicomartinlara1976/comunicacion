@@ -6,7 +6,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
-import net.bounceme.chronos.comunicacion.services.emisores.Emisor;
 import net.bounceme.chronos.comunicacion.utils.Constantes.ResultadoEnvio;
 
 /**
@@ -16,7 +15,7 @@ import net.bounceme.chronos.comunicacion.utils.Constantes.ResultadoEnvio;
  *
  */
 @Component("FAX_Emisor")
-public class FAXEmisor extends EmisorBase implements Emisor {
+public class FAXEmisor extends EmisorBase {
 	
 	private static final Logger log = Logger.getLogger(FAXEmisor.class);
 	

@@ -1,5 +1,7 @@
 package net.bounceme.chronos.comunicacion.services;
 
+import java.util.List;
+
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.Notificacion;
 
@@ -37,4 +39,9 @@ public interface NotificacionesService {
      * @throws ServiceException 
      */
     void enviarNotificacion(Long idNotificacion) throws ServiceException;
+    
+    /**
+     * @return
+     */
+    List<Notificacion> getNotificacionesNoEnviadas();
 }

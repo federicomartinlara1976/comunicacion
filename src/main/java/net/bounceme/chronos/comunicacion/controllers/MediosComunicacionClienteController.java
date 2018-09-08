@@ -28,7 +28,7 @@ import net.bounceme.chronos.comunicacion.services.MediosComunicacionClienteServi
  *
  */
 @RestController
-@RequestMapping("/mediosComunicacionCliente")
+@RequestMapping("/clientes/mediosComunicacion")
 public class MediosComunicacionClienteController {
 	Logger log = Logger.getLogger(MediosComunicacionClienteController.class);
 	

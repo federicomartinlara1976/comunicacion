@@ -8,6 +8,8 @@ import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
 
 public interface DireccionesClienteService {
 
+	String NAME = "DireccionesClienteService";
+
 	MedioComunicacionCliente nuevo(Long idCliente, String direccion, String numero, String escalera, Integer piso,
 			String puerta, String localidad, String provincia, String codigoPostal) throws ServiceException;
 

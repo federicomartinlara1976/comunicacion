@@ -21,7 +21,6 @@ import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.DireccionCliente;
 import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
 import net.bounceme.chronos.comunicacion.services.DireccionesClienteService;
-import net.bounceme.chronos.comunicacion.services.MediosComunicacionClienteService;
 
 /**
  * Controlador para la gestión de medios de comunicación de clientes
@@ -35,7 +34,7 @@ public class DireccionesClienteController {
 	Logger log = Logger.getLogger(DireccionesClienteController.class);
 	
 	@Autowired
-	@Qualifier(MediosComunicacionClienteService.NAME)
+	@Qualifier(DireccionesClienteService.NAME)
 	private DireccionesClienteService direccionesClienteService;
 
 	/**

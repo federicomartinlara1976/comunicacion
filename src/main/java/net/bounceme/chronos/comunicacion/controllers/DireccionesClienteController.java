@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.bounceme.chronos.comunicacion.controllers.params.ParamsMedioComunicacion;
+import net.bounceme.chronos.comunicacion.controllers.params.ParamsDireccion;
 import net.bounceme.chronos.comunicacion.exceptions.ControllerException;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
+import net.bounceme.chronos.comunicacion.model.DireccionCliente;
 import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
+import net.bounceme.chronos.comunicacion.services.DireccionesClienteService;
 import net.bounceme.chronos.comunicacion.services.MediosComunicacionClienteService;
 
 /**
@@ -34,7 +36,7 @@ public class DireccionesClienteController {
 	
 	@Autowired
 	@Qualifier(MediosComunicacionClienteService.NAME)
-	private MediosComunicacionClienteService mediosComunicacionClienteService;
+	private DireccionesClienteService direccionesClienteService;
 
 	/**
 	 * Lista los medios para comunicarse con un cliente
@@ -44,8 +46,8 @@ public class DireccionesClienteController {
 	 */
 	@CrossOrigin
 	@RequestMapping(method = RequestMethod.GET)
-	public List<MedioComunicacionCliente> listAll(@RequestParam(value = "idCliente") Long idCliente) {
-		return mediosComunicacionClienteService.listar(idCliente);
+	public List<DireccionCliente> listAll(@RequestParam(value = "idCliente") Long idCliente) {
+		return direccionesClienteService.listar(idCliente);
 	}
 
 	/**
@@ -56,9 +58,9 @@ public class DireccionesClienteController {
 	@CrossOrigin
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public MedioComunicacionCliente nuevo(@RequestBody ParamsMedioComunicacion medio) throws ControllerException {
+	public MedioComunicacionCliente nuevo(@RequestBody ParamsDireccion direccion) throws ControllerException {
 		try {
-			return mediosComunicacionClienteService.nuevo(medio.getIdCliente(), medio.getIdTipo(), medio.getValor());
+			return direccionesClienteService.nuevo(direccion.getIdCliente(), direccion.getDireccion(), direccion.getNumero(), direccion.getEscalera(), direccion.getPiso(), direccion.getPuerta(), direccion.getLocalidad(), direccion.getProvincia(), direccion.getCodigoPostal());
 		} catch (ServiceException e) {
 			log.error(e);
 			throw new ControllerException(e);
@@ -74,11 +76,11 @@ public class DireccionesClienteController {
 	 */
 	@CrossOrigin
 	@RequestMapping(value = "/get", method = RequestMethod.GET)
-	public ResponseEntity<MedioComunicacionCliente> get(@RequestParam(value = "idCliente") Long idCliente,
-			@RequestParam(value = "idTipo") Long idTipo) {
-		MedioComunicacionCliente medioComunicacionCliente = mediosComunicacionClienteService.get(idCliente, idTipo);
-		HttpStatus status = medioComunicacionCliente != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
-		return new ResponseEntity<MedioComunicacionCliente>(medioComunicacionCliente, status);
+	public ResponseEntity<DireccionCliente> get(@RequestParam(value = "idCliente") Long idCliente,
+			@RequestParam(value = "idDireccion") Long idDireccion) {
+		DireccionCliente direccionCliente = direccionesClienteService.get(idCliente, idDireccion);
+		HttpStatus status = direccionCliente != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
+		return new ResponseEntity<DireccionCliente>(direccionCliente, status);
 	}
 
 	/**
@@ -89,9 +91,9 @@ public class DireccionesClienteController {
 	 */
 	@CrossOrigin
 	@RequestMapping(value = "/update", method = RequestMethod.PUT)
-	public void actualizar(@RequestBody ParamsMedioComunicacion medio) throws ControllerException {
+	public void actualizar(@RequestBody ParamsDireccion direccion) throws ControllerException {
 		try {
-			mediosComunicacionClienteService.actualizar(medio.getIdCliente(), medio.getIdTipo(), medio.getValor());
+			direccionesClienteService.actualizar(direccion.getIdCliente(), direccion.getIdDireccion(), direccion.getDireccion(), direccion.getNumero(), direccion.getEscalera(), direccion.getPiso(), direccion.getPuerta(), direccion.getLocalidad(), direccion.getProvincia(), direccion.getCodigoPostal());
 		} catch (ServiceException e) {
 			log.error(e);
 			throw new ControllerException(e);
@@ -106,9 +108,9 @@ public class DireccionesClienteController {
 	 */
 	@CrossOrigin
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-	public void borrar(@RequestBody ParamsMedioComunicacion medio) throws ControllerException {
+	public void borrar(@RequestBody ParamsDireccion direccion) throws ControllerException {
 		try {
-			mediosComunicacionClienteService.borrar(medio.getIdCliente(), medio.getIdTipo());
+			direccionesClienteService.borrar(direccion.getIdCliente(), direccion.getIdDireccion());
 		} catch (ServiceException e) {
 			log.error(e);
 			throw new ControllerException(e);

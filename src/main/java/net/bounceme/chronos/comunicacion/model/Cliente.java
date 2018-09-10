@@ -64,6 +64,9 @@ public class Cliente implements Serializable {
 	 */
 	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, mappedBy = "cliente", fetch = FetchType.LAZY)
 	private List<MedioComunicacionCliente> mediosComunicacion;
+	
+	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, mappedBy = "cliente", fetch = FetchType.LAZY)
+	private List<DireccionCliente> direcciones;
 
 	/**
 	 * 
@@ -159,6 +162,20 @@ public class Cliente implements Serializable {
 	 */
 	public void setAvisos(List<Aviso> avisos) {
 		this.avisos = Collections.unmodifiableList(avisos);
+	}
+
+	/**
+	 * @return the direcciones
+	 */
+	public List<DireccionCliente> getDirecciones() {
+		return direcciones;
+	}
+
+	/**
+	 * @param direcciones the direcciones to set
+	 */
+	public void setDirecciones(List<DireccionCliente> direcciones) {
+		this.direcciones = direcciones;
 	}
 
 	/*

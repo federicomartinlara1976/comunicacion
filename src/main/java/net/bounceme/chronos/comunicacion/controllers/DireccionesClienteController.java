@@ -19,7 +19,6 @@ import net.bounceme.chronos.comunicacion.controllers.params.ParamsDireccion;
 import net.bounceme.chronos.comunicacion.exceptions.ControllerException;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.DireccionCliente;
-import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
 import net.bounceme.chronos.comunicacion.services.DireccionesClienteService;
 
 /**
@@ -57,7 +56,7 @@ public class DireccionesClienteController {
 	@CrossOrigin
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public MedioComunicacionCliente nuevo(@RequestBody ParamsDireccion direccion) throws ControllerException {
+	public DireccionCliente nuevo(@RequestBody ParamsDireccion direccion) throws ControllerException {
 		try {
 			return direccionesClienteService.nuevo(direccion.getIdCliente(), direccion.getDireccion(), direccion.getNumero(), direccion.getEscalera(), direccion.getPiso(), direccion.getPuerta(), direccion.getLocalidad(), direccion.getProvincia(), direccion.getCodigoPostal());
 		} catch (ServiceException e) {

@@ -32,6 +32,7 @@ import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.jms.Receiver;
 import net.bounceme.chronos.comunicacion.model.Aviso;
 import net.bounceme.chronos.comunicacion.model.Cliente;
+import net.bounceme.chronos.comunicacion.model.DireccionCliente;
 import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
 import net.bounceme.chronos.comunicacion.model.Notificacion;
 import net.bounceme.chronos.comunicacion.model.RegistroNotificacion;
@@ -47,6 +48,8 @@ public class AppConfig {
 	public static final String TIPOS_COMUNICACION_REPOSITORY = "tiposComunicacionRepository";
 	
 	public static final String MEDIOS_COMUNICACION_CLIENTE_REPOSITORY = "mediosComunicacionClienteRepository";
+	
+	public static final String DIRECCIONES_CLIENTE_REPOSITORY = "direccionesClienteRepository";
 
 	public static final String AVISOS_REPOSITORY = "avisosRepository";
 	
@@ -102,6 +105,17 @@ public class AppConfig {
 	@Bean(name = MEDIOS_COMUNICACION_CLIENTE_REPOSITORY)
 	public DaoPersistence<MedioComunicacionCliente> mediosComunicacionClienteRepository() {
 		return new DaoPersistence<MedioComunicacionCliente>(MedioComunicacionCliente.class);
+	}
+	
+	/**
+     * Crea el repositorio para la entidad de direcciones
+     * del cliente 
+     * 
+     * @return bean del repositorio
+     */
+	@Bean(name = DIRECCIONES_CLIENTE_REPOSITORY)
+	public DaoPersistence<DireccionCliente> direccionesClienteRepository() {
+		return new DaoPersistence<DireccionCliente>(DireccionCliente.class);
 	}
 	
 	/**

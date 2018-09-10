@@ -16,7 +16,6 @@ import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.Cliente;
 import net.bounceme.chronos.comunicacion.model.DireccionCliente;
 import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
-import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
 import net.bounceme.chronos.comunicacion.services.DireccionesClienteService;
 
 /**
@@ -33,16 +32,12 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 	private static final Logger log = Logger.getLogger(DireccionesClienteServiceImpl.class);
 
 	@Autowired
-	@Qualifier(AppConfig.MEDIOS_COMUNICACION_CLIENTE_REPOSITORY)
-	private DaoPersistence<MedioComunicacionCliente> mediosComunicacionClienteRepository;
+	@Qualifier(AppConfig.DIRECCIONES_CLIENTE_REPOSITORY)
+	private DaoPersistence<DireccionCliente> direccionesClienteRepository;
 
 	@Autowired
 	@Qualifier(AppConfig.CLIENTE_REPOSITORY)
 	private DaoPersistence<Cliente> clientesRepository;
-
-	@Autowired
-	@Qualifier(AppConfig.TIPOS_COMUNICACION_REPOSITORY)
-	private DaoPersistence<TipoComunicacion> tiposComunicacionRepository;
 
 	@Autowired
 	@Qualifier(DaoQueries.NAME)

@@ -1,6 +1,10 @@
 package net.bounceme.chronos.comunicacion.services.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +19,6 @@ import net.bounceme.chronos.comunicacion.data.dao.DaoQueries;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.Cliente;
 import net.bounceme.chronos.comunicacion.model.DireccionCliente;
-import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
 import net.bounceme.chronos.comunicacion.services.DireccionesClienteService;
 
 /**
@@ -43,42 +46,171 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 	@Qualifier(DaoQueries.NAME)
 	private DaoQueries daoQueries;
 
+	/**
+	 * @param idCliente
+	 * @param direccion
+	 * @param numero
+	 * @param escalera
+	 * @param piso
+	 * @param puerta
+	 * @param localidad
+	 * @param provincia
+	 * @param codigoPostal
+	 * @return
+	 * @throws ServiceException
+	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public MedioComunicacionCliente nuevo(Long idCliente, String direccion, String numero, String escalera,
+	public DireccionCliente nuevo(Long idCliente, String direccion, String numero, String escalera,
 			Integer piso, String puerta, String localidad, String provincia, String codigoPostal)
 			throws ServiceException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			Cliente cliente = clientesRepository.getObject(idCliente);
+			
+			boolean isNew = true;
+			DireccionCliente direccionCliente = obtenerDireccion(cliente, null, isNew);
+			fillDireccion(direccionCliente, direccion, numero, escalera, piso, puerta, localidad, provincia, codigoPostal);
+			
+			return direccionesClienteRepository.saveObject(direccionCliente);
+		} catch (Exception e) {
+			log.error(e);
+			throw new ServiceException(e);
+		}
 	}
 
+	/**
+	 * @param idCliente
+	 * @param idDireccion
+	 * @return
+	 */
 	@Override
 	public DireccionCliente get(Long idCliente, Long idDireccion) {
-		// TODO Auto-generated method stub
-		return null;
+		Cliente cliente = clientesRepository.getObject(idCliente);
+		
+		return getDireccionCliente(cliente, idDireccion);
 	}
 
+	/**
+	 * @param idCliente
+	 * @param idDireccion
+	 * @param direccion
+	 * @param numero
+	 * @param escalera
+	 * @param piso
+	 * @param puerta
+	 * @param localidad
+	 * @param provincia
+	 * @param codigoPostal
+	 * @throws ServiceException
+	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public void actualizar(Long idCliente, Long idDireccion, String direccion, String numero, String escalera,
 			Integer piso, String puerta, String localidad, String provincia, String codigoPostal)
 			throws ServiceException {
-		// TODO Auto-generated method stub
-		
+		try {
+			Cliente cliente = clientesRepository.getObject(idCliente);
+
+			DireccionCliente direccionCliente = obtenerDireccion(cliente, idDireccion, false);
+			fillDireccion(direccionCliente, direccion, numero, escalera, piso, puerta, localidad, provincia, codigoPostal);
+
+			direccionesClienteRepository.updateObject(direccionCliente);
+		} catch (Exception e) {
+			log.error(e);
+			throw new ServiceException(e);
+		}
 	}
 
+	/**
+	 * @param idCliente
+	 * @param idDireccion
+	 * @throws ServiceException
+	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public void borrar(Long idCliente, Long idDireccion) throws ServiceException {
-		// TODO Auto-generated method stub
-		
+		try {
+			Cliente cliente = clientesRepository.getObject(idCliente);
+			
+			DireccionCliente direccion = getDireccionCliente(cliente, idDireccion);
+
+			direccionesClienteRepository.removeObject(direccion.getId());
+		} catch (Exception e) {
+			log.error(e);
+			throw new ServiceException(e);
+		}
 	}
 
+	/**
+	 * @param idCliente
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<DireccionCliente> listar(Long idCliente) {
-		// TODO Auto-generated method stub
-		return null;
+		Cliente cliente = clientesRepository.getObject(idCliente);
+
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("cliente", cliente);
+		return new ArrayList<DireccionCliente>(
+				daoQueries.executeNamedQuery("direccionesCliente", parameters, Boolean.TRUE));
 	}
 
+	/**
+	 * @param cliente
+	 * @param idDireccion
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private DireccionCliente getDireccionCliente(Cliente cliente, Long idDireccion) {
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("cliente", cliente);
+		parameters.put("idDireccion", idDireccion);
+		Optional<DireccionCliente> oResult = daoQueries.executeScalarNamedQuery("direccionCliente", parameters,
+				Boolean.TRUE);
+		
+		return (oResult.isPresent()) ? oResult.get() : null;
+	}
 	
+	/**
+	 * @param cliente
+	 * @param idDireccion
+	 * @param isNew
+	 * @return
+	 */
+	private DireccionCliente obtenerDireccion(Cliente cliente, Long idDireccion, boolean isNew) {
+		DireccionCliente direccionCliente;
+		
+		if (isNew) {
+			direccionCliente = new DireccionCliente();
+			direccionCliente.setCliente(cliente);
+		}
+		else {
+			direccionCliente = getDireccionCliente(cliente, idDireccion);
+		}
+		
+		return direccionCliente;
+	}
+	
+	/**
+	 * @param direccionCliente
+	 * @param direccion
+	 * @param numero
+	 * @param escalera
+	 * @param piso
+	 * @param puerta
+	 * @param localidad
+	 * @param provincia
+	 * @param codigoPostal
+	 */
+	private void fillDireccion(DireccionCliente direccionCliente, String direccion, String numero, String escalera,
+			Integer piso, String puerta, String localidad, String provincia, String codigoPostal) {
+		direccionCliente.setDireccion(direccion);
+		direccionCliente.setNumero(numero);
+		direccionCliente.setEscalera(escalera);
+		direccionCliente.setPiso(piso);
+		direccionCliente.setPuerta(puerta);
+		direccionCliente.setProvincia(provincia);
+		direccionCliente.setCodigoPostal(codigoPostal);
+	}
 }

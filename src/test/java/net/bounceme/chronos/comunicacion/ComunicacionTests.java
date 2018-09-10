@@ -62,8 +62,10 @@ public class ComunicacionTests {
         CLIENTES_NEW("/clientes/new"),
         CLIENTES_GET("/clientes/1"),
         CLIENTES_UPDATE("/clientes/1/update"),
-        MEDIOS_COMUNICACION_NEW("/mediosComunicacionCliente/new"),
-        MEDIOS_COMUNICACION_UPDATE("/mediosComunicacionCliente/update"),
+        DIRECCIONES_NEW("/clientes/direcciones/new"),
+        DIRECCIONES_UPDATE("/clientes/direcciones/update"),
+        MEDIOS_COMUNICACION_NEW("/clientes/mediosComunicacion/new"),
+        MEDIOS_COMUNICACION_UPDATE("/clientes/mediosComunicacion/update"),
         AVISOS_NEW("/avisos/new"),
         AVISOS_GET("/avisos/1"),
         NOTIFICACIONES_NEW("/notificaciones/new"),
@@ -192,7 +194,27 @@ public class ComunicacionTests {
 	 * @throws Exception
 	 */
 	@Test
-	public void test_AD_nuevoSMSCliente() throws Exception {
+	public void test_AD_nuevaDireccionCliente() throws Exception {
+		Map<String, String> parameters = new HashMap<String, String>();
+		parameters.put("idCliente", "1");
+		parameters.put("direccion", "xx");
+
+		String params = toJson(parameters);
+
+		log.info("Method: post\nURL: " + verbs.DIRECCIONES_NEW.getValue() + "\n " + params);
+		mockMvc.perform(MockMvcRequestBuilders.post(verbs.DIRECCIONES_NEW.getValue())
+				.contentType(contentType)
+				.content(params))
+				.andExpect(MockMvcResultMatchers.status().isCreated());
+	}
+	
+	/**
+	 * Prueba de creación de un medio de fax para un cliente 
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void test_AE_nuevoSMSCliente() throws Exception {
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("idCliente", "1");
 		parameters.put("idTipo", "1");
@@ -213,7 +235,7 @@ public class ComunicacionTests {
 	 * @throws Exception
 	 */
 	@Test
-	public void test_AE_nuevoFAXCliente() throws Exception {
+	public void test_AF_nuevoFAXCliente() throws Exception {
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("idCliente", "1");
 		parameters.put("idTipo", "2");
@@ -234,7 +256,7 @@ public class ComunicacionTests {
 	 * @throws Exception
 	 */
 	@Test
-	public void test_AF_nuevoAvisoCliente() throws Exception {
+	public void test_AG_nuevoAvisoCliente() throws Exception {
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("idCliente", "1");
 		parameters.put("fechaInicioObra", "2017-06-20");
@@ -256,7 +278,7 @@ public class ComunicacionTests {
 	 * @throws Exception
 	 */
 	@Test
-	public void test_AG_nuevoAvisoClienteNotValid() throws Exception {
+	public void test_AH_nuevoAvisoClienteNotValid() throws Exception {
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("idCliente", "1");
 		parameters.put("fechaInicioObra", "2017-06-20");
@@ -276,7 +298,7 @@ public class ComunicacionTests {
 	 * @throws Exception
 	 */
 	@Test
-	public void test_AH_nuevaNotificacion_a_SMS() throws Exception {
+	public void test_AI_nuevaNotificacion_a_SMS() throws Exception {
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("idAviso", "1");
 		parameters.put("idTipoMedio", "1");
@@ -296,7 +318,7 @@ public class ComunicacionTests {
 	 * @throws Exception
 	 */
 	@Test
-	public void test_AI_nuevaNotificacion_a_FAX() throws Exception {
+	public void test_AJ_nuevaNotificacion_a_FAX() throws Exception {
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("idAviso", "1");
 		parameters.put("idTipoMedio", "2");
@@ -316,7 +338,7 @@ public class ComunicacionTests {
 	 * @throws Exception
 	 */
 	@Test
-	public void test_AJ_enviarNotificacion_SMS_Fallido() throws Exception {
+	public void test_AK_enviarNotificacion_SMS_Fallido() throws Exception {
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("idNotificacion", "1");
 
@@ -347,7 +369,7 @@ public class ComunicacionTests {
 	 * @throws Exception
 	 */
 	@Test
-	public void test_AK_enviarNotificacion_FAX_Fallido() throws Exception {
+	public void test_AL_enviarNotificacion_FAX_Fallido() throws Exception {
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("idNotificacion", "2");
 
@@ -378,7 +400,7 @@ public class ComunicacionTests {
      * @throws Exception
      */
     @Test
-    public void test_AL_enviarNotificacion_FAX_Correcto() throws Exception {
+    public void test_AM_enviarNotificacion_FAX_Correcto() throws Exception {
         // Cambiar numero de fax
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("idCliente", "1");

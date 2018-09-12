@@ -180,7 +180,7 @@ public class ClientesServiceImpl implements ClientesService {
 		parameters.put("nombre", "%" + nombre + "%");
 		parameters.put("apellidos", "%" + apellidos + "%");
 		
-		return new ArrayList<Cliente>(daoQueries.executeNamedQuery("buscarClientesPorNombreYApellidos", Boolean.TRUE));
+		return new ArrayList<Cliente>(daoQueries.executeNamedQuery("buscarClientesPorNombreYApellidos", parameters, Boolean.TRUE));
 	}
 
 	/* (non-Javadoc)
@@ -192,7 +192,7 @@ public class ClientesServiceImpl implements ClientesService {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("dni", dni);
 		
-		return new ArrayList<Cliente>(daoQueries.executeNamedQuery("buscarClientesPorDNI", Boolean.TRUE));
+		return new ArrayList<Cliente>(daoQueries.executeNamedQuery("buscarClientesPorDNI", parameters, Boolean.TRUE));
 	}
 
 }

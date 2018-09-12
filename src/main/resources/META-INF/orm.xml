@@ -14,6 +14,40 @@
 		</query>
     </named-query>
     
+    <!-- Buscar clientes por nombre -->
+    <named-query name="buscarClientesPorNombre">
+    	<query>
+			<![CDATA[
+    		select c
+    		from Cliente c	
+    		where c.nombre like :nombre
+    		 ]]>
+		</query>
+    </named-query>
+    
+    <!-- Buscar clientes por nombre y apellidos -->
+    <named-query name="buscarClientesPorNombreYApellidos">
+    	<query>
+			<![CDATA[
+    		select c
+    		from Cliente c	
+    		where c.nombre like :nombre
+    		and c.apellidos like :apellidos
+    		 ]]>
+		</query>
+    </named-query>
+    
+    <!-- Buscar clientes por DNI -->
+    <named-query name="buscarClientesPorDNI">
+    	<query>
+			<![CDATA[
+    		select c
+    		from Cliente c	
+    		where c.dni = :dni
+    		 ]]>
+		</query>
+    </named-query>
+    
     <!-- Consulta de todos los tipos de comunicacion -->
     <named-query name="tiposComunicacion">
     	<query>

@@ -1,7 +1,9 @@
 package net.bounceme.chronos.comunicacion.services.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -154,6 +156,43 @@ public class ClientesServiceImpl implements ClientesService {
 	@Override
 	public List<Cliente> listar() {
 		return new ArrayList<Cliente>(daoQueries.executeNamedQuery("clientes", Boolean.TRUE));
+	}
+
+	/* (non-Javadoc)
+	 * @see net.bounceme.chronos.comunicacion.services.ClientesService#buscarPorNombre(java.lang.String)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Cliente> buscarPorNombre(String nombre) {
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("nombre", "%" + nombre + "%");
+		
+		return new ArrayList<Cliente>(daoQueries.executeNamedQuery("buscarClientesPorNombre", Boolean.TRUE));
+	}
+
+	/* (non-Javadoc)
+	 * @see net.bounceme.chronos.comunicacion.services.ClientesService#buscarPorNombreYApellidos(java.lang.String, java.lang.String)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Cliente> buscarPorNombreYApellidos(String nombre, String apellidos) {
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("nombre", "%" + nombre + "%");
+		parameters.put("apellidos", "%" + apellidos + "%");
+		
+		return new ArrayList<Cliente>(daoQueries.executeNamedQuery("buscarClientesPorNombreYApellidos", Boolean.TRUE));
+	}
+
+	/* (non-Javadoc)
+	 * @see net.bounceme.chronos.comunicacion.services.ClientesService#buscarPorDNI(java.lang.String)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Cliente> buscarPorDNI(String dni) {
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("dni", dni);
+		
+		return new ArrayList<Cliente>(daoQueries.executeNamedQuery("buscarClientesPorDNI", Boolean.TRUE));
 	}
 
 }

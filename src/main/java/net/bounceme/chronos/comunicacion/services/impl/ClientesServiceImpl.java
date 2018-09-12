@@ -167,7 +167,7 @@ public class ClientesServiceImpl implements ClientesService {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("nombre", "%" + nombre + "%");
 		
-		return new ArrayList<Cliente>(daoQueries.executeNamedQuery("buscarClientesPorNombre", Boolean.TRUE));
+		return new ArrayList<Cliente>(daoQueries.executeNamedQuery("buscarClientesPorNombre", parameters, Boolean.TRUE));
 	}
 
 	/* (non-Javadoc)

@@ -58,4 +58,23 @@ public interface ClientesService {
 	 * @return listado de clientes
 	 */
 	List<Cliente> listar();
+	
+	/**
+	 * @param nombre
+	 * @return
+	 */
+	List<Cliente> buscarPorNombre(String nombre);
+	
+	/**
+	 * @param nombre
+	 * @param apellidos
+	 * @return
+	 */
+	List<Cliente> buscarPorNombreYApellidos(String nombre, String apellidos);
+	
+	/**
+	 * @param dni
+	 * @return
+	 */
+	List<Cliente> buscarPorDNI(String dni);
 }

@@ -1,6 +1,8 @@
 package net.bounceme.chronos.comunicacion.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,35 @@ public class ClientesController {
 	@RequestMapping(method = RequestMethod.GET)
 	public List<Cliente> listAll() {
 		return clientesService.listar();
+	}
+	
+	/**
+	 * Crea un cliente
+	 * 
+	 * @param nombre
+	 * @param apellidos
+	 * @param dni
+	 * @throws ControllerException
+	 */
+	@CrossOrigin
+	@RequestMapping(value = "/search", method = RequestMethod.POST, consumes = "application/json")
+	@ResponseStatus(HttpStatus.CREATED)
+	public List<Cliente> buscar(@RequestBody Cliente cliente) {
+		List<Cliente> clientes = new ArrayList<>();
+		if (!Objects.isNull(cliente.getNombre()) && !Objects.isNull(cliente.getApellidos())) {
+			clientes = clientesService.buscarPorNombreYApellidos(cliente.getNombre(), cliente.getApellidos());
+		}
+		else {
+			if (!Objects.isNull(cliente.getNombre())) {
+				clientes = clientesService.buscarPorNombre(cliente.getNombre());
+			}
+			
+			if (!Objects.isNull(cliente.getDni())) {
+				clientes = clientesService.buscarPorDNI(cliente.getDni());
+			}
+		}
+	
+		return clientes;
 	}
 
 	/**

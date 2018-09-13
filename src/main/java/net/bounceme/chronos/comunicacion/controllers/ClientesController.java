@@ -70,6 +70,10 @@ public class ClientesController {
 				clientes = clientesService.buscarPorNombre(cliente.getNombre());
 			}
 			
+			if (!Objects.isNull(cliente.getApellidos())) {
+				clientes = clientesService.buscarPorApellidos(cliente.getApellidos());
+			}
+			
 			if (!Objects.isNull(cliente.getDni())) {
 				clientes = clientesService.buscarPorDNI(cliente.getDni());
 			}

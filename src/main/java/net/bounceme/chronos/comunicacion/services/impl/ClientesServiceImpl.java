@@ -195,4 +195,13 @@ public class ClientesServiceImpl implements ClientesService {
 		return new ArrayList<Cliente>(daoQueries.executeNamedQuery("buscarClientesPorDNI", parameters, Boolean.TRUE));
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Cliente> buscarPorApellidos(String apellidos) {
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("apellidos", "%" + apellidos + "%");
+		
+		return new ArrayList<Cliente>(daoQueries.executeNamedQuery("buscarClientesPorApellidos", parameters, Boolean.TRUE));
+	}
+
 }

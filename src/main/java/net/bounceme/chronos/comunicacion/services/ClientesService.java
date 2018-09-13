@@ -66,6 +66,12 @@ public interface ClientesService {
 	List<Cliente> buscarPorNombre(String nombre);
 	
 	/**
+	 * @param apellidos
+	 * @return
+	 */
+	List<Cliente> buscarPorApellidos(String apellidos);
+	
+	/**
 	 * @param nombre
 	 * @param apellidos
 	 * @return

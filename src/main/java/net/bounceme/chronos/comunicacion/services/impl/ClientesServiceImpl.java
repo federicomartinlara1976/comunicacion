@@ -140,7 +140,7 @@ public class ClientesServiceImpl implements ClientesService {
 				avisosRepository.updateObject(aviso);
 			}
 
-			clientesRepository.removeObject(id);
+			clientesRepository.removeObject(cliente);
 		} catch (Exception e) {
 			log.error(e);
 			throw new ServiceException(e);

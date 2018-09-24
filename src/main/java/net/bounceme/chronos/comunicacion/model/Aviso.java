@@ -58,6 +58,14 @@ public class Aviso implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="idCliente", nullable = true)
 	private Cliente cliente;
+
+	/**
+	 * Esta es la direccion del cliente para el cual se genera este aviso
+	 */
+	@JsonIgnore
+	@ManyToOne
+	@JoinColumn(name="idDireccion", nullable = true)
+	private DireccionCliente direccionCliente;
 	
 	/**
 	 * Todas las notificaciones de este aviso. Si un medio fallase,
@@ -139,6 +147,20 @@ public class Aviso implements Serializable {
 	}
 
 	/**
+	 * @return the direccionCliente
+	 */
+	public DireccionCliente getDireccionCliente() {
+		return direccionCliente;
+	}
+
+	/**
+	 * @param direccionCliente the direccionCliente to set
+	 */
+	public void setDireccionCliente(DireccionCliente direccionCliente) {
+		this.direccionCliente = direccionCliente;
+	}
+
+	/**
 	 * @return the notificaciones
 	 */
 	public List<Notificacion> getNotificaciones() {
@@ -169,6 +191,7 @@ public class Aviso implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((cliente == null) ? 0 : cliente.hashCode());
+        result = prime * result + ((direccionCliente == null) ? 0 : direccionCliente.hashCode());
         result = prime * result + ((estaNotificado == null) ? 0 : estaNotificado.hashCode());
         result = prime * result + ((fechaInicioObra == null) ? 0 : fechaInicioObra.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
@@ -195,6 +218,14 @@ public class Aviso implements Serializable {
         }
         else if (!cliente.equals(other.cliente))
             return false;
+        
+        if (direccionCliente == null) {
+            if (other.direccionCliente != null)
+                return false;
+        }
+        else if (!direccionCliente.equals(other.direccionCliente))
+            return false;
+        
         if (estaNotificado == null) {
             if (other.estaNotificado != null)
                 return false;

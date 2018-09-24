@@ -1,0 +1,13 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPattern": "/tinsa/fax.*"
+    },
+    "response": {
+        "status": 500,
+        "body": "",
+        "headers": {
+            "Trace": "from=wiremock-ws"
+        }
+    }
+}

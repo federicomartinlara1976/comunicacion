@@ -26,6 +26,8 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
+
 import net.bounceme.chronos.comunicacion.data.dao.DaoPersistence;
 import net.bounceme.chronos.comunicacion.data.dao.DaoQueries;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
@@ -214,6 +216,16 @@ public class AppConfig {
 				registry.addMapping("/**");
 			}
 		};
+	}
+	
+	/**
+	 * Método que inicia el servidor wiremock
+	 * 
+	 * @return
+	 */
+	@Bean
+	public WireMockClassRule wiremock() {
+		return new WireMockClassRule(9100);
 	}
 	
 	/**

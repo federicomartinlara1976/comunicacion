@@ -1,0 +1,13 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPattern": "/tinsa/sms.*"
+    },
+    "response": {
+        "status": 500,
+        "body": "",
+        "headers": {
+            "Trace": "from=wiremock-ws"
+        }
+    }
+}

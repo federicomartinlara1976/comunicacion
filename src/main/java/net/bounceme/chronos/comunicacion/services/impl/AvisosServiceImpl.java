@@ -14,6 +14,7 @@ import net.bounceme.chronos.comunicacion.data.dao.DaoPersistence;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.Aviso;
 import net.bounceme.chronos.comunicacion.model.Cliente;
+import net.bounceme.chronos.comunicacion.model.DireccionCliente;
 import net.bounceme.chronos.comunicacion.model.Notificacion;
 import net.bounceme.chronos.comunicacion.services.AvisosService;
 
@@ -33,6 +34,10 @@ public class AvisosServiceImpl implements AvisosService {
 	private DaoPersistence<Cliente> clientesRepository;
 
 	@Autowired
+	@Qualifier(AppConfig.DIRECCIONES_CLIENTE_REPOSITORY)
+	private DaoPersistence<DireccionCliente> direccionClienteRepository;
+	
+	@Autowired
 	@Qualifier(AppConfig.AVISOS_REPOSITORY)
 	private DaoPersistence<Aviso> avisosRepository;
 
@@ -49,12 +54,14 @@ public class AvisosServiceImpl implements AvisosService {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public Aviso nuevoAviso(Long idCliente, Date fechaInicioObra, String mensaje) throws ServiceException {
+	public Aviso nuevoAviso(Long idCliente, Long idDireccion, Date fechaInicioObra, String mensaje) throws ServiceException {
 		try {
 			Cliente cliente = clientesRepository.getObject(idCliente);
-
+			DireccionCliente direccionCliente = direccionClienteRepository.getObject(idDireccion);
+			
 			Aviso aviso = new Aviso();
 			aviso.setCliente(cliente);
+			aviso.setDireccionCliente(direccionCliente);
 			aviso.setFechaInicioObra(fechaInicioObra);
 			aviso.setMensaje(mensaje);
 			aviso.setEstaNotificado(Boolean.FALSE);

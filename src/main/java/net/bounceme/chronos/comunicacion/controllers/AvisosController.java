@@ -48,7 +48,7 @@ public class AvisosController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public Aviso nuevo(@RequestBody @Valid ParamsAviso aviso) throws ControllerException {
 		try {
-			return avisosService.nuevoAviso(aviso.getIdCliente(), aviso.getFechaInicioObra(), aviso.getMensaje());
+			return avisosService.nuevoAviso(aviso.getIdCliente(), aviso.getIdDireccion(), aviso.getFechaInicioObra(), aviso.getMensaje());
 		} catch (ServiceException e) {
 			log.error(e);
 			throw new ControllerException(e);

@@ -20,12 +20,13 @@ public interface AvisosService {
      * para el aviso.
      *  
      * @param idCliente el identificador del cliente
+     * @param idDireccion el identificador de la direccion donde se hará la obra
      * @param fechaInicioObra
      * @param mensaje
      * @return el aviso creado
      * @throws ServiceException 
      */
-    Aviso nuevoAviso(Long idCliente, Date fechaInicioObra, String mensaje) throws ServiceException;
+    Aviso nuevoAviso(Long idCliente, Long idDireccion, Date fechaInicioObra, String mensaje) throws ServiceException;
     
     /**
      * Anula un aviso si no tiene notificaciones. Si tuviera notificaciones

@@ -7,7 +7,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 public class ParamsAviso {
 
+	@NotBlank
     private Long idCliente;
+    
+	@NotBlank
+    private Long idDireccion;
     
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date fechaInicioObra;
@@ -30,6 +34,20 @@ public class ParamsAviso {
     }
 
     /**
+	 * @return the idDireccion
+	 */
+	public Long getIdDireccion() {
+		return idDireccion;
+	}
+
+	/**
+	 * @param idDireccion the idDireccion to set
+	 */
+	public void setIdDireccion(Long idDireccion) {
+		this.idDireccion = idDireccion;
+	}
+
+	/**
      * @return the fechaInicioObra
      */
     public Date getFechaInicioObra() {

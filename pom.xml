@@ -6,7 +6,7 @@
 
 	<groupId>net.bounceme.chronos</groupId>
 	<artifactId>comunicacion</artifactId>
-	<version>1.1.0-RELEASE</version>
+	<version>1.1.1-RELEASE</version>
 	<packaging>jar</packaging>
 
 	<name>Comunicacion</name>
@@ -68,7 +68,6 @@
 			<groupId>com.github.tomakehurst</groupId>
 			<artifactId>wiremock</artifactId>
 			<version>2.18.0</version>
-			<scope>test</scope>
 		</dependency>
 
 		<dependency>

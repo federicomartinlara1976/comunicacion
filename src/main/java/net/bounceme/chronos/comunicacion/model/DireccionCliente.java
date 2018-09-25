@@ -213,9 +213,9 @@ public class DireccionCliente implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "DireccionCliente [id=" + id + ", cliente=" + cliente + ", direccion=" + direccion + ", numero=" + numero
-				+ ", piso=" + piso + ", escalera=" + escalera + ", puerta=" + puerta + ", localidad=" + localidad
-				+ ", provincia=" + provincia + ", codigoPostal=" + codigoPostal + "]";
+		return "Direccion: " + direccion + ", nº " + numero
+				+ ", " + piso + ", " + escalera + ", " + puerta + "\n" + localidad
+				+ "\n" + codigoPostal + " " + provincia ;
 	}
 
 	/* (non-Javadoc)

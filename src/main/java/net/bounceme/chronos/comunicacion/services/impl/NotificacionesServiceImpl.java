@@ -147,9 +147,7 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 			Emisor emisor = emisorFactory.getEmisor(tipo);
 
 			// Construye el mensaje a enviar
-			StringBuilder mensaje = new StringBuilder();
-			mensaje.append(aviso.getMensaje());
-			mensaje.append(" (" + aviso.getFechaInicioObra() + ")");
+			StringBuilder mensaje = buildMensaje(aviso);
 
 			// Envía el mensaje a través del medio seleccionado
 			notificacion.setFechaHoraEnvio(new Date());
@@ -187,6 +185,14 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 			log.error(e);
 			throw new ServiceException(e);
 		}
+	}
+
+	private StringBuilder buildMensaje(Aviso aviso) {
+		StringBuilder mensaje = new StringBuilder();
+		mensaje.append(aviso.getMensaje());
+		mensaje.append(" (" + aviso.getFechaInicioObra() + ")\n");
+		mensaje.append(aviso.getDireccionCliente().toString());
+		return mensaje;
 	}
 	
 	/**

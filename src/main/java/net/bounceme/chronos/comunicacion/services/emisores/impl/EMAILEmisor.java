@@ -4,9 +4,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import net.bounceme.chronos.comunicacion.services.helpers.EmailHelper;
 import net.bounceme.chronos.comunicacion.utils.Constantes;
 import net.bounceme.chronos.comunicacion.utils.Constantes.ResultadoEnvio;
-import net.bounceme.chronos.comunicacion.utils.EmailHelper;
 
 /**
  * Emisor para enviar mensajes vía email

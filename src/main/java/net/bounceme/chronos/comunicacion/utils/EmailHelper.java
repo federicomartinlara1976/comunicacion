@@ -10,7 +10,20 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-public class EmailUtil {
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
+import net.bounceme.chronos.comunicacion.config.AppConfig;
+
+@Component
+public class EmailHelper {
+	
+	@Autowired
+	@Qualifier(AppConfig.TLS_MAIL_SESSION)
+	private Session session;	
+
+	public EmailHelper() {}
 
 	/**
 	 * Utility method to send simple HTML email
@@ -22,7 +35,7 @@ public class EmailUtil {
 	 * @throws MessagingException 
 	 * @throws UnsupportedEncodingException 
 	 */
-	public static void sendEmail(Session session, String toEmail, String subject, String body) throws MessagingException, UnsupportedEncodingException {
+	public void sendEmail(String toEmail, String subject, String body) throws MessagingException, UnsupportedEncodingException {
 		MimeMessage msg = new MimeMessage(session);
 		// set message headers
 		msg.addHeader("Content-type", "text/HTML; charset=UTF-8");

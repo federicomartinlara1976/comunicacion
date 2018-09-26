@@ -4,8 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import net.bounceme.chronos.comunicacion.services.emisores.Emisor;
+import net.bounceme.chronos.comunicacion.services.helpers.HttpHelper;
 import net.bounceme.chronos.comunicacion.utils.Constantes.ResultadoEnvio;
 
 /**
@@ -15,15 +18,19 @@ import net.bounceme.chronos.comunicacion.utils.Constantes.ResultadoEnvio;
  *
  */
 @Component("FAX_Emisor")
-public class FAXEmisor extends EmisorBase {
+public class FAXEmisor implements Emisor {
 	
 	private static final Logger log = Logger.getLogger(FAXEmisor.class);
 	
 	private static final String URL = "http://localhost:9100/tinsa/fax";
 
-    public FAXEmisor() {
-    	super();
-    }
+	@Autowired
+	private HttpHelper helper;
+	
+    /**
+     * 
+     */
+    public FAXEmisor() {}
 
     /* (non-Javadoc)
 	 * @see net.bounceme.chronos.comunicacion.services.emisores.Emisor#enviar(java.lang.String, java.lang.String)
@@ -35,7 +42,7 @@ public class FAXEmisor extends EmisorBase {
 			parameters.put("phone", numero);
 			parameters.put("message", mensaje.replace("\\s+", "_"));
 			
-			String result = get(URL, parameters);
+			String result = helper.get(URL, parameters);
 			log.info(result);
 			
 			return ResultadoEnvio.OK;

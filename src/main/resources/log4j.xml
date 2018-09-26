@@ -32,6 +32,9 @@
 	<logger name="net.bounceme.chronos.comunicacion.services.impl">
 		<level value="ERROR" />
 	</logger>
+	<logger name="net.bounceme.chronos.comunicacion.services.helpers">
+		<level value="ERROR" />
+	</logger>
 	<logger name="net.bounceme.chronos.comunicacion.services.emisores.impl">
 		<level value="ERROR" />
 	</logger>

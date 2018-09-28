@@ -13,7 +13,7 @@
 	<!-- Appender para la salida de los mensajes de error -->	
 	<appender name="allLog" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="DatePattern" value=".yyyy-MM-dd"/>
-		<param name="File" value="comunicacion.log"/>
+		<param name="File" value="./comunicacion.log"/>
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d|%p|%c{1}.%M:%L|%m%n"/>
 		</layout>

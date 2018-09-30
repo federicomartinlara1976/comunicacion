@@ -210,6 +210,7 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 		direccionCliente.setEscalera(escalera);
 		direccionCliente.setPiso(piso);
 		direccionCliente.setPuerta(puerta);
+		direccionCliente.setLocalidad(localidad);
 		direccionCliente.setProvincia(provincia);
 		direccionCliente.setCodigoPostal(codigoPostal);
 	}

@@ -73,10 +73,9 @@ public class DireccionesClienteController {
 	 * @return medio de comunicación
 	 */
 	@CrossOrigin
-	@RequestMapping(value = "/get", method = RequestMethod.GET)
-	public ResponseEntity<DireccionCliente> get(@RequestParam(value = "idCliente") Long idCliente,
-			@RequestParam(value = "idDireccion") Long idDireccion) {
-		DireccionCliente direccionCliente = direccionesClienteService.get(idCliente, idDireccion);
+	@RequestMapping(value = "/get", method = RequestMethod.POST)
+	public ResponseEntity<DireccionCliente> get(@RequestBody ParamsDireccion direccion) {
+		DireccionCliente direccionCliente = direccionesClienteService.get(direccion.getIdCliente(), direccion.getIdDireccion());
 		HttpStatus status = direccionCliente != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
 		return new ResponseEntity<DireccionCliente>(direccionCliente, status);
 	}

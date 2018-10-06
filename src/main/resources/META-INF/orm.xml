@@ -108,8 +108,7 @@
 			<![CDATA[
     		select d
     		from DireccionCliente d
-    		where d.cliente = :cliente
-    		and d.id = :idDireccion	
+    		where d.id = :idDireccion	
     		 ]]>
 		</query>
     </named-query>

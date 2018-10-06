@@ -84,10 +84,8 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 	 * @return
 	 */
 	@Override
-	public DireccionCliente get(Long idCliente, Long idDireccion) {
-		Cliente cliente = clientesRepository.getObject(idCliente);
-		
-		return getDireccionCliente(cliente, idDireccion);
+	public DireccionCliente get(Long idDireccion) {
+		return getDireccionCliente(idDireccion);
 	}
 
 	/**
@@ -128,13 +126,11 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public void borrar(Long idCliente, Long idDireccion) throws ServiceException {
+	public void borrar(Long idDireccion) throws ServiceException {
 		try {
-			Cliente cliente = clientesRepository.getObject(idCliente);
-			
-			DireccionCliente direccion = getDireccionCliente(cliente, idDireccion);
+			DireccionCliente direccion = getDireccionCliente(idDireccion);
 
-			direccionesClienteRepository.removeObject(direccion.getId());
+			direccionesClienteRepository.removeObject(direccion);
 		} catch (Exception e) {
 			log.error(e);
 			throw new ServiceException(e);
@@ -162,9 +158,8 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private DireccionCliente getDireccionCliente(Cliente cliente, Long idDireccion) {
+	private DireccionCliente getDireccionCliente(Long idDireccion) {
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("cliente", cliente);
 		parameters.put("idDireccion", idDireccion);
 		Optional<DireccionCliente> oResult = daoQueries.executeScalarNamedQuery("direccionCliente", parameters,
 				Boolean.TRUE);
@@ -186,7 +181,7 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 			direccionCliente.setCliente(cliente);
 		}
 		else {
-			direccionCliente = getDireccionCliente(cliente, idDireccion);
+			direccionCliente = getDireccionCliente(idDireccion);
 		}
 		
 		return direccionCliente;

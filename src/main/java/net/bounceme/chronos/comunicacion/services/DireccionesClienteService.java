@@ -30,7 +30,7 @@ public interface DireccionesClienteService {
 	 * @param idDireccion
 	 * @return
 	 */
-	DireccionCliente get(Long idCliente, Long idDireccion);
+	DireccionCliente get(Long idDireccion);
 
 	/**
 	 * @param idCliente
@@ -49,11 +49,10 @@ public interface DireccionesClienteService {
 			String puerta, String localidad, String provincia, String codigoPostal) throws ServiceException;
 
 	/**
-	 * @param idCliente
 	 * @param idDireccion
 	 * @throws ServiceException
 	 */
-	void borrar(Long idCliente, Long idDireccion) throws ServiceException;
+	void borrar(Long idDireccion) throws ServiceException;
 
 	/**
 	 * @param idCliente

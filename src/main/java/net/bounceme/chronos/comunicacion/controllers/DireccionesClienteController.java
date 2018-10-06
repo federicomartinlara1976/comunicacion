@@ -37,20 +37,18 @@ public class DireccionesClienteController {
 	private DireccionesClienteService direccionesClienteService;
 
 	/**
-	 * Lista los medios para comunicarse con un cliente
-	 * 
 	 * @param idCliente
-	 * @return listado de medios
+	 * @return
 	 */
 	@CrossOrigin
 	@RequestMapping(method = RequestMethod.GET)
 	public List<DireccionCliente> listAll(@RequestParam(value = "idCliente") Long idCliente) {
 		return direccionesClienteService.listar(idCliente);
 	}
-
+	
 	/**
-	 * @param medio parámetros de entrada [idCliente, idTipo, valor]
-	 * @return medio creado
+	 * @param direccion
+	 * @return
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
@@ -65,25 +63,22 @@ public class DireccionesClienteController {
 		}
 	}
 
+	
 	/**
-	 * Obtiene un medio de comunicación de un cliente
-	 * 
-	 * @param idCliente
-	 * @param idTipo
-	 * @return medio de comunicación
+	 * @param direccion
+	 * @return
 	 */
 	@CrossOrigin
 	@RequestMapping(value = "/get", method = RequestMethod.POST)
 	public ResponseEntity<DireccionCliente> get(@RequestBody ParamsDireccion direccion) {
-		DireccionCliente direccionCliente = direccionesClienteService.get(direccion.getIdCliente(), direccion.getIdDireccion());
+		DireccionCliente direccionCliente = direccionesClienteService.get(direccion.getIdDireccion());
 		HttpStatus status = direccionCliente != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
 		return new ResponseEntity<DireccionCliente>(direccionCliente, status);
 	}
 
+	
 	/**
-	 * Actualiza un medio de comunicación de un cliente
-	 * 
-	 * @param medio parámetros de entrada [idCliente, idTipo, valor]
+	 * @param direccion
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
@@ -98,16 +93,14 @@ public class DireccionesClienteController {
 	}
 
 	/**
-	 * Borra un medio de comunicación de un cliente
-	 * 
-	 * @param medio parámetros de entrada [idCliente, idTipo]
+	 * @param id
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-	public void borrar(@RequestBody ParamsDireccion direccion) throws ControllerException {
+	public void borrar(@RequestParam(value = "id") Long id) throws ControllerException {
 		try {
-			direccionesClienteService.borrar(direccion.getIdCliente(), direccion.getIdDireccion());
+			direccionesClienteService.borrar(id);
 		} catch (ServiceException e) {
 			log.error(e);
 			throw new ControllerException(e);

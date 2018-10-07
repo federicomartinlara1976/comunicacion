@@ -73,10 +73,9 @@ public class MediosComunicacionClienteController {
 	 * @return medio de comunicación
 	 */
 	@CrossOrigin
-	@RequestMapping(value = "/get", method = RequestMethod.GET)
-	public ResponseEntity<MedioComunicacionCliente> get(@RequestParam(value = "idCliente") Long idCliente,
-			@RequestParam(value = "idTipo") Long idTipo) {
-		MedioComunicacionCliente medioComunicacionCliente = mediosComunicacionClienteService.get(idCliente, idTipo);
+	@RequestMapping(value = "/get", method = RequestMethod.POST)
+	public ResponseEntity<MedioComunicacionCliente> get(@RequestBody ParamsMedioComunicacion medio) {
+		MedioComunicacionCliente medioComunicacionCliente = mediosComunicacionClienteService.get(medio.getIdCliente(), medio.getIdTipo());
 		HttpStatus status = medioComunicacionCliente != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
 		return new ResponseEntity<MedioComunicacionCliente>(medioComunicacionCliente, status);
 	}

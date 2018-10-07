@@ -133,7 +133,7 @@ public class MediosComunicacionClienteServiceImpl implements MediosComunicacionC
 			
 			MedioComunicacionCliente medio = getMedioComunicacion(cliente, tipo);
 
-			mediosComunicacionClienteRepository.removeObject(medio.getId());
+			mediosComunicacionClienteRepository.removeObject(medio);
 		} catch (Exception e) {
 			log.error(e);
 			throw new ServiceException(e);

@@ -105,9 +105,9 @@ public class MediosComunicacionClienteController {
 	 */
 	@CrossOrigin
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-	public void borrar(@RequestBody ParamsMedioComunicacion medio) throws ControllerException {
+	public void borrar(@RequestParam(value = "idCliente") Long idCliente, @RequestParam(value = "idTipo") Long idTipo) throws ControllerException {
 		try {
-			mediosComunicacionClienteService.borrar(medio.getIdCliente(), medio.getIdTipo());
+			mediosComunicacionClienteService.borrar(idCliente, idTipo);
 		} catch (ServiceException e) {
 			log.error(e);
 			throw new ControllerException(e);

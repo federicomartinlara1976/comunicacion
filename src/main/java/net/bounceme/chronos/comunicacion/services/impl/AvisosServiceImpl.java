@@ -1,6 +1,8 @@
 package net.bounceme.chronos.comunicacion.services.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import net.bounceme.chronos.comunicacion.config.AppConfig;
 import net.bounceme.chronos.comunicacion.data.dao.DaoPersistence;
+import net.bounceme.chronos.comunicacion.data.dao.DaoQueries;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.Aviso;
 import net.bounceme.chronos.comunicacion.model.Cliente;
@@ -44,6 +47,10 @@ public class AvisosServiceImpl implements AvisosService {
 	@Autowired
 	@Qualifier(AppConfig.NOTIFICACIONES_REPOSITORY)
 	private DaoPersistence<Notificacion> notificacionesRepository;
+	
+	@Autowired
+	@Qualifier(DaoQueries.NAME)
+	private DaoQueries daoQueries;
 
 	/*
 	 * (non-Javadoc)
@@ -109,5 +116,11 @@ public class AvisosServiceImpl implements AvisosService {
 	@Override
 	public Aviso get(Long id) {
 		return avisosRepository.getObject(id);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Aviso> listar() {
+		return new ArrayList<Aviso>(daoQueries.executeNamedQuery("avisos", Boolean.TRUE));
 	}
 }

@@ -184,5 +184,15 @@
     		 ]]>
 		</query>
     </named-query>
+    
+    <!-- Consulta de todos los clientes -->
+    <named-query name="avisos">
+    	<query>
+			<![CDATA[
+    		select a
+    		from Aviso a	
+    		 ]]>
+		</query>
+    </named-query>
 
 </entity-mappings>

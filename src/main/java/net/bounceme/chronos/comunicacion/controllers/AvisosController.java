@@ -1,5 +1,7 @@
 package net.bounceme.chronos.comunicacion.controllers;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
@@ -19,6 +21,7 @@ import net.bounceme.chronos.comunicacion.controllers.params.ParamsAviso;
 import net.bounceme.chronos.comunicacion.exceptions.ControllerException;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.Aviso;
+import net.bounceme.chronos.comunicacion.model.Cliente;
 import net.bounceme.chronos.comunicacion.services.AvisosService;
 
 /**
@@ -35,6 +38,12 @@ public class AvisosController {
 	@Autowired
 	@Qualifier(AvisosService.NAME)
 	private AvisosService avisosService;
+	
+	@CrossOrigin
+	@RequestMapping(method = RequestMethod.GET)
+	public List<Aviso> listAll() {
+		return avisosService.listar();
+	}
 
 	/**
 	 * Crea un nuevo aviso

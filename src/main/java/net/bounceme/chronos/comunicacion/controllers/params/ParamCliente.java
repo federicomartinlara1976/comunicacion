@@ -1,10 +1,10 @@
-package net.bounceme.chronos.comunicacion.services.dto;
+package net.bounceme.chronos.comunicacion.controllers.params;
 
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-public class ClienteDTO implements Serializable {
+public class ParamCliente implements Serializable {
 
 	/**
      * 
@@ -28,10 +28,10 @@ public class ClienteDTO implements Serializable {
 	/**
 	 * 
 	 */
-	public ClienteDTO() {
+	public ParamCliente() {
 	}
 
-	public ClienteDTO(String nombre, String apellidos, String dni) {
+	public ParamCliente(String nombre, String apellidos, String dni) {
 		this.nombre = nombre;
 		this.apellidos = apellidos;
 		this.dni = dni;
@@ -171,7 +171,7 @@ public class ClienteDTO implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ClienteDTO other = (ClienteDTO) obj;
+		ParamCliente other = (ParamCliente) obj;
 		if (apellidos == null) {
 			if (other.apellidos != null)
 				return false;

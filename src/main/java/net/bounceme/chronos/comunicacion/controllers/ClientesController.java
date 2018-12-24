@@ -21,11 +21,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.bounceme.chronos.comunicacion.controllers.params.ParamCliente;
 import net.bounceme.chronos.comunicacion.exceptions.ControllerException;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.Cliente;
 import net.bounceme.chronos.comunicacion.services.ClientesService;
-import net.bounceme.chronos.comunicacion.services.dto.ClienteDTO;
 
 /**
  * Controlador para la gestión de clientes
@@ -67,7 +67,7 @@ public class ClientesController {
 	@CrossOrigin
 	@GetMapping(value = "/search", consumes = "application/json")
 	@ResponseStatus(HttpStatus.CREATED)
-	public List<Cliente> buscar(@RequestBody ClienteDTO cliente) {
+	public List<Cliente> buscar(@RequestBody ParamCliente cliente) {
 		List<Cliente> clientes = new ArrayList<>();
 		if (!Objects.isNull(cliente.getNombre()) && !Objects.isNull(cliente.getApellidos())) {
 			clientes = clientesService.buscarPorNombreYApellidos(cliente.getNombre(), cliente.getApellidos());
@@ -100,7 +100,7 @@ public class ClientesController {
 	@CrossOrigin
 	@PostMapping(value = "/new", consumes = "application/json")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cliente nuevo(@RequestBody ClienteDTO cliente) throws ControllerException {
+	public Cliente nuevo(@RequestBody ParamCliente cliente) throws ControllerException {
 		try {
 			return clientesService.nuevo(cliente.getNombre(), cliente.getApellidos(), cliente.getDni());
 		} catch (ServiceException e) {
@@ -135,7 +135,7 @@ public class ClientesController {
 	@CrossOrigin
 	@PutMapping(value = "/{id}/update", consumes = "application/json")
 	@ResponseStatus(HttpStatus.OK)
-	public void actualizar(@PathVariable Long id, @RequestBody ClienteDTO cliente) throws ControllerException {
+	public void actualizar(@PathVariable Long id, @RequestBody ParamCliente cliente) throws ControllerException {
 		try {
 			clientesService.actualizar(id, cliente.getNombre(), cliente.getApellidos(), cliente.getDni());
 		} catch (ServiceException e) {

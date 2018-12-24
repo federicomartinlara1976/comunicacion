@@ -3,9 +3,13 @@ package net.bounceme.chronos.comunicacion.services.emisores.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import net.bounceme.chronos.comunicacion.services.emisores.Emisor;
+import net.bounceme.chronos.comunicacion.services.helpers.HttpHelper;
 import net.bounceme.chronos.comunicacion.utils.Constantes.ResultadoEnvio;
 
 /**
@@ -15,15 +19,14 @@ import net.bounceme.chronos.comunicacion.utils.Constantes.ResultadoEnvio;
  *
  */
 @Component("FAX_Emisor")
-public class FAXEmisor extends EmisorBase {
+public class FAXEmisor implements Emisor {
 	
-	private static final Logger log = Logger.getLogger(FAXEmisor.class);
+	private static final Logger log = LoggerFactory.getLogger(FAXEmisor.class);
 	
 	private static final String URL = "http://localhost:9100/tinsa/fax";
 
-    public FAXEmisor() {
-    	super();
-    }
+	@Autowired
+	private HttpHelper helper;
 
     /* (non-Javadoc)
 	 * @see net.bounceme.chronos.comunicacion.services.emisores.Emisor#enviar(java.lang.String, java.lang.String)
@@ -31,16 +34,16 @@ public class FAXEmisor extends EmisorBase {
 	@Override
 	public ResultadoEnvio enviar(String mensaje, String numero) {
 		try {
-			Map<String, String> parameters = new HashMap<String, String>();
+			Map<String, String> parameters = new HashMap<>();
 			parameters.put("phone", numero);
 			parameters.put("message", mensaje.replace("\\s+", "_"));
 			
-			String result = get(URL, parameters);
+			String result = helper.get(URL, parameters);
 			log.info(result);
 			
 			return ResultadoEnvio.OK;
 		} catch (Exception e) {
-			log.error(e);
+			log.error("ERROR: ", e);
 			return ResultadoEnvio.FALLO;
 		}
 	}

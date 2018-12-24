@@ -1,17 +1,20 @@
 package net.bounceme.chronos.comunicacion.controllers;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,11 +33,17 @@ import net.bounceme.chronos.comunicacion.services.AvisosService;
 @RestController
 @RequestMapping("/avisos")
 public class AvisosController {
-	Logger log = Logger.getLogger(AvisosController.class);
+	Logger log = LoggerFactory.getLogger(AvisosController.class);
 
 	@Autowired
 	@Qualifier(AvisosService.NAME)
 	private AvisosService avisosService;
+	
+	@CrossOrigin
+	@GetMapping
+	public List<Aviso> listAll() {
+		return avisosService.listar();
+	}
 
 	/**
 	 * Crea un nuevo aviso
@@ -44,13 +53,13 @@ public class AvisosController {
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
-	@RequestMapping(value = "/new", method = RequestMethod.POST)
+	@GetMapping(value = "/new")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Aviso nuevo(@RequestBody @Valid ParamsAviso aviso) throws ControllerException {
 		try {
 			return avisosService.nuevoAviso(aviso.getIdCliente(), aviso.getIdDireccion(), aviso.getFechaInicioObra(), aviso.getMensaje());
 		} catch (ServiceException e) {
-			log.error(e);
+			log.error("ERROR: ", e);
 			throw new ControllerException(e);
 		}
 	}
@@ -62,11 +71,11 @@ public class AvisosController {
 	 * @return
 	 */
 	@CrossOrigin
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	@GetMapping(value = "/{id}")
 	public ResponseEntity<Aviso> get(@PathVariable Long id) {
 		Aviso aviso = avisosService.get(id);
 		HttpStatus status = aviso != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
-		return new ResponseEntity<Aviso>(aviso, status);
+		return new ResponseEntity<>(aviso, status);
 	}
 
 	/**
@@ -76,14 +85,14 @@ public class AvisosController {
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
-	@RequestMapping(value = "/{id}/delete", method = RequestMethod.DELETE)
+	@GetMapping(value = "/{id}/delete")
 	@ResponseStatus(HttpStatus.OK)
 	public void anular(@PathVariable Long id) throws ControllerException {
 		try {
 			// Si tiene notificaciones enviadas, no se podrá borrar
 			avisosService.anularAviso(id);
 		} catch (ServiceException e) {
-			log.error(e);
+			log.error("ERROR: ", e);
 			throw new ControllerException(e);
 		}
 	}

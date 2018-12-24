@@ -18,7 +18,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
 	
-	private static final Set<String> DEFAULT_PRODUCES_AND_CONSUMES = new HashSet<String>(
+	private static final Set<String> DEFAULT_PRODUCES_AND_CONSUMES = new HashSet<>(
 			Arrays.asList("application/json", "application/xml"));
 	
 	@Value("${swagger.contact.name}")

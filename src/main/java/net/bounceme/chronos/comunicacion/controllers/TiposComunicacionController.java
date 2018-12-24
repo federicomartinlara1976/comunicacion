@@ -2,16 +2,20 @@ package net.bounceme.chronos.comunicacion.controllers;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,7 +33,9 @@ import net.bounceme.chronos.comunicacion.services.TiposComunicacionService;
 @RestController
 @RequestMapping("/tiposComunicacion")
 public class TiposComunicacionController {
-	Logger log = Logger.getLogger(TiposComunicacionController.class);
+	private static final String ERROR = "ERROR: ";
+
+	Logger log = LoggerFactory.getLogger(TiposComunicacionController.class);
 
 	@Autowired
 	@Qualifier(TiposComunicacionService.NAME)
@@ -41,7 +47,7 @@ public class TiposComunicacionController {
 	 * @return listado
 	 */
 	@CrossOrigin
-	@RequestMapping(method = RequestMethod.GET)
+	@GetMapping
 	public List<TipoComunicacion> listAll() {
 		return tiposComunicacionService.listar();
 	}
@@ -54,13 +60,13 @@ public class TiposComunicacionController {
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
-	@RequestMapping(value = "/new", method = RequestMethod.POST)
+	@PostMapping(value = "/new")
 	@ResponseStatus(HttpStatus.CREATED)
 	public TipoComunicacion nuevo(@RequestBody TipoComunicacion tipo) throws ControllerException {
 		try {
 			return tiposComunicacionService.nuevo(tipo.getDenominacion(), tipo.getNombreClaseEmisora());
 		} catch (ServiceException e) {
-			log.error(e);
+			log.error(ERROR, e);
 			throw new ControllerException(e);
 		}
 	}
@@ -72,11 +78,11 @@ public class TiposComunicacionController {
 	 * @return el tipo
 	 */
 	@CrossOrigin
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	@GetMapping(value = "/{id}")
 	public ResponseEntity<TipoComunicacion> get(@PathVariable Long id) {
 		TipoComunicacion tipoComunicacion = tiposComunicacionService.get(id);
 		HttpStatus status = tipoComunicacion != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
-		return new ResponseEntity<TipoComunicacion>(tipoComunicacion, status);
+		return new ResponseEntity<>(tipoComunicacion, status);
 	}
 
 	/**
@@ -87,13 +93,13 @@ public class TiposComunicacionController {
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
-	@RequestMapping(value = "/{id}/update", method = RequestMethod.PUT)
+	@PutMapping(value = "/{id}/update")
 	@ResponseStatus(HttpStatus.OK)
 	public void actualizar(@PathVariable Long id, @RequestBody TipoComunicacion tipo) throws ControllerException {
 		try {
 			tiposComunicacionService.actualizar(id, tipo.getDenominacion(), tipo.getNombreClaseEmisora());
 		} catch (ServiceException e) {
-			log.error(e);
+			log.error(ERROR, e);
 			throw new ControllerException(e);
 		}
 	}
@@ -105,13 +111,13 @@ public class TiposComunicacionController {
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
-	@RequestMapping(value = "/{id}/delete", method = RequestMethod.DELETE)
+	@DeleteMapping(value = "/{id}/delete")
 	@ResponseStatus(HttpStatus.OK)
 	public void borrar(@PathVariable Long id) throws ControllerException {
 		try {
 			tiposComunicacionService.borrar(id);
 		} catch (ServiceException e) {
-			log.error(e);
+			log.error(ERROR, e);
 			throw new ControllerException(e);
 		}
 	}

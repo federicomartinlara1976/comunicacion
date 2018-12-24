@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,9 @@ import net.bounceme.chronos.comunicacion.services.DireccionesClienteService;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class DireccionesClienteServiceImpl implements DireccionesClienteService {
 
-	private static final Logger log = Logger.getLogger(DireccionesClienteServiceImpl.class);
+	private static final String ERROR = "ERROR: ";
+
+    private static final Logger log = LoggerFactory.getLogger(DireccionesClienteServiceImpl.class);
 
 	@Autowired
 	@Qualifier(AppConfig.DIRECCIONES_CLIENTE_REPOSITORY)
@@ -73,7 +76,7 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 			
 			return direccionesClienteRepository.saveObject(direccionCliente);
 		} catch (Exception e) {
-			log.error(e);
+			log.error(ERROR, e);
 			throw new ServiceException(e);
 		}
 	}
@@ -84,10 +87,8 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 	 * @return
 	 */
 	@Override
-	public DireccionCliente get(Long idCliente, Long idDireccion) {
-		Cliente cliente = clientesRepository.getObject(idCliente);
-		
-		return getDireccionCliente(cliente, idDireccion);
+	public DireccionCliente get(Long idDireccion) {
+		return getDireccionCliente(idDireccion);
 	}
 
 	/**
@@ -116,7 +117,7 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 
 			direccionesClienteRepository.updateObject(direccionCliente);
 		} catch (Exception e) {
-			log.error(e);
+			log.error(ERROR, e);
 			throw new ServiceException(e);
 		}
 	}
@@ -128,15 +129,13 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public void borrar(Long idCliente, Long idDireccion) throws ServiceException {
+	public void borrar(Long idDireccion) throws ServiceException {
 		try {
-			Cliente cliente = clientesRepository.getObject(idCliente);
-			
-			DireccionCliente direccion = getDireccionCliente(cliente, idDireccion);
+			DireccionCliente direccion = getDireccionCliente(idDireccion);
 
-			direccionesClienteRepository.removeObject(direccion.getId());
+			direccionesClienteRepository.removeObject(direccion);
 		} catch (Exception e) {
-			log.error(e);
+			log.error(ERROR, e);
 			throw new ServiceException(e);
 		}
 	}
@@ -150,9 +149,9 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 	public List<DireccionCliente> listar(Long idCliente) {
 		Cliente cliente = clientesRepository.getObject(idCliente);
 
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("cliente", cliente);
-		return new ArrayList<DireccionCliente>(
+		return new ArrayList<>(
 				daoQueries.executeNamedQuery("direccionesCliente", parameters, Boolean.TRUE));
 	}
 
@@ -162,9 +161,8 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private DireccionCliente getDireccionCliente(Cliente cliente, Long idDireccion) {
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("cliente", cliente);
+	private DireccionCliente getDireccionCliente(Long idDireccion) {
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("idDireccion", idDireccion);
 		Optional<DireccionCliente> oResult = daoQueries.executeScalarNamedQuery("direccionCliente", parameters,
 				Boolean.TRUE);
@@ -186,7 +184,7 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 			direccionCliente.setCliente(cliente);
 		}
 		else {
-			direccionCliente = getDireccionCliente(cliente, idDireccion);
+			direccionCliente = getDireccionCliente(idDireccion);
 		}
 		
 		return direccionCliente;
@@ -210,6 +208,7 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 		direccionCliente.setEscalera(escalera);
 		direccionCliente.setPiso(piso);
 		direccionCliente.setPuerta(puerta);
+		direccionCliente.setLocalidad(localidad);
 		direccionCliente.setProvincia(provincia);
 		direccionCliente.setCodigoPostal(codigoPostal);
 	}

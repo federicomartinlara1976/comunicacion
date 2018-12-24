@@ -7,7 +7,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,9 @@ import net.bounceme.chronos.comunicacion.services.TiposComunicacionService;
 @Service(TiposComunicacionService.NAME)
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class TiposComunicacionServiceImpl implements TiposComunicacionService {
-	private static final Logger log = Logger.getLogger(TiposComunicacionServiceImpl.class);
+	private static final String ERROR = "ERROR: ";
+
+    private static final Logger log = LoggerFactory.getLogger(TiposComunicacionServiceImpl.class);
 
 	@Autowired
 	@Qualifier(AppConfig.TIPOS_COMUNICACION_REPOSITORY)
@@ -58,7 +61,7 @@ public class TiposComunicacionServiceImpl implements TiposComunicacionService {
 
 			return tiposComunicacionRepository.saveObject(tipo);
 		} catch (Exception e) {
-			log.error(e);
+			log.error(ERROR, e);
 			throw new ServiceException(e);
 		}
 	}
@@ -77,7 +80,7 @@ public class TiposComunicacionServiceImpl implements TiposComunicacionService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public TipoComunicacion get(String name) {
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("denominacion", name);
 		Optional<TipoComunicacion> oResult = daoQueries.executeScalarNamedQuery("tipoComunicacion", parameters, Boolean.TRUE);
 		
@@ -106,7 +109,7 @@ public class TiposComunicacionServiceImpl implements TiposComunicacionService {
 
 			tiposComunicacionRepository.updateObject(tipoComunicacion);
 		} catch (Exception e) {
-			log.error(e);
+			log.error(ERROR, e);
 			throw new ServiceException(e);
 		}
 	}
@@ -123,7 +126,7 @@ public class TiposComunicacionServiceImpl implements TiposComunicacionService {
 		try {
 			tiposComunicacionRepository.removeObject(id);
 		} catch (Exception e) {
-			log.error(e);
+			log.error(ERROR, e);
 			throw new ServiceException(e);
 		}
 	}
@@ -137,6 +140,6 @@ public class TiposComunicacionServiceImpl implements TiposComunicacionService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<TipoComunicacion> listar() {
-		return new ArrayList<TipoComunicacion>(daoQueries.executeNamedQuery("tiposComunicacion", Boolean.TRUE));
+		return new ArrayList<>(daoQueries.executeNamedQuery("tiposComunicacion", Boolean.TRUE));
 	}
 }

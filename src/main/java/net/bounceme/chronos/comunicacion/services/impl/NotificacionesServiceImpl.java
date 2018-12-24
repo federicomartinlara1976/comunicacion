@@ -8,7 +8,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -42,7 +43,7 @@ import net.bounceme.chronos.comunicacion.utils.Constantes.ResultadoEnvio;
 @Service(NotificacionesService.NAME)
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class NotificacionesServiceImpl implements NotificacionesService {
-	private static final Logger log = Logger.getLogger(NotificacionesServiceImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(NotificacionesServiceImpl.class);
 
 	@Autowired
 	@Qualifier(AppConfig.AVISOS_REPOSITORY)
@@ -100,7 +101,7 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 
 			return notificacionesRepository.saveObject(notificacion);
 		} catch (Exception e) {
-			log.error(e);
+			log.error("ERROR: ", e);
 			throw new ServiceException(e);
 		}
 	}
@@ -182,7 +183,7 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 			avisosRepository.updateObject(aviso);
 			registraNotificacion(notificacion, cliente);
 		} catch (Exception e) {
-			log.error(e);
+			log.error("ERROR: ", e);
 			throw new ServiceException(e);
 		}
 	}
@@ -213,7 +214,7 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Notificacion> getNotificacionesNoEnviadas() {
-		return new ArrayList<Notificacion>(daoQueries.executeNamedQuery("notificacionesPendientes", Boolean.TRUE));
+		return new ArrayList<>(daoQueries.executeNamedQuery("notificacionesPendientes", Boolean.TRUE));
 	}
 
 	/**
@@ -223,7 +224,7 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 	 */
 	@SuppressWarnings("unchecked")
 	private MedioComunicacionCliente getMedioComunicacion(Cliente cliente, TipoComunicacion tipo) {
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("cliente", cliente);
 		parameters.put("tipo", tipo);
 		Optional<MedioComunicacionCliente> oResult = daoQueries.executeScalarNamedQuery("medioComunicacionCliente", parameters,

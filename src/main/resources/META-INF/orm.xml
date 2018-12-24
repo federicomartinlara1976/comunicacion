@@ -91,6 +91,28 @@
 		</query>
     </named-query>
     
+    <!-- Consulta de todas las direcciones de un cliente -->
+    <named-query name="direccionesCliente">
+    	<query>
+			<![CDATA[
+    		select d
+    		from DireccionCliente d
+    		where d.cliente = :cliente	
+    		 ]]>
+		</query>
+    </named-query>
+    
+    <!-- Consulta de todas las direcciones de un cliente -->
+    <named-query name="direccionCliente">
+    	<query>
+			<![CDATA[
+    		select d
+    		from DireccionCliente d
+    		where d.id = :idDireccion	
+    		 ]]>
+		</query>
+    </named-query>
+    
     <!-- Consulta de todos los medios de comunicacion de un cliente -->
     <named-query name="medioComunicacionCliente">
     	<query>
@@ -159,6 +181,16 @@
     		from RegistroNotificacion r
     		where r.cliente = :cliente
     		order by r.fechaHoraNotificacion	
+    		 ]]>
+		</query>
+    </named-query>
+    
+    <!-- Consulta de todos los clientes -->
+    <named-query name="avisos">
+    	<query>
+			<![CDATA[
+    		select a
+    		from Aviso a	
     		 ]]>
 		</query>
     </named-query>

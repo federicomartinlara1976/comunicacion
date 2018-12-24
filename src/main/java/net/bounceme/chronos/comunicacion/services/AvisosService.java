@@ -1,6 +1,7 @@
 package net.bounceme.chronos.comunicacion.services;
 
 import java.util.Date;
+import java.util.List;
 
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.Aviso;
@@ -44,5 +45,10 @@ public interface AvisosService {
 	 * @return
 	 */
 	Aviso get(Long id);
+
+	/**
+	 * @return
+	 */
+	List<Aviso> listar();
     
 }

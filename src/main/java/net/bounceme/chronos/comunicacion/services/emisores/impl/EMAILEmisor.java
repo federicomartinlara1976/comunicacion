@@ -1,7 +1,13 @@
 package net.bounceme.chronos.comunicacion.services.emisores.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import net.bounceme.chronos.comunicacion.services.emisores.Emisor;
+import net.bounceme.chronos.comunicacion.services.helpers.EmailHelper;
+import net.bounceme.chronos.comunicacion.utils.Constantes;
 import net.bounceme.chronos.comunicacion.utils.Constantes.ResultadoEnvio;
 
 /**
@@ -11,15 +17,25 @@ import net.bounceme.chronos.comunicacion.utils.Constantes.ResultadoEnvio;
  *
  */
 @Component("EMAIL_Emisor")
-public class EMAILEmisor extends EmisorBase {
+public class EMAILEmisor implements Emisor {
+	
+	private static final Logger log = LoggerFactory.getLogger(EMAILEmisor.class);
 
-    public EMAILEmisor() {
-        // TODO Auto-generated constructor stub
-    }
+	@Autowired
+	private EmailHelper helper;
 
+	/* (non-Javadoc)
+	 * @see net.bounceme.chronos.comunicacion.services.emisores.Emisor#enviar(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public ResultadoEnvio enviar(String mensaje, String numero) {
-		// TODO Auto-generated method stub
-		return ResultadoEnvio.OK;
+		try {
+			helper.sendEmail(numero, Constantes.TITULO_MENSAJE , mensaje);
+			
+			return ResultadoEnvio.OK;
+		} catch (Exception e) {
+			log.error("ERROR: ", e);
+			return ResultadoEnvio.FALLO;
+		}
 	}
 }

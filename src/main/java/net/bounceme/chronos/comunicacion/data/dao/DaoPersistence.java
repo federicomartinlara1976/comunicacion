@@ -6,7 +6,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -18,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  */
 public class DaoPersistence<T> {
-	private static final Logger log = Logger.getLogger(DaoPersistence.class);
+	private static final String ERROR = "ERROR: ";
+
+    private static final Logger log = LoggerFactory.getLogger(DaoPersistence.class);
 	
 	@Autowired
 	private EntityManager entityManager;
@@ -43,7 +46,7 @@ public class DaoPersistence<T> {
 			entityManager.persist(object);
 			return object;
 		} catch (Exception e) {
-			log.error(e);
+			log.error(ERROR, e);
 			throw e;
 		}
 	}
@@ -72,7 +75,7 @@ public class DaoPersistence<T> {
 			Object object = entityManager.find(clazz, identifier);
 			entityManager.remove(object);
 		} catch (Exception e) {
-			log.error(e);
+		    log.error(ERROR, e);
 			throw e;
 		}
 	}
@@ -84,7 +87,7 @@ public class DaoPersistence<T> {
 		try {
 			entityManager.remove(object);
 		} catch (Exception e) {
-			log.error(e);
+		    log.error(ERROR, e);
 			throw e;
 		}
 	}
@@ -96,7 +99,7 @@ public class DaoPersistence<T> {
 		try {
 			entityManager.merge(object);
 		} catch (Exception e) {
-			log.error(e);
+		    log.error(ERROR, e);
 			throw e;
 		}
 	}

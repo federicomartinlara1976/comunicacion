@@ -3,15 +3,17 @@ package net.bounceme.chronos.comunicacion.controllers;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,7 +31,7 @@ import net.bounceme.chronos.comunicacion.services.RegistroNotificacionesService;
 @RestController
 @RequestMapping("/registro/notificaciones")
 public class RegistroNotificacionesController {
-	Logger log = Logger.getLogger(RegistroNotificacionesController.class);
+	Logger log = LoggerFactory.getLogger(RegistroNotificacionesController.class);
 
 	@Autowired
 	@Qualifier(RegistroNotificacionesService.NAME)
@@ -37,7 +39,7 @@ public class RegistroNotificacionesController {
 
 	
 	@CrossOrigin
-	@RequestMapping(value = "/cliente/{id}", method = RequestMethod.GET)
+	@GetMapping(value = "/cliente/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public List<RegistroNotificacion> listarPorCliente(@PathVariable Long id) {
 		return registroNotificacionesService.searchByClient(id);
@@ -50,7 +52,7 @@ public class RegistroNotificacionesController {
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
-	@RequestMapping(value = "/fecha", method = RequestMethod.POST, consumes = "application/json")
+	@PostMapping(value = "/fecha", consumes = "application/json")
 	@ResponseStatus(HttpStatus.OK)
 	public List<RegistroNotificacion> listarPorFecha(@RequestBody ParamsRegistroNotificacion registroNotificacion) {
 		Date from = registroNotificacion.getFrom();

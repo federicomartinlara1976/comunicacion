@@ -9,7 +9,8 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.bounceme.chronos.comunicacion.utils.Constantes;
 
@@ -25,7 +26,7 @@ public class DaoQueries {
 	
 	public static final String NAME = "daoQueries"; 
 	
-	private static final Logger log = Logger.getLogger(DaoQueries.class);
+	private static final Logger log = LoggerFactory.getLogger(DaoQueries.class);
 	
 	@PersistenceContext
 	private EntityManager entityManager;

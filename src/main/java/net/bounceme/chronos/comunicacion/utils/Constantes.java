@@ -16,4 +16,6 @@ public class Constantes {
 	public enum EstadoNotificacion {
 		ENVIADA, NO_ENVIADA, FALLIDA
 	}
+	
+	public static final String TITULO_MENSAJE = "Inicio de obra";
 }

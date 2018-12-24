@@ -1,13 +1,15 @@
 package net.bounceme.chronos.comunicacion.controllers;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,7 +28,7 @@ import net.bounceme.chronos.comunicacion.services.NotificacionesService;
 @RestController
 @RequestMapping("/notificaciones")
 public class NotificacionesController {
-	Logger log = Logger.getLogger(NotificacionesController.class);
+	Logger log = LoggerFactory.getLogger(NotificacionesController.class);
 
 	@Autowired
 	@Qualifier(NotificacionesService.NAME)
@@ -40,13 +42,13 @@ public class NotificacionesController {
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
-	@RequestMapping(value = "/new", method = RequestMethod.POST)
+	@PostMapping(value = "/new")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Notificacion nuevo(@RequestBody ParamsNotificacion notificacion) throws ControllerException {
 		try {
 			return notificacionesService.notificarAviso(notificacion.getIdAviso(), notificacion.getIdTipoMedio());
 		} catch (ServiceException e) {
-			log.error(e);
+			log.error("ERROR: ", e);
 			throw new ControllerException(e);
 		}
 	}
@@ -58,13 +60,13 @@ public class NotificacionesController {
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
-	@RequestMapping(value = "/send", method = RequestMethod.PUT, consumes = "application/json")
+	@PutMapping(value = "/send", consumes = "application/json")
 	@ResponseStatus(HttpStatus.OK)
 	public void enviar(@RequestBody ParamsNotificacion notificacion) throws ControllerException {
 		try {
 			notificacionesService.prepararNotificacionParaEnvio(notificacion.getIdNotificacion());
 		} catch (ServiceException e) {
-			log.error(e);
+			log.error("ERROR: ", e);
 			throw new ControllerException(e);
 		}
 	}

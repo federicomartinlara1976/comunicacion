@@ -15,7 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class ComunicacionApplication {
 
 	/**
-	 * M�todo de arranque de la aplicaci�n
+	 * Método de arranque de la aplicación
 	 * 
 	 * @param args
 	 */

@@ -4,6 +4,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Properties;
+
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
 
 import org.apache.catalina.connector.Connector;
 import org.apache.log4j.Logger;
@@ -63,6 +68,8 @@ public class AppConfig {
 	
 	public static final String TOPIC_NAME = "spring-boot-exchange";
 	
+	public static final String TLS_MAIL_SESSION = "tls-mail-session";
+	
 	@Value("${tomcat.ajp.port}")
 	int ajpPort;
 
@@ -71,6 +78,18 @@ public class AppConfig {
 
 	@Value("${tomcat.ajp.enabled}")
 	boolean tomcatAjpEnabled;
+	
+	@Value("${envio.smtp.server}")
+	String smtpServer;
+	
+	@Value("${envio.smtp.port}")
+	String smtpPort;
+	
+	@Value("${envio.smtp.user}")
+	String fromEmail;
+	
+	@Value("${envio.smtp.password}")
+	String password;
 	
 	@Bean(name = DaoQueries.NAME)
 	public DaoQueries daoQueries() {
@@ -257,5 +276,23 @@ public class AppConfig {
 				log.error(e);
 			}
 		});
+	}
+	
+	@Bean(name = TLS_MAIL_SESSION)
+	Session tlsMailSession() {
+		Properties props = new Properties();
+		props.put("mail.smtp.host", smtpServer); // SMTP Host
+		props.put("mail.smtp.port", smtpPort); // TLS Port
+		props.put("mail.smtp.auth", "true"); // enable authentication
+		props.put("mail.smtp.starttls.enable", "true"); // enable STARTTLS
+
+		// create Authenticator object to pass in Session.getInstance argument
+		Authenticator auth = new Authenticator() {
+			// override the getPasswordAuthentication method
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(fromEmail, password);
+			}
+		};
+		return Session.getInstance(props, auth);
 	}
 }

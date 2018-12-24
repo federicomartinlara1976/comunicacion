@@ -4,16 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,7 +35,9 @@ import net.bounceme.chronos.comunicacion.services.ClientesService;
 @RestController
 @RequestMapping("/clientes")
 public class ClientesController {
-	Logger log = Logger.getLogger(ClientesController.class);
+	private static final String ERROR = "ERROR: ";
+
+	Logger log = LoggerFactory.getLogger(ClientesController.class);
 
 	@Autowired
 	@Qualifier(ClientesService.NAME)
@@ -44,7 +50,7 @@ public class ClientesController {
 	 * @throws ServiceException
 	 */
 	@CrossOrigin
-	@RequestMapping(method = RequestMethod.GET)
+	@GetMapping
 	public List<Cliente> listAll() {
 		return clientesService.listar();
 	}
@@ -58,7 +64,7 @@ public class ClientesController {
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
-	@RequestMapping(value = "/search", method = RequestMethod.POST, consumes = "application/json")
+	@GetMapping(value = "/search", consumes = "application/json")
 	@ResponseStatus(HttpStatus.CREATED)
 	public List<Cliente> buscar(@RequestBody Cliente cliente) {
 		List<Cliente> clientes = new ArrayList<>();
@@ -91,13 +97,13 @@ public class ClientesController {
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
-	@RequestMapping(value = "/new", method = RequestMethod.POST, consumes = "application/json")
+	@PostMapping(value = "/new", consumes = "application/json")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cliente nuevo(@RequestBody Cliente cliente) throws ControllerException {
 		try {
 			return clientesService.nuevo(cliente.getNombre(), cliente.getApellidos(), cliente.getDni());
 		} catch (ServiceException e) {
-			log.error(e);
+			log.error(ERROR, e);
 			throw new ControllerException(e);
 		}
 	}
@@ -109,11 +115,11 @@ public class ClientesController {
 	 * @return
 	 */
 	@CrossOrigin
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	@GetMapping(value = "/{id}")
 	public ResponseEntity<Cliente> get(@PathVariable Long id) {
 		Cliente cliente = clientesService.get(id);
 		HttpStatus status = cliente != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
-		return new ResponseEntity<Cliente>(cliente, status);
+		return new ResponseEntity<>(cliente, status);
 	}
 
 	/**
@@ -126,13 +132,13 @@ public class ClientesController {
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
-	@RequestMapping(value = "/{id}/update", method = RequestMethod.PUT, consumes = "application/json")
+	@PutMapping(value = "/{id}/update", consumes = "application/json")
 	@ResponseStatus(HttpStatus.OK)
 	public void actualizar(@PathVariable Long id, @RequestBody Cliente cliente) throws ControllerException {
 		try {
 			clientesService.actualizar(id, cliente.getNombre(), cliente.getApellidos(), cliente.getDni());
 		} catch (ServiceException e) {
-			log.error(e);
+			log.error(ERROR, e);
 			throw new ControllerException(e);
 		}
 	}
@@ -144,13 +150,13 @@ public class ClientesController {
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
-	@RequestMapping(value = "/{id}/delete", method = RequestMethod.DELETE)
+	@DeleteMapping(value = "/{id}/delete")
 	@ResponseStatus(HttpStatus.OK)
 	public void borrar(@PathVariable Long id) throws ControllerException {
 		try {
 			clientesService.borrar(id);
 		} catch (ServiceException e) {
-			log.error(e);
+			log.error(ERROR, e);
 			throw new ControllerException(e);
 		}
 	}

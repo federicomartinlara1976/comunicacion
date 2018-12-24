@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -34,7 +36,9 @@ import net.bounceme.chronos.comunicacion.services.MediosComunicacionClienteServi
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class MediosComunicacionClienteServiceImpl implements MediosComunicacionClienteService {
 
-	private static final Logger log = Logger.getLogger(MediosComunicacionClienteServiceImpl.class);
+	private static final String ERROR = "ERROR: ";
+
+    private static final Logger log = LoggerFactory.getLogger(MediosComunicacionClienteServiceImpl.class);
 
 	@Autowired
 	@Qualifier(AppConfig.MEDIOS_COMUNICACION_CLIENTE_REPOSITORY)
@@ -71,7 +75,7 @@ public class MediosComunicacionClienteServiceImpl implements MediosComunicacionC
 
 			return mediosComunicacionClienteRepository.saveObject(medioComunicacion);
 		} catch (Exception e) {
-			log.error(e);
+			log.error(ERROR, e);
 			throw new ServiceException(e);
 		}
 
@@ -107,13 +111,13 @@ public class MediosComunicacionClienteServiceImpl implements MediosComunicacionC
 
 			MedioComunicacionCliente medio = getMedioComunicacion(cliente, tipo);
 
-			if (StringUtils.isNotBlank(valor)) {
+			if (!Objects.isNull(medio) && StringUtils.isNotBlank(valor)) {
 				medio.setValor(valor);
 			}
 
 			mediosComunicacionClienteRepository.updateObject(medio);
 		} catch (Exception e) {
-			log.error(e);
+			log.error(ERROR, e);
 			throw new ServiceException(e);
 		}
 	}
@@ -135,7 +139,7 @@ public class MediosComunicacionClienteServiceImpl implements MediosComunicacionC
 
 			mediosComunicacionClienteRepository.removeObject(medio);
 		} catch (Exception e) {
-			log.error(e);
+			log.error(ERROR, e);
 			throw new ServiceException(e);
 		}
 	}
@@ -151,9 +155,9 @@ public class MediosComunicacionClienteServiceImpl implements MediosComunicacionC
 	public List<MedioComunicacionCliente> listar(Long idCliente) {
 		Cliente cliente = clientesRepository.getObject(idCliente);
 
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("cliente", cliente);
-		return new ArrayList<MedioComunicacionCliente>(
+		return new ArrayList<>(
 				daoQueries.executeNamedQuery("mediosComunicacionCliente", parameters, Boolean.TRUE));
 	}
 	
@@ -164,7 +168,7 @@ public class MediosComunicacionClienteServiceImpl implements MediosComunicacionC
 	 */
 	@SuppressWarnings("unchecked")
 	private MedioComunicacionCliente getMedioComunicacion(Cliente cliente, TipoComunicacion tipo) {
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("cliente", cliente);
 		parameters.put("tipo", tipo);
 		Optional<MedioComunicacionCliente> oResult = daoQueries.executeScalarNamedQuery("medioComunicacionCliente", parameters,

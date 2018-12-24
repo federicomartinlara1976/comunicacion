@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -19,13 +20,14 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class HttpHelper {
 	
-	private static final Logger log = Logger.getLogger(HttpHelper.class);
+	private static final Logger log = LoggerFactory.getLogger(HttpHelper.class);
 	
 	private HttpClient httpClient;
 
@@ -47,7 +49,7 @@ public class HttpHelper {
 			URI uri = new URIBuilder(getRequest.getURI()).addParameters(nvPairList).build();
 			getRequest.setURI(uri);
 			
-			log.info("URL:" + getRequest.toString());
+			log.info("URL: {}", getRequest);
 
 			// Create a custom response handler
 			ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
@@ -60,7 +62,7 @@ public class HttpHelper {
 						return entity != null ? EntityUtils.toString(entity) : null;
 					}
 					else {
-						log.error("Unexpected response status: " + status);
+						log.error("Unexpected response status: {}", status);
 						throw new ClientProtocolException("Unexpected response status: " + status);
 					}
 				}
@@ -71,7 +73,7 @@ public class HttpHelper {
 
 		}
 		catch (URISyntaxException | IOException e) {
-			log.error(e);
+			log.error("ERROR: ", e);
 			throw new Exception(e);
 		}
 	}
@@ -86,13 +88,13 @@ public class HttpHelper {
 			List<NameValuePair> nvPairList = new ArrayList<NameValuePair>();
 			for (String key : parameters.keySet()) {
 				NameValuePair nv = new BasicNameValuePair(key, parameters.get(key));
-				log.info("Parameter: " + nv.toString());
+				log.info("Parameter: {}", nv);
 				nvPairList.add(nv);
 			}
 			return nvPairList;
 		}
 		else {
-			return null;
+			return Collections.emptyList();
 		}
 	}
 }

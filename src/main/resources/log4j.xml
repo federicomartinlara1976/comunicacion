@@ -65,6 +65,7 @@
 	<root>
 		<priority value="ERROR" />
 		<appender-ref ref="console" />
+		<appender-ref ref="graylog" />
 	</root>
 
 </log4j:configuration>

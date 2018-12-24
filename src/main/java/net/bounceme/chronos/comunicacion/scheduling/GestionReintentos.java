@@ -2,7 +2,8 @@ package net.bounceme.chronos.comunicacion.scheduling;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,7 +19,7 @@ import net.bounceme.chronos.comunicacion.services.NotificacionesService;
  */
 @Component
 public class GestionReintentos {
-	private static final Logger log = Logger.getLogger(GestionReintentos.class);
+	private static final Logger log = LoggerFactory.getLogger(GestionReintentos.class);
 
 	@Autowired
 	@Qualifier(NotificacionesService.NAME)
@@ -39,7 +40,7 @@ public class GestionReintentos {
 			}
 
 		} catch (ServiceException e) {
-			log.error(e);
+			log.error("ERROR: ", e);
 		}
 	}
 }

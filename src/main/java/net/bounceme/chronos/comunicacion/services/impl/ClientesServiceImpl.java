@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotBlank;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,9 @@ import net.bounceme.chronos.comunicacion.services.ClientesService;
 @Service(ClientesService.NAME)
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class ClientesServiceImpl implements ClientesService {
-	private static final Logger log = Logger.getLogger(ClientesServiceImpl.class);
+	private static final String ERROR = "ERROR: ";
+
+    private static final Logger log = LoggerFactory.getLogger(ClientesServiceImpl.class);
 
 	@Autowired
 	@Qualifier(AppConfig.CLIENTE_REPOSITORY)
@@ -67,7 +70,7 @@ public class ClientesServiceImpl implements ClientesService {
 
 			return clientesRepository.saveObject(cliente);
 		} catch (Exception e) {
-			log.error(e);
+			log.error(ERROR, e);
 			throw new ServiceException(e);
 		}
 	}
@@ -110,7 +113,7 @@ public class ClientesServiceImpl implements ClientesService {
 
 			clientesRepository.updateObject(cliente);
 		} catch (Exception e) {
-			log.error(e);
+			log.error(ERROR, e);
 			throw new ServiceException(e);
 		}
 	}
@@ -142,7 +145,7 @@ public class ClientesServiceImpl implements ClientesService {
 
 			clientesRepository.removeObject(cliente);
 		} catch (Exception e) {
-			log.error(e);
+			log.error(ERROR, e);
 			throw new ServiceException(e);
 		}
 	}
@@ -155,7 +158,7 @@ public class ClientesServiceImpl implements ClientesService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Cliente> listar() {
-		return new ArrayList<Cliente>(daoQueries.executeNamedQuery("clientes", Boolean.TRUE));
+		return new ArrayList<>(daoQueries.executeNamedQuery("clientes", Boolean.TRUE));
 	}
 
 	/* (non-Javadoc)
@@ -164,10 +167,10 @@ public class ClientesServiceImpl implements ClientesService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Cliente> buscarPorNombre(String nombre) {
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("nombre", "%" + nombre + "%");
 		
-		return new ArrayList<Cliente>(daoQueries.executeNamedQuery("buscarClientesPorNombre", parameters, Boolean.TRUE));
+		return new ArrayList<>(daoQueries.executeNamedQuery("buscarClientesPorNombre", parameters, Boolean.TRUE));
 	}
 
 	/* (non-Javadoc)
@@ -176,11 +179,11 @@ public class ClientesServiceImpl implements ClientesService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Cliente> buscarPorNombreYApellidos(String nombre, String apellidos) {
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("nombre", "%" + nombre + "%");
 		parameters.put("apellidos", "%" + apellidos + "%");
 		
-		return new ArrayList<Cliente>(daoQueries.executeNamedQuery("buscarClientesPorNombreYApellidos", parameters, Boolean.TRUE));
+		return new ArrayList<>(daoQueries.executeNamedQuery("buscarClientesPorNombreYApellidos", parameters, Boolean.TRUE));
 	}
 
 	/* (non-Javadoc)
@@ -189,19 +192,19 @@ public class ClientesServiceImpl implements ClientesService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Cliente> buscarPorDNI(String dni) {
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("dni", dni);
 		
-		return new ArrayList<Cliente>(daoQueries.executeNamedQuery("buscarClientesPorDNI", parameters, Boolean.TRUE));
+		return new ArrayList<>(daoQueries.executeNamedQuery("buscarClientesPorDNI", parameters, Boolean.TRUE));
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Cliente> buscarPorApellidos(String apellidos) {
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("apellidos", "%" + apellidos + "%");
 		
-		return new ArrayList<Cliente>(daoQueries.executeNamedQuery("buscarClientesPorApellidos", parameters, Boolean.TRUE));
+		return new ArrayList<>(daoQueries.executeNamedQuery("buscarClientesPorApellidos", parameters, Boolean.TRUE));
 	}
 
 }

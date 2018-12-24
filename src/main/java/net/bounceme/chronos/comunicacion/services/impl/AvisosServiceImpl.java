@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ import net.bounceme.chronos.comunicacion.services.AvisosService;
 @Service(AvisosService.NAME)
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class AvisosServiceImpl implements AvisosService {
-	private static final Logger log = Logger.getLogger(AvisosServiceImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(AvisosServiceImpl.class);
 
 	@Autowired
 	@Qualifier(AppConfig.CLIENTE_REPOSITORY)
@@ -75,7 +76,7 @@ public class AvisosServiceImpl implements AvisosService {
 
 			return avisosRepository.saveObject(aviso);
 		} catch (Exception e) {
-			log.error(e);
+			log.error("ERROR: ", e);
 			throw new ServiceException(e);
 		}
 	}
@@ -102,7 +103,7 @@ public class AvisosServiceImpl implements AvisosService {
 				avisosRepository.removeObject(idAviso);
 			}
 		} catch (Exception e) {
-			log.error(e);
+			log.error("ERROR: ", e);
 			throw new ServiceException(e);
 		}
 	}
@@ -121,6 +122,6 @@ public class AvisosServiceImpl implements AvisosService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Aviso> listar() {
-		return new ArrayList<Aviso>(daoQueries.executeNamedQuery("avisos", Boolean.TRUE));
+		return new ArrayList<>(daoQueries.executeNamedQuery("avisos", Boolean.TRUE));
 	}
 }

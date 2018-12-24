@@ -1,6 +1,7 @@
 package net.bounceme.chronos.comunicacion.jms;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ import net.bounceme.chronos.comunicacion.services.NotificacionesService;
 @Component
 public class Receiver {
 
-	private static final Logger log = Logger.getLogger(Receiver.class);
+	private static final Logger log = LoggerFactory.getLogger(Receiver.class);
 
 	@Autowired
 	@Qualifier(NotificacionesService.NAME)
@@ -31,10 +32,10 @@ public class Receiver {
 	 */
 	public void receiveMessage(String message) {
 		try {
-			log.info("Received <" + message + ">");
+			log.info("Received <{}>", message);
 			notificacionesService.enviarNotificacion(Long.valueOf(message));
 		} catch (ServiceException e) {
-			log.error(e);
+			log.error("ERROR: ", e);
 		}
 	}
 }

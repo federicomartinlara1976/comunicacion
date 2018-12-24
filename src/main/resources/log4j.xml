@@ -1,48 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "./log4j.dtd">
-<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+<log4j:configuration
+	xmlns:log4j="http://jakarta.apache.org/log4j/">
 
 	<!-- Appenders -->
-	<appender name="console" class="org.apache.log4j.ConsoleAppender">
+	<appender name="console"
+		class="org.apache.log4j.ConsoleAppender">
 		<param name="Target" value="System.out" />
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%-5p: %c - %m%n" />
+			<param name="ConversionPattern" value="%d|%p|%c{1}.%M:%L|%m%n" />
 		</layout>
 	</appender>
-	
-	<!-- Appender para la salida de los mensajes de error -->	
-	<appender name="allLog" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="DatePattern" value=".yyyy-MM-dd"/>
-		<param name="File" value="./comunicacion.log"/>
+
+	<!-- Appender para la salida de los mensajes de error -->
+	<appender name="allLog"
+		class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="DatePattern" value=".yyyy-MM-dd" />
+		<param name="File" value="logs/comunicacion.log" />
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d|%p|%c{1}.%M:%L|%m%n"/>
+			<param name="ConversionPattern" value="%d|%p|%c{1}.%M:%L|%m%n" />
 		</layout>
-	</appender>	
-	
+	</appender>
+
+	<appender name="graylog" class="org.graylog2.log.GelfAppender">
+		<param name="graylogHost" value="192.168.1.134" />
+		<param name="originHost" value="graylog" />
+		<param name="additionalFields"
+			value="{'environment': 'DEV', 'application': 'Comunicacion'}" />
+		<param name="extractStacktrace" value="true" />
+		<param name="addExtendedInformation" value="true" />
+		<param name="Facility" value="COMUNICACION" />
+		<param name="FacilityPrinting" value="true" />
+		<param name="Threshold" value="DEBUG" />
+	</appender>
+
 	<!-- Application Loggers -->
 	<logger name="net.bounceme.chronos.comunicacion.controllers">
 		<level value="ERROR" />
 	</logger>
+	
 	<logger name="net.bounceme.chronos.comunicacion.dao">
 		<level value="ERROR" />
 	</logger>
+	
 	<logger name="net.bounceme.chronos.comunicacion.jms">
 		<level value="ERROR" />
 	</logger>
+	
 	<logger name="net.bounceme.chronos.comunicacion.services.impl">
 		<level value="ERROR" />
 	</logger>
-	<logger name="net.bounceme.chronos.comunicacion.services.helpers">
+	
+	<logger
+		name="net.bounceme.chronos.comunicacion.services.helpers">
 		<level value="ERROR" />
 	</logger>
-	<logger name="net.bounceme.chronos.comunicacion.services.emisores.impl">
+	
+	<logger
+		name="net.bounceme.chronos.comunicacion.services.emisores.impl">
 		<level value="ERROR" />
 	</logger>
+	
 	<!-- Root Logger -->
 	<root>
 		<priority value="ERROR" />
-		<appender-ref ref="allLog" />
 		<appender-ref ref="console" />
+		<appender-ref ref="graylog" />
 	</root>
-	
+
 </log4j:configuration>

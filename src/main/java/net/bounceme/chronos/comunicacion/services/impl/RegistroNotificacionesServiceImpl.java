@@ -40,11 +40,11 @@ public class RegistroNotificacionesServiceImpl implements RegistroNotificaciones
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<RegistroNotificacion> searchByDates(Date from, Date to) {
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("from", from);
 		parameters.put("to", to);
 		
-		return new ArrayList<RegistroNotificacion>(daoQueries.executeNamedQuery("registrosNotificacionesPorFecha", parameters, Boolean.TRUE));
+		return new ArrayList<>(daoQueries.executeNamedQuery("registrosNotificacionesPorFecha", parameters, Boolean.TRUE));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -52,10 +52,10 @@ public class RegistroNotificacionesServiceImpl implements RegistroNotificaciones
 	public List<RegistroNotificacion> searchByClient(Long idClient) {
 		Cliente cliente = clientesRepository.getObject(idClient);
 		
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("cliente", cliente);
 		
-		return new ArrayList<RegistroNotificacion>(daoQueries.executeNamedQuery("registrosNotificacionesPorCliente", parameters, Boolean.TRUE));
+		return new ArrayList<>(daoQueries.executeNamedQuery("registrosNotificacionesPorCliente", parameters, Boolean.TRUE));
 	}
 
 	

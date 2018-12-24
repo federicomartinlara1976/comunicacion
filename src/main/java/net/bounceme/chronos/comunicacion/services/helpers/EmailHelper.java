@@ -23,8 +23,6 @@ public class EmailHelper {
 	@Qualifier(AppConfig.TLS_MAIL_SESSION)
 	private Session session;	
 
-	public EmailHelper() {}
-
 	/**
 	 * Utility method to send simple HTML email
 	 * 

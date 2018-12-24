@@ -65,7 +65,7 @@ public class ClientesController {
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
-	@GetMapping(value = "/search", consumes = "application/json")
+	@PostMapping(value = "/search", consumes = "application/json")
 	@ResponseStatus(HttpStatus.CREATED)
 	public List<Cliente> buscar(@RequestBody ParamCliente cliente) {
 		List<Cliente> clientes = new ArrayList<>();

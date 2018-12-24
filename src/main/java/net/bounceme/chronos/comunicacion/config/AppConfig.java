@@ -103,7 +103,7 @@ public class AppConfig {
 	 */
 	@Bean(name = CLIENTE_REPOSITORY)
 	public DaoPersistence<Cliente> clienteRepository() {
-		return new DaoPersistence<Cliente>(Cliente.class);
+		return new DaoPersistence<>(Cliente.class);
 	}
 	
 	/**
@@ -114,7 +114,7 @@ public class AppConfig {
      */
 	@Bean(name = TIPOS_COMUNICACION_REPOSITORY)
 	public DaoPersistence<TipoComunicacion> tiposComunicacionRepository() {
-		return new DaoPersistence<TipoComunicacion>(TipoComunicacion.class);
+		return new DaoPersistence<>(TipoComunicacion.class);
 	}
 	
 	/**
@@ -125,7 +125,7 @@ public class AppConfig {
      */
 	@Bean(name = MEDIOS_COMUNICACION_CLIENTE_REPOSITORY)
 	public DaoPersistence<MedioComunicacionCliente> mediosComunicacionClienteRepository() {
-		return new DaoPersistence<MedioComunicacionCliente>(MedioComunicacionCliente.class);
+		return new DaoPersistence<>(MedioComunicacionCliente.class);
 	}
 	
 	/**
@@ -136,7 +136,7 @@ public class AppConfig {
      */
 	@Bean(name = DIRECCIONES_CLIENTE_REPOSITORY)
 	public DaoPersistence<DireccionCliente> direccionesClienteRepository() {
-		return new DaoPersistence<DireccionCliente>(DireccionCliente.class);
+		return new DaoPersistence<>(DireccionCliente.class);
 	}
 	
 	/**
@@ -147,7 +147,7 @@ public class AppConfig {
      */
 	@Bean(name = AVISOS_REPOSITORY)
 	public DaoPersistence<Aviso> avisosRepository() {
-		return new DaoPersistence<Aviso>(Aviso.class);
+		return new DaoPersistence<>(Aviso.class);
 	}
 	
 	/**
@@ -158,7 +158,7 @@ public class AppConfig {
      */
 	@Bean(name = NOTIFICACIONES_REPOSITORY)
 	public DaoPersistence<Notificacion> notificacionesRepository() {
-		return new DaoPersistence<Notificacion>(Notificacion.class);
+		return new DaoPersistence<>(Notificacion.class);
 	}
 	
 	/**
@@ -169,7 +169,7 @@ public class AppConfig {
      */
 	@Bean(name = REGISTRO_NOTIFICACIONES_REPOSITORY)
 	public DaoPersistence<RegistroNotificacion> registroNotificacionesRepository() {
-		return new DaoPersistence<RegistroNotificacion>(RegistroNotificacion.class);
+		return new DaoPersistence<>(RegistroNotificacion.class);
 	}
 	
 	/**
@@ -248,9 +248,9 @@ public class AppConfig {
 	}
 	
 	/**
-	 * Este m�todo alimenta la base de datos con datos iniciales, en concreto la
+	 * Este método alimenta la base de datos con datos iniciales, en concreto la
 	 * tabla de tipos de comunicaciones. Si hay un fallo, termina el arranque de la
-	 * aplicaci�n con error
+	 * aplicación con error
 	 * 
 	 * @param tipoComunicacionRepository
 	 * @return
@@ -259,12 +259,12 @@ public class AppConfig {
 	public CommandLineRunner init(
 			@Autowired @Qualifier(TiposComunicacionService.NAME) TiposComunicacionService tiposComunicacionService) {
 
-		Map<String, String> medios = new HashMap<String, String>();
+		Map<String, String> medios = new HashMap<>();
 		medios.put("SMS", "SMS_Emisor");
 		medios.put("FAX", "FAX_Emisor");
 		medios.put("EMAIL", "EMAIL_Emisor");
 
-		return (evt) -> Arrays.asList(new String[] { "SMS", "FAX", "EMAIL" }).forEach(a -> {
+		return evt -> Arrays.asList("SMS", "FAX", "EMAIL").forEach(a -> {
 			try {
 				String emisor = medios.get(a);
 				
@@ -289,6 +289,7 @@ public class AppConfig {
 		// create Authenticator object to pass in Session.getInstance argument
 		Authenticator auth = new Authenticator() {
 			// override the getPasswordAuthentication method
+		    @Override
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(fromEmail, password);
 			}

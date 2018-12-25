@@ -74,6 +74,7 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 			DireccionCliente direccionCliente = obtenerDireccion(cliente, null, isNew);
 			fillDireccion(direccionCliente, direccion, numero, escalera, piso, puerta, localidad, provincia, codigoPostal);
 			
+			log.debug("Direccion creada correctamente");
 			return direccionesClienteRepository.saveObject(direccionCliente);
 		} catch (Exception e) {
 			log.error(ERROR, e);
@@ -116,6 +117,7 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 			fillDireccion(direccionCliente, direccion, numero, escalera, piso, puerta, localidad, provincia, codigoPostal);
 
 			direccionesClienteRepository.updateObject(direccionCliente);
+			log.debug("Direccion modificada correctamente");
 		} catch (Exception e) {
 			log.error(ERROR, e);
 			throw new ServiceException(e);
@@ -134,6 +136,7 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 			DireccionCliente direccion = getDireccionCliente(idDireccion);
 
 			direccionesClienteRepository.removeObject(direccion);
+			log.debug("Direccion borrada correctamente");
 		} catch (Exception e) {
 			log.error(ERROR, e);
 			throw new ServiceException(e);

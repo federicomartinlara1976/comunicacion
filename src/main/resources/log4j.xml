@@ -23,48 +23,54 @@
 	</appender>
 
 	<appender name="graylog" class="org.graylog2.log.GelfAppender">
-		<param name="graylogHost" value="192.168.1.134" />
-		<param name="originHost" value="graylog" />
-		<param name="additionalFields"
-			value="{'environment': 'DEV', 'application': 'Comunicacion'}" />
-		<param name="extractStacktrace" value="true" />
-		<param name="addExtendedInformation" value="true" />
-		<param name="Facility" value="COMUNICACION" />
-		<param name="FacilityPrinting" value="true" />
-		<param name="Threshold" value="DEBUG" />
+		<param name="graylogHost" value="192.168.1.134"/>
+        <param name="originHost" value="portal.Comunicacion"/>
+        <param name="additionalFields" value="{'environment': 'DEV', 'application': 'Comunicacion'}"/>
+        <param name="extractStacktrace" value="true"/>
+        <param name="addExtendedInformation" value="true"/>
+        <param name="Facility" value="COMUNICACION"/>
+        <param name="FacilityPrinting" value="true"/>
+        <param name="Threshold" value="DEBUG"/>
 	</appender>
 
 	<!-- Application Loggers -->
 	<logger name="net.bounceme.chronos.comunicacion.controllers">
-		<level value="ERROR" />
+		<level value="DEBUG" />
 	</logger>
 	
 	<logger name="net.bounceme.chronos.comunicacion.dao">
-		<level value="ERROR" />
+		<level value="DEBUG" />
 	</logger>
 	
 	<logger name="net.bounceme.chronos.comunicacion.jms">
-		<level value="ERROR" />
+		<level value="DEBUG" />
 	</logger>
 	
 	<logger name="net.bounceme.chronos.comunicacion.services.impl">
-		<level value="ERROR" />
+		<level value="DEBUG" />
 	</logger>
 	
 	<logger
 		name="net.bounceme.chronos.comunicacion.services.helpers">
-		<level value="ERROR" />
+		<level value="DEBUG" />
 	</logger>
 	
 	<logger
 		name="net.bounceme.chronos.comunicacion.services.emisores.impl">
-		<level value="ERROR" />
+		<level value="DEBUG" />
+	</logger>
+	
+	<logger name="org.hibernate.SQL">
+		<level value="DEBUG" />
+	</logger>
+	
+	<logger name="org.hibernate.stat">
+		<level value="DEBUG" />
 	</logger>
 	
 	<!-- Root Logger -->
 	<root>
 		<priority value="ERROR" />
-		<appender-ref ref="console" />
 		<appender-ref ref="graylog" />
 	</root>
 

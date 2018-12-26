@@ -23,42 +23,46 @@
 		</Root>
 
 		<logger name="net.bounceme.chronos.comunicacion.controllers"
-			level="DEBUG">
+			level="DEBUG" additivity="false">
 			<AppenderRef ref="gelfAppender" />
 		</logger>
 
 		<logger name="net.bounceme.chronos.comunicacion.dao"
-			level="DEBUG">
+			level="DEBUG" additivity="false">
 			<AppenderRef ref="gelfAppender" />
 		</logger>
 
 		<logger name="net.bounceme.chronos.comunicacion.jms"
-			level="DEBUG">
+			level="DEBUG" additivity="false">
 			<AppenderRef ref="gelfAppender" />
 		</logger>
 
 		<logger name="net.bounceme.chronos.comunicacion.services.impl"
-			level="DEBUG">
+			level="DEBUG" additivity="false">
 			<AppenderRef ref="gelfAppender" />
 		</logger>
 
 		<logger
 			name="net.bounceme.chronos.comunicacion.services.helpers"
-			level="DEBUG">
+			level="DEBUG" additivity="false">
 			<AppenderRef ref="gelfAppender" />
 		</logger>
 
 		<logger
 			name="net.bounceme.chronos.comunicacion.services.emisores.impl"
-			level="DEBUG">
+			level="DEBUG" additivity="false">
 			<AppenderRef ref="gelfAppender" />
 		</logger>
 
-		<logger name="org.hibernate.SQL" level="DEBUG">
+		<logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
 			<AppenderRef ref="gelfAppender" />
 		</logger>
 
-		<logger name="org.hibernate.stat" level="DEBUG">
+		<logger name="org.hibernate.stat" level="DEBUG" additivity="false">
+			<AppenderRef ref="gelfAppender" />
+		</logger>
+		
+		<logger name="org.hibernate.engine.internal" level="DEBUG" additivity="false">
 			<AppenderRef ref="gelfAppender" />
 		</logger>
 	</Loggers>

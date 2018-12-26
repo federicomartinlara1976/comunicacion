@@ -49,6 +49,12 @@
 		timeToIdleSeconds="300" timeToLiveSeconds="600"
 		memoryStoreEvictionPolicy="LFU" transactionalMode="off"/>
 		
+	<cache name="DIRECCIONES_CLIENTE" 
+		maxElementsInMemory="1"
+		eternal="false" diskSpoolBufferSizeMB="20"
+		timeToIdleSeconds="300" timeToLiveSeconds="600"
+		memoryStoreEvictionPolicy="LFU" transactionalMode="off"/>
+		
 	<cache name="AVISOS" 
 		maxElementsInMemory="1"
 		eternal="false" diskSpoolBufferSizeMB="20"
@@ -62,6 +68,12 @@
 		memoryStoreEvictionPolicy="LFU" transactionalMode="off"/>
 		
 	<cache name="NOTIFICACIONES_AVISO" 
+		maxElementsInMemory="1"
+		eternal="false" diskSpoolBufferSizeMB="20"
+		timeToIdleSeconds="300" timeToLiveSeconds="600"
+		memoryStoreEvictionPolicy="LFU" transactionalMode="off"/>
+		
+	<cache name="REGISTRO_NOTIFICACION" 
 		maxElementsInMemory="1"
 		eternal="false" diskSpoolBufferSizeMB="20"
 		timeToIdleSeconds="300" timeToLiveSeconds="600"

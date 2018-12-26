@@ -75,7 +75,7 @@ public class DireccionesClienteController {
 	 * @return
 	 */
 	@CrossOrigin
-	@GetMapping(value = "/get")
+	@PostMapping(value = "/get")
 	public ResponseEntity<DireccionCliente> get(@RequestBody ParamsDireccion direccion) {
 		DireccionCliente direccionCliente = direccionesClienteService.get(direccion.getIdDireccion());
 		HttpStatus status = direccionCliente != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;

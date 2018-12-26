@@ -11,7 +11,8 @@ import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 
 import org.apache.catalina.connector.Connector;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
@@ -48,7 +49,7 @@ import net.bounceme.chronos.comunicacion.services.TiposComunicacionService;
 
 @Configuration
 public class AppConfig {
-	Logger log = Logger.getLogger(AppConfig.class);
+	Logger log = LoggerFactory.getLogger(AppConfig.class);
 	
 	public static final String CLIENTE_REPOSITORY = "clienteRepository";
 	
@@ -273,7 +274,7 @@ public class AppConfig {
 
 				}
 			} catch (ServiceException e) {
-				log.error(e);
+				log.error("ERROR: ", e);
 			}
 		});
 	}

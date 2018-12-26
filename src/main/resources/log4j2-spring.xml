@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="[%d{MM:dd HH:mm:ss.SSS}] [%level] [%logger{36}] - %msg%n" />
+		</Console>
+
+		<GELF name="gelfAppender" server="192.168.1.134"
+			port="12201" hostName="portal.Comunicacion">
+			<PatternLayout pattern="[%d{MM:dd HH:mm:ss.SSS}] [%level] [%logger{36}] - %msg%n" />
+			<!-- Additional fields -->
+			<KeyValuePair key="user" value="${env:USER}"/>
+    		<KeyValuePair key="CLIargument" value="${sys:cliargument}"/>
+    		<KeyValuePair key="jvm" value="${java:vm}"/>
+    		<KeyValuePair key="fileEncoding" value="${sys:file.encoding}"/>
+		</GELF>
+	</Appenders>
+
+	<Loggers>
+		<Root level="info">
+			<AppenderRef ref="Console" />
+		</Root>
+
+		<logger name="net.bounceme.chronos.comunicacion.controllers"
+			level="DEBUG">
+			<AppenderRef ref="gelfAppender" />
+		</logger>
+
+		<logger name="net.bounceme.chronos.comunicacion.dao"
+			level="DEBUG">
+			<AppenderRef ref="gelfAppender" />
+		</logger>
+
+		<logger name="net.bounceme.chronos.comunicacion.jms"
+			level="DEBUG">
+			<AppenderRef ref="gelfAppender" />
+		</logger>
+
+		<logger name="net.bounceme.chronos.comunicacion.services.impl"
+			level="DEBUG">
+			<AppenderRef ref="gelfAppender" />
+		</logger>
+
+		<logger
+			name="net.bounceme.chronos.comunicacion.services.helpers"
+			level="DEBUG">
+			<AppenderRef ref="gelfAppender" />
+		</logger>
+
+		<logger
+			name="net.bounceme.chronos.comunicacion.services.emisores.impl"
+			level="DEBUG">
+			<AppenderRef ref="gelfAppender" />
+		</logger>
+
+		<logger name="org.hibernate.SQL" level="DEBUG">
+			<AppenderRef ref="gelfAppender" />
+		</logger>
+
+		<logger name="org.hibernate.stat" level="DEBUG">
+			<AppenderRef ref="gelfAppender" />
+		</logger>
+	</Loggers>
+</Configuration>

@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -53,7 +55,7 @@ public class AvisosController {
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
-	@GetMapping(value = "/new")
+	@PostMapping(value = "/new")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Aviso nuevo(@RequestBody @Valid ParamsAviso aviso) throws ControllerException {
 		try {
@@ -85,7 +87,7 @@ public class AvisosController {
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
-	@GetMapping(value = "/{id}/delete")
+	@DeleteMapping(value = "/{id}/delete")
 	@ResponseStatus(HttpStatus.OK)
 	public void anular(@PathVariable Long id) throws ControllerException {
 		try {

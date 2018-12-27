@@ -53,6 +53,12 @@
 			level="DEBUG" additivity="false">
 			<AppenderRef ref="gelfAppender" />
 		</logger>
+		
+		<logger
+			name="net.bounceme.chronos.comunicacion.aspect"
+			level="DEBUG" additivity="false">
+			<AppenderRef ref="gelfAppender" />
+		</logger>
 
 		<logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
 			<AppenderRef ref="gelfAppender" />

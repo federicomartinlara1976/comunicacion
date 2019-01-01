@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.bounceme.chronos.comunicacion.controllers.params.ParamTipo;
 import net.bounceme.chronos.comunicacion.exceptions.ControllerException;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
@@ -62,7 +63,7 @@ public class TiposComunicacionController {
 	@CrossOrigin
 	@PostMapping(value = "/new")
 	@ResponseStatus(HttpStatus.CREATED)
-	public TipoComunicacion nuevo(@RequestBody TipoComunicacion tipo) throws ControllerException {
+	public TipoComunicacion nuevo(@RequestBody ParamTipo tipo) throws ControllerException {
 		try {
 			return tiposComunicacionService.nuevo(tipo.getDenominacion(), tipo.getNombreClaseEmisora());
 		} catch (ServiceException e) {
@@ -95,7 +96,7 @@ public class TiposComunicacionController {
 	@CrossOrigin
 	@PutMapping(value = "/{id}/update")
 	@ResponseStatus(HttpStatus.OK)
-	public void actualizar(@PathVariable Long id, @RequestBody TipoComunicacion tipo) throws ControllerException {
+	public void actualizar(@PathVariable Long id, @RequestBody ParamTipo tipo) throws ControllerException {
 		try {
 			tiposComunicacionService.actualizar(id, tipo.getDenominacion(), tipo.getNombreClaseEmisora());
 		} catch (ServiceException e) {

@@ -69,20 +69,20 @@ public class ClientesController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public List<Cliente> buscar(@RequestBody ParamCliente cliente) {
 		List<Cliente> clientes = new ArrayList<>();
-		if (!Objects.isNull(cliente.getNombre()) && !Objects.isNull(cliente.getApellidos())) {
-			clientes = clientesService.buscarPorNombreYApellidos(cliente.getNombre(), cliente.getApellidos());
+		if (!Objects.isNull(cliente.getName()) && !Objects.isNull(cliente.getLastName())) {
+			clientes = clientesService.buscarPorNombreYApellidos(cliente.getName(), cliente.getLastName());
 		}
 		else {
-			if (!Objects.isNull(cliente.getNombre())) {
-				clientes = clientesService.buscarPorNombre(cliente.getNombre());
+			if (!Objects.isNull(cliente.getName())) {
+				clientes = clientesService.buscarPorNombre(cliente.getName());
 			}
 			
-			if (!Objects.isNull(cliente.getApellidos())) {
-				clientes = clientesService.buscarPorApellidos(cliente.getApellidos());
+			if (!Objects.isNull(cliente.getLastName())) {
+				clientes = clientesService.buscarPorApellidos(cliente.getLastName());
 			}
 			
-			if (!Objects.isNull(cliente.getDni())) {
-				clientes = clientesService.buscarPorDNI(cliente.getDni());
+			if (!Objects.isNull(cliente.getIdentification())) {
+				clientes = clientesService.buscarPorDNI(cliente.getIdentification());
 			}
 		}
 	
@@ -102,7 +102,7 @@ public class ClientesController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cliente nuevo(@RequestBody ParamCliente cliente) throws ControllerException {
 		try {
-			return clientesService.nuevo(cliente.getNombre(), cliente.getApellidos(), cliente.getDni());
+			return clientesService.nuevo(cliente.getName(), cliente.getLastName(), cliente.getIdentification());
 		} catch (ServiceException e) {
 			log.error(ERROR, e);
 			throw new ControllerException(e);
@@ -137,7 +137,7 @@ public class ClientesController {
 	@ResponseStatus(HttpStatus.OK)
 	public void actualizar(@PathVariable Long id, @RequestBody ParamCliente cliente) throws ControllerException {
 		try {
-			clientesService.actualizar(id, cliente.getNombre(), cliente.getApellidos(), cliente.getDni());
+			clientesService.actualizar(id, cliente.getName(), cliente.getLastName(), cliente.getIdentification());
 		} catch (ServiceException e) {
 			log.error(ERROR, e);
 			throw new ControllerException(e);

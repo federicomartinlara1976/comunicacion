@@ -11,42 +11,42 @@ public class ParamCliente {
 	/**
 	 * @return the nombre
 	 */
-	public String getNombre() {
+	public String getName() {
 		return nombre;
 	}
 
 	/**
 	 * @param nombre the nombre to set
 	 */
-	public void setNombre(String nombre) {
+	public void setName(String nombre) {
 		this.nombre = nombre;
 	}
 
 	/**
 	 * @return the apellidos
 	 */
-	public String getApellidos() {
+	public String getLastName() {
 		return apellidos;
 	}
 
 	/**
 	 * @param apellidos the apellidos to set
 	 */
-	public void setApellidos(String apellidos) {
+	public void setLastName(String apellidos) {
 		this.apellidos = apellidos;
 	}
 
 	/**
 	 * @return the dni
 	 */
-	public String getDni() {
+	public String getIdentification() {
 		return dni;
 	}
 
 	/**
 	 * @param dni the dni to set
 	 */
-	public void setDni(String dni) {
+	public void setIdentification(String dni) {
 		this.dni = dni;
 	}
 }

@@ -62,7 +62,7 @@ public class DireccionesClienteController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public DireccionCliente nuevo(@RequestBody ParamsDireccion direccion) throws ControllerException {
 		try {
-			return direccionesClienteService.nuevo(direccion.getIdCliente(), direccion.getDireccion(), direccion.getNumero(), direccion.getEscalera(), direccion.getPiso(), direccion.getPuerta(), direccion.getLocalidad(), direccion.getProvincia(), direccion.getCodigoPostal());
+			return direccionesClienteService.nuevo(direccion.getIdCliente(), direccion.getAddress(), direccion.getNumber(), direccion.getEsc(), direccion.getFloor(), direccion.getDoor(), direccion.getCity(), direccion.getProvince(), direccion.getPostalCode());
 		} catch (ServiceException e) {
 			log.error(ERROR, e);
 			throw new ControllerException(e);
@@ -91,7 +91,7 @@ public class DireccionesClienteController {
 	@PutMapping(value = "/update")
 	public void actualizar(@RequestBody ParamsDireccion direccion) throws ControllerException {
 		try {
-			direccionesClienteService.actualizar(direccion.getIdCliente(), direccion.getIdDireccion(), direccion.getDireccion(), direccion.getNumero(), direccion.getEscalera(), direccion.getPiso(), direccion.getPuerta(), direccion.getLocalidad(), direccion.getProvincia(), direccion.getCodigoPostal());
+			direccionesClienteService.actualizar(direccion.getIdCliente(), direccion.getIdDireccion(), direccion.getAddress(), direccion.getNumber(), direccion.getEsc(), direccion.getFloor(), direccion.getDoor(), direccion.getCity(), direccion.getProvince(), direccion.getPostalCode());
 		} catch (ServiceException e) {
 			log.error(ERROR, e);
 			throw new ControllerException(e);

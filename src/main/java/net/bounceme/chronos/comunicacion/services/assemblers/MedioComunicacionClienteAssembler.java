@@ -8,7 +8,7 @@ import net.bounceme.chronos.comunicacion.dto.MedioComunicacionClienteDTO;
 import net.bounceme.chronos.comunicacion.dto.TipoComunicacionDTO;
 import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
 import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
-import net.bounceme.chronos.utils.assemblers.BidirectionalAssembler;
+import net.bounceme.chronos.utils.assemblers.Assembler;
 import net.bounceme.chronos.utils.assemblers.BidirectionalGenericAssembler;
 import net.bounceme.chronos.utils.exceptions.AssembleException;
 
@@ -17,7 +17,7 @@ public class MedioComunicacionClienteAssembler extends BidirectionalGenericAssem
 
     @Autowired
     @Qualifier("tipoComunicacionAssembler")
-    private BidirectionalAssembler<TipoComunicacion, TipoComunicacionDTO> tipoComunicacionAssembler;
+    private Assembler<TipoComunicacion, TipoComunicacionDTO> tipoComunicacionAssembler;
     
     public MedioComunicacionClienteAssembler() {
         super(MedioComunicacionCliente.class, MedioComunicacionClienteDTO.class);

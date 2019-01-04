@@ -1,5 +1,6 @@
 package net.bounceme.chronos.comunicacion.services.assemblers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import net.bounceme.chronos.comunicacion.dto.MedioComunicacionClienteDTO;
@@ -10,6 +11,9 @@ import net.bounceme.chronos.utils.exceptions.AssembleException;
 @Component("medioComunicacionClienteAssembler")
 public class MedioComunicacionClienteAssembler extends BidirectionalGenericAssembler<MedioComunicacionCliente, MedioComunicacionClienteDTO> {
 
+    @Autowired
+    private TipoComunicacionAssembler tipoComunicacionAssembler;
+    
     public MedioComunicacionClienteAssembler() {
         super(MedioComunicacionCliente.class, MedioComunicacionClienteDTO.class);
     }
@@ -30,6 +34,8 @@ public class MedioComunicacionClienteAssembler extends BidirectionalGenericAssem
         
         medioComunicacionClienteDTO.setId(source.getId());
         medioComunicacionClienteDTO.setValor(source.getValor());
+        
+        medioComunicacionClienteDTO.setTipoComunicacion(tipoComunicacionAssembler.assemble(source.getTipoComunicacion()));
         
         return medioComunicacionClienteDTO;
     }

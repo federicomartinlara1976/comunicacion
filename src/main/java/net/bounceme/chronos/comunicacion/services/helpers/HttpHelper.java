@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -86,9 +87,9 @@ public class HttpHelper {
 	private List<NameValuePair> parseParameters(Map<String, String> parameters) {
 		if (!parameters.isEmpty()) {
 			List<NameValuePair> nvPairList = new ArrayList<>();
-			for (String key : parameters.keySet()) {
-				NameValuePair nv = new BasicNameValuePair(key, parameters.get(key));
-				log.info("Parameter: {}", nv);
+			for (Entry<String, String> entry : parameters.entrySet()) {
+				NameValuePair nv = new BasicNameValuePair(entry.getKey(), entry.getValue());
+				log.debug("Parameter: {}", nv);
 				nvPairList.add(nv);
 			}
 			return nvPairList;

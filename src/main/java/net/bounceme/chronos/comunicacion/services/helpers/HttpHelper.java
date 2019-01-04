@@ -42,7 +42,7 @@ public class HttpHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	public String get(String url, Map<String, String> parameters) throws Exception {
+	public String get(String url, Map<String, String> parameters) throws IOException {
 		try {
 			HttpGet getRequest = new HttpGet(url);
 			List<NameValuePair> nvPairList = parseParameters(parameters);
@@ -55,7 +55,7 @@ public class HttpHelper {
 			ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
 
 				@Override
-				public String handleResponse(final HttpResponse response) throws ClientProtocolException, IOException {
+				public String handleResponse(final HttpResponse response) throws IOException {
 					int status = response.getStatusLine().getStatusCode();
 					if (status >= HttpStatus.SC_OK && status < HttpStatus.SC_MULTIPLE_CHOICES) {
 						HttpEntity entity = response.getEntity();
@@ -74,7 +74,7 @@ public class HttpHelper {
 		}
 		catch (URISyntaxException | IOException e) {
 			log.error("ERROR: ", e);
-			throw new Exception(e);
+			throw new IOException(e);
 		}
 	}
 
@@ -85,7 +85,7 @@ public class HttpHelper {
 	 */
 	private List<NameValuePair> parseParameters(Map<String, String> parameters) {
 		if (!parameters.isEmpty()) {
-			List<NameValuePair> nvPairList = new ArrayList<NameValuePair>();
+			List<NameValuePair> nvPairList = new ArrayList<>();
 			for (String key : parameters.keySet()) {
 				NameValuePair nv = new BasicNameValuePair(key, parameters.get(key));
 				log.info("Parameter: {}", nv);

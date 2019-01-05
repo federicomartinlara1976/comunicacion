@@ -1,6 +1,7 @@
 package net.bounceme.chronos.comunicacion.services.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,10 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 import net.bounceme.chronos.comunicacion.config.AppConfig;
 import net.bounceme.chronos.comunicacion.data.dao.DaoPersistence;
 import net.bounceme.chronos.comunicacion.data.dao.DaoQueries;
+import net.bounceme.chronos.comunicacion.dto.DireccionClienteDTO;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.Cliente;
 import net.bounceme.chronos.comunicacion.model.DireccionCliente;
 import net.bounceme.chronos.comunicacion.services.DireccionesClienteService;
+import net.bounceme.chronos.utils.assemblers.Assembler;
+import net.bounceme.chronos.utils.exceptions.AssembleException;
 
 /**
  * Implementación del servicio que gestiona los medios de comunicación de los
@@ -48,6 +52,10 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 	@Autowired
 	@Qualifier(DaoQueries.NAME)
 	private DaoQueries daoQueries;
+	
+	@Autowired
+	@Qualifier("direccionClienteAssembler")
+	private Assembler<DireccionCliente, DireccionClienteDTO> direccionClienteAssembler;
 
 	/**
 	 * @param idCliente
@@ -64,7 +72,7 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public DireccionCliente nuevo(Long idCliente, String direccion, String numero, String escalera,
+	public DireccionClienteDTO nuevo(Long idCliente, String direccion, String numero, String escalera,
 			Integer piso, String puerta, String localidad, String provincia, String codigoPostal)
 			throws ServiceException {
 		try {
@@ -74,8 +82,7 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 			DireccionCliente direccionCliente = obtenerDireccion(cliente, null, isNew);
 			fillDireccion(direccionCliente, direccion, numero, escalera, piso, puerta, localidad, provincia, codigoPostal);
 			
-			log.debug("Direccion creada correctamente");
-			return direccionesClienteRepository.saveObject(direccionCliente);
+			return direccionClienteAssembler.assemble(direccionesClienteRepository.saveObject(direccionCliente));
 		} catch (Exception e) {
 			log.error(ERROR, e);
 			throw new ServiceException(e);
@@ -88,8 +95,13 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 	 * @return
 	 */
 	@Override
-	public DireccionCliente get(Long idDireccion) {
-		return getDireccionCliente(idDireccion);
+	public DireccionClienteDTO get(Long idDireccion) {
+		try {
+			return direccionClienteAssembler.assemble(getDireccionCliente(idDireccion));
+		} catch (AssembleException e) {
+			log.error(ERROR, e);
+			return null;
+		}
 	}
 
 	/**
@@ -149,13 +161,19 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<DireccionCliente> listar(Long idCliente) {
+	public List<DireccionClienteDTO> listar(Long idCliente) {
 		Cliente cliente = clientesRepository.getObject(idCliente);
 
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("cliente", cliente);
-		return new ArrayList<>(
-				daoQueries.executeNamedQuery("direccionesCliente", parameters, Boolean.TRUE));
+		
+		try {
+			return new ArrayList<>(direccionClienteAssembler.assemble(
+					daoQueries.executeNamedQuery("direccionesCliente", parameters, Boolean.TRUE)));
+		} catch (AssembleException e) {
+			log.error(ERROR, e);
+			return Collections.emptyList();
+		}
 	}
 
 	/**

@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.bounceme.chronos.comunicacion.controllers.params.ParamsDireccion;
+import net.bounceme.chronos.comunicacion.dto.DireccionClienteDTO;
 import net.bounceme.chronos.comunicacion.exceptions.ControllerException;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
-import net.bounceme.chronos.comunicacion.model.DireccionCliente;
 import net.bounceme.chronos.comunicacion.services.DireccionesClienteService;
 
 /**
@@ -48,7 +48,7 @@ public class DireccionesClienteController {
 	 */
 	@CrossOrigin
 	@GetMapping
-	public List<DireccionCliente> listAll(@RequestParam(value = "idCliente") Long idCliente) {
+	public List<DireccionClienteDTO> listAll(@RequestParam(value = "idCliente") Long idCliente) {
 		return direccionesClienteService.listar(idCliente);
 	}
 	
@@ -60,7 +60,7 @@ public class DireccionesClienteController {
 	@CrossOrigin
 	@PostMapping(value = "/new")
 	@ResponseStatus(HttpStatus.CREATED)
-	public DireccionCliente nuevo(@RequestBody ParamsDireccion direccion) throws ControllerException {
+	public DireccionClienteDTO nuevo(@RequestBody ParamsDireccion direccion) throws ControllerException {
 		try {
 			return direccionesClienteService.nuevo(direccion.getIdCliente(), direccion.getAddress(), direccion.getNumber(), direccion.getEsc(), direccion.getFloor(), direccion.getDoor(), direccion.getCity(), direccion.getProvince(), direccion.getPostalCode());
 		} catch (ServiceException e) {
@@ -76,8 +76,8 @@ public class DireccionesClienteController {
 	 */
 	@CrossOrigin
 	@PostMapping(value = "/get")
-	public ResponseEntity<DireccionCliente> get(@RequestBody ParamsDireccion direccion) {
-		DireccionCliente direccionCliente = direccionesClienteService.get(direccion.getIdDireccion());
+	public ResponseEntity<DireccionClienteDTO> get(@RequestBody ParamsDireccion direccion) {
+		DireccionClienteDTO direccionCliente = direccionesClienteService.get(direccion.getIdDireccion());
 		HttpStatus status = direccionCliente != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
 		return new ResponseEntity<>(direccionCliente, status);
 	}

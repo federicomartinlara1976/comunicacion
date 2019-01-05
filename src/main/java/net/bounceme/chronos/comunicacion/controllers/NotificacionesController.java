@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.bounceme.chronos.comunicacion.controllers.params.ParamsNotificacion;
+import net.bounceme.chronos.comunicacion.dto.NotificacionDTO;
 import net.bounceme.chronos.comunicacion.exceptions.ControllerException;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
-import net.bounceme.chronos.comunicacion.model.Notificacion;
 import net.bounceme.chronos.comunicacion.services.NotificacionesService;
 
 /**
@@ -44,7 +44,7 @@ public class NotificacionesController {
 	@CrossOrigin
 	@PostMapping(value = "/new")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Notificacion nuevo(@RequestBody ParamsNotificacion notificacion) throws ControllerException {
+	public NotificacionDTO nuevo(@RequestBody ParamsNotificacion notificacion) throws ControllerException {
 		try {
 			return notificacionesService.notificarAviso(notificacion.getIdAviso(), notificacion.getIdTipoMedio());
 		} catch (ServiceException e) {

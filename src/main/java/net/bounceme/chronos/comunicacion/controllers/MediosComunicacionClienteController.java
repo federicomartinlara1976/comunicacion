@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.bounceme.chronos.comunicacion.controllers.params.ParamsMedioComunicacion;
+import net.bounceme.chronos.comunicacion.dto.MedioComunicacionClienteDTO;
 import net.bounceme.chronos.comunicacion.exceptions.ControllerException;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
-import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
 import net.bounceme.chronos.comunicacion.services.MediosComunicacionClienteService;
 
 /**
@@ -50,7 +50,7 @@ public class MediosComunicacionClienteController {
 	 */
 	@CrossOrigin
 	@GetMapping
-	public List<MedioComunicacionCliente> listAll(@RequestParam(value = "idCliente") Long idCliente) {
+	public List<MedioComunicacionClienteDTO> listAll(@RequestParam(value = "idCliente") Long idCliente) {
 		return mediosComunicacionClienteService.listar(idCliente);
 	}
 
@@ -62,7 +62,7 @@ public class MediosComunicacionClienteController {
 	@CrossOrigin
 	@PostMapping(value = "/new")
 	@ResponseStatus(HttpStatus.CREATED)
-	public MedioComunicacionCliente nuevo(@RequestBody ParamsMedioComunicacion medio) throws ControllerException {
+	public MedioComunicacionClienteDTO nuevo(@RequestBody ParamsMedioComunicacion medio) throws ControllerException {
 		try {
 			return mediosComunicacionClienteService.nuevo(medio.getIdCliente(), medio.getIdTipo(), medio.getValor());
 		} catch (ServiceException e) {
@@ -80,8 +80,8 @@ public class MediosComunicacionClienteController {
 	 */
 	@CrossOrigin
 	@PostMapping(value = "/get")
-	public ResponseEntity<MedioComunicacionCliente> get(@RequestBody ParamsMedioComunicacion medio) {
-		MedioComunicacionCliente medioComunicacionCliente = mediosComunicacionClienteService.get(medio.getIdCliente(), medio.getIdTipo());
+	public ResponseEntity<MedioComunicacionClienteDTO> get(@RequestBody ParamsMedioComunicacion medio) {
+		MedioComunicacionClienteDTO medioComunicacionCliente = mediosComunicacionClienteService.get(medio.getIdCliente(), medio.getIdTipo());
 		HttpStatus status = medioComunicacionCliente != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
 		return new ResponseEntity<>(medioComunicacionCliente, status);
 	}

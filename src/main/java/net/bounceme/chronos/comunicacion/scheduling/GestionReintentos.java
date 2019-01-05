@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import net.bounceme.chronos.comunicacion.dto.NotificacionDTO;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
-import net.bounceme.chronos.comunicacion.model.Notificacion;
 import net.bounceme.chronos.comunicacion.services.NotificacionesService;
 
 /**
@@ -33,9 +33,9 @@ public class GestionReintentos {
 	public void reenvioNotificaciones() {
 		try {
 
-			List<Notificacion> notificacionesPendientes = notificacionesService.getNotificacionesNoEnviadas();
+			List<NotificacionDTO> notificacionesPendientes = notificacionesService.getNotificacionesNoEnviadas();
 
-			for (Notificacion notificacion : notificacionesPendientes) {
+			for (NotificacionDTO notificacion : notificacionesPendientes) {
 				notificacionesService.enviarNotificacion(notificacion.getId());
 			}
 

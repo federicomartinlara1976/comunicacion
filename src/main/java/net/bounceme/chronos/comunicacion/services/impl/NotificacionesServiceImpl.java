@@ -1,6 +1,7 @@
 package net.bounceme.chronos.comunicacion.services.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import net.bounceme.chronos.comunicacion.config.AppConfig;
 import net.bounceme.chronos.comunicacion.data.dao.DaoPersistence;
 import net.bounceme.chronos.comunicacion.data.dao.DaoQueries;
+import net.bounceme.chronos.comunicacion.dto.NotificacionDTO;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.Aviso;
 import net.bounceme.chronos.comunicacion.model.Cliente;
@@ -33,6 +35,8 @@ import net.bounceme.chronos.comunicacion.services.emisores.Emisor;
 import net.bounceme.chronos.comunicacion.services.emisores.EmisorFactory;
 import net.bounceme.chronos.comunicacion.utils.Constantes.EstadoNotificacion;
 import net.bounceme.chronos.comunicacion.utils.Constantes.ResultadoEnvio;
+import net.bounceme.chronos.utils.assemblers.Assembler;
+import net.bounceme.chronos.utils.exceptions.AssembleException;
 
 /**
  * Implementación del servicio que gestiona las notificaciones
@@ -43,6 +47,8 @@ import net.bounceme.chronos.comunicacion.utils.Constantes.ResultadoEnvio;
 @Service(NotificacionesService.NAME)
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class NotificacionesServiceImpl implements NotificacionesService {
+	private static final String ERROR = "ERROR: ";
+
 	private static final Logger log = LoggerFactory.getLogger(NotificacionesServiceImpl.class);
 
 	@Autowired
@@ -68,6 +74,10 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 	@Autowired
 	@Qualifier(DaoQueries.NAME)
 	private DaoQueries daoQueries;
+	
+	@Autowired
+	@Qualifier("notificacionAssembler")
+	private Assembler<Notificacion, NotificacionDTO> notificacionAssembler;
 
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
@@ -86,7 +96,7 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public Notificacion notificarAviso(Long idAviso, Long idTipoMedio) throws ServiceException {
+	public NotificacionDTO notificarAviso(Long idAviso, Long idTipoMedio) throws ServiceException {
 		try {
 			Aviso aviso = avisosRepository.getObject(idAviso);
 			TipoComunicacion tipo = tiposComunicacionRepository.getObject(idTipoMedio);
@@ -99,9 +109,9 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 			MedioComunicacionCliente medio = getMedioComunicacion(aviso.getCliente(), tipo);
 			notificacion.setDatosMedioComunicacion(medio);
 
-			return notificacionesRepository.saveObject(notificacion);
+			return notificacionAssembler.assemble(notificacionesRepository.saveObject(notificacion));
 		} catch (Exception e) {
-			log.error("ERROR: ", e);
+			log.error(ERROR, e);
 			throw new ServiceException(e);
 		}
 	}
@@ -183,7 +193,7 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 			avisosRepository.updateObject(aviso);
 			registraNotificacion(notificacion, cliente);
 		} catch (Exception e) {
-			log.error("ERROR: ", e);
+			log.error(ERROR, e);
 			throw new ServiceException(e);
 		}
 	}
@@ -213,8 +223,14 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Notificacion> getNotificacionesNoEnviadas() {
-		return new ArrayList<>(daoQueries.executeNamedQuery("notificacionesPendientes", Boolean.TRUE));
+	public List<NotificacionDTO> getNotificacionesNoEnviadas() {
+		try {
+			return new ArrayList<>(notificacionAssembler.assemble(
+					daoQueries.executeNamedQuery("notificacionesPendientes", Boolean.TRUE)));
+		} catch (AssembleException e) {
+			log.error(ERROR, e);
+			return Collections.emptyList();
+		}
 	}
 
 	/**

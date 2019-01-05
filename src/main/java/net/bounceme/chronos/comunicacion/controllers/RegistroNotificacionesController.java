@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.bounceme.chronos.comunicacion.controllers.params.ParamsRegistroNotificacion;
+import net.bounceme.chronos.comunicacion.dto.RegistroNotificacionDTO;
 import net.bounceme.chronos.comunicacion.exceptions.ControllerException;
-import net.bounceme.chronos.comunicacion.model.RegistroNotificacion;
 import net.bounceme.chronos.comunicacion.services.RegistroNotificacionesService;
 
 /**
@@ -41,7 +41,7 @@ public class RegistroNotificacionesController {
 	@CrossOrigin
 	@GetMapping(value = "/cliente/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public List<RegistroNotificacion> listarPorCliente(@PathVariable Long id) {
+	public List<RegistroNotificacionDTO> listarPorCliente(@PathVariable Long id) {
 		return registroNotificacionesService.searchByClient(id);
 	}
 
@@ -54,7 +54,7 @@ public class RegistroNotificacionesController {
 	@CrossOrigin
 	@PostMapping(value = "/fecha", consumes = "application/json")
 	@ResponseStatus(HttpStatus.OK)
-	public List<RegistroNotificacion> listarPorFecha(@RequestBody ParamsRegistroNotificacion registroNotificacion) {
+	public List<RegistroNotificacionDTO> listarPorFecha(@RequestBody ParamsRegistroNotificacion registroNotificacion) {
 		Date from = registroNotificacion.getFrom();
 		Date to = registroNotificacion.getTo();
 		

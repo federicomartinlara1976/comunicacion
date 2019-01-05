@@ -2,8 +2,8 @@ package net.bounceme.chronos.comunicacion.services;
 
 import java.util.List;
 
+import net.bounceme.chronos.comunicacion.dto.DireccionClienteDTO;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
-import net.bounceme.chronos.comunicacion.model.DireccionCliente;
 
 public interface DireccionesClienteService {
 
@@ -22,7 +22,7 @@ public interface DireccionesClienteService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	DireccionCliente nuevo(Long idCliente, String direccion, String numero, String escalera, Integer piso,
+	DireccionClienteDTO nuevo(Long idCliente, String direccion, String numero, String escalera, Integer piso,
 			String puerta, String localidad, String provincia, String codigoPostal) throws ServiceException;
 
 	/**
@@ -30,7 +30,7 @@ public interface DireccionesClienteService {
 	 * @param idDireccion
 	 * @return
 	 */
-	DireccionCliente get(Long idDireccion);
+	DireccionClienteDTO get(Long idDireccion);
 
 	/**
 	 * @param idCliente
@@ -58,6 +58,6 @@ public interface DireccionesClienteService {
 	 * @param idCliente
 	 * @return
 	 */
-	List<DireccionCliente> listar(Long idCliente);
+	List<DireccionClienteDTO> listar(Long idCliente);
 
 }

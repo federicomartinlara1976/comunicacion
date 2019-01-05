@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import net.bounceme.chronos.comunicacion.dto.AvisoDTO;
 import net.bounceme.chronos.comunicacion.dto.ClienteDTO;
 import net.bounceme.chronos.comunicacion.dto.DireccionClienteDTO;
 import net.bounceme.chronos.comunicacion.dto.MedioComunicacionClienteDTO;
+import net.bounceme.chronos.comunicacion.model.Aviso;
 import net.bounceme.chronos.comunicacion.model.Cliente;
 import net.bounceme.chronos.comunicacion.model.DireccionCliente;
 import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
@@ -27,6 +29,10 @@ public class ClienteAssembler extends BidirectionalGenericAssembler<Cliente, Cli
 	@Autowired
 	@Qualifier("direccionClienteAssembler")
 	private Assembler<DireccionCliente, DireccionClienteDTO> direccionesClienteAssembler;
+	
+	@Autowired
+	@Qualifier("avisoAssembler")
+	private Assembler<Aviso, AvisoDTO> avisoAssembler;
 
     public ClienteAssembler() {
         super(Cliente.class, ClienteDTO.class);
@@ -55,9 +61,11 @@ public class ClienteAssembler extends BidirectionalGenericAssembler<Cliente, Cli
         
         List<MedioComunicacionClienteDTO> listMediosComunicacion = new ArrayList<>(mediosComunicacionAssembler.assemble(source.getMediosComunicacion()));
         List<DireccionClienteDTO> listDirecciones = new ArrayList<>(direccionesClienteAssembler.assemble(source.getDirecciones()));
+        List<AvisoDTO> listAvisos = new ArrayList<>(avisoAssembler.assemble(source.getAvisos()));
         
         clienteDTO.setMediosComunicacion(listMediosComunicacion);
         clienteDTO.setDirecciones(listDirecciones);
+        clienteDTO.setAvisos(listAvisos);
         
         return clienteDTO;
     }

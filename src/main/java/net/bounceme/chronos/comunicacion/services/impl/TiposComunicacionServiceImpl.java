@@ -1,6 +1,7 @@
 package net.bounceme.chronos.comunicacion.services.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,9 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 import net.bounceme.chronos.comunicacion.config.AppConfig;
 import net.bounceme.chronos.comunicacion.data.dao.DaoPersistence;
 import net.bounceme.chronos.comunicacion.data.dao.DaoQueries;
+import net.bounceme.chronos.comunicacion.dto.TipoComunicacionDTO;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
 import net.bounceme.chronos.comunicacion.services.TiposComunicacionService;
+import net.bounceme.chronos.utils.assemblers.Assembler;
+import net.bounceme.chronos.utils.exceptions.AssembleException;
 
 /**
  * Implementación del servicio que gestiona los tipos de comunicación aplicables
@@ -43,6 +47,10 @@ public class TiposComunicacionServiceImpl implements TiposComunicacionService {
 	@Autowired
 	@Qualifier(DaoQueries.NAME)
 	private DaoQueries daoQueries;
+	
+	@Autowired
+	@Qualifier("tipoComunicacionAssembler")
+	private Assembler<TipoComunicacion, TipoComunicacionDTO> tipoComunicacionAssembler;
 
 	/*
 	 * (non-Javadoc)
@@ -53,13 +61,13 @@ public class TiposComunicacionServiceImpl implements TiposComunicacionService {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public TipoComunicacion nuevo(String denominacion, String nombreEmisor) throws ServiceException {
+	public TipoComunicacionDTO nuevo(String denominacion, String nombreEmisor) throws ServiceException {
 		try {
 			TipoComunicacion tipo = new TipoComunicacion();
 			tipo.setDenominacion(denominacion);
 			tipo.setNombreClaseEmisora(nombreEmisor);
 
-			return tiposComunicacionRepository.saveObject(tipo);
+			return tipoComunicacionAssembler.assemble(tiposComunicacionRepository.saveObject(tipo));
 		} catch (Exception e) {
 			log.error(ERROR, e);
 			throw new ServiceException(e);
@@ -73,18 +81,28 @@ public class TiposComunicacionServiceImpl implements TiposComunicacionService {
 	 * java.lang.String)
 	 */
 	@Override
-	public TipoComunicacion get(Long id) {
-		return tiposComunicacionRepository.getObject(id);
+	public TipoComunicacionDTO get(Long id) {
+		try {
+			return tipoComunicacionAssembler.assemble(tiposComunicacionRepository.getObject(id));
+		} catch (AssembleException e) {
+			log.error(ERROR, e);
+			return null;
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public TipoComunicacion get(String name) {
+	public TipoComunicacionDTO get(String name) {
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("denominacion", name);
 		Optional<TipoComunicacion> oResult = daoQueries.executeScalarNamedQuery("tipoComunicacion", parameters, Boolean.TRUE);
 		
-		return (oResult.isPresent()) ? oResult.get() : null;
+		try {
+			return (oResult.isPresent()) ? tipoComunicacionAssembler.assemble(oResult.get()) : null;
+		} catch (AssembleException e) {
+			log.error(ERROR, e);
+			return null;
+		}
 	}
 
 	/*
@@ -139,7 +157,13 @@ public class TiposComunicacionServiceImpl implements TiposComunicacionService {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<TipoComunicacion> listar() {
-		return new ArrayList<>(daoQueries.executeNamedQuery("tiposComunicacion", Boolean.TRUE));
+	public List<TipoComunicacionDTO> listar() {
+		try {
+			return new ArrayList<>(tipoComunicacionAssembler.assemble(
+					daoQueries.executeNamedQuery("tiposComunicacion", Boolean.TRUE)));
+		} catch (AssembleException e) {
+			log.error(ERROR, e);
+			return Collections.emptyList();
+		}
 	}
 }

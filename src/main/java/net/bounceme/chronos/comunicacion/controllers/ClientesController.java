@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.bounceme.chronos.comunicacion.controllers.params.ParamCliente;
+import net.bounceme.chronos.comunicacion.dto.ClienteDTO;
 import net.bounceme.chronos.comunicacion.exceptions.ControllerException;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
-import net.bounceme.chronos.comunicacion.model.Cliente;
 import net.bounceme.chronos.comunicacion.services.ClientesService;
 
 /**
@@ -52,7 +52,7 @@ public class ClientesController {
 	 */
 	@CrossOrigin
 	@GetMapping
-	public List<Cliente> listAll() {
+	public List<ClienteDTO> listAll() {
 		return clientesService.listar();
 	}
 	
@@ -67,8 +67,8 @@ public class ClientesController {
 	@CrossOrigin
 	@PostMapping(value = "/search", consumes = "application/json")
 	@ResponseStatus(HttpStatus.CREATED)
-	public List<Cliente> buscar(@RequestBody ParamCliente cliente) {
-		List<Cliente> clientes = new ArrayList<>();
+	public List<ClienteDTO> buscar(@RequestBody ParamCliente cliente) {
+		List<ClienteDTO> clientes = new ArrayList<>();
 		if (!Objects.isNull(cliente.getName()) && !Objects.isNull(cliente.getLastName())) {
 			clientes = clientesService.buscarPorNombreYApellidos(cliente.getName(), cliente.getLastName());
 		}
@@ -100,7 +100,7 @@ public class ClientesController {
 	@CrossOrigin
 	@PostMapping(value = "/new", consumes = "application/json")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cliente nuevo(@RequestBody ParamCliente cliente) throws ControllerException {
+	public ClienteDTO nuevo(@RequestBody ParamCliente cliente) throws ControllerException {
 		try {
 			return clientesService.nuevo(cliente.getName(), cliente.getLastName(), cliente.getIdentification());
 		} catch (ServiceException e) {
@@ -117,8 +117,8 @@ public class ClientesController {
 	 */
 	@CrossOrigin
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Cliente> get(@PathVariable Long id) {
-		Cliente cliente = clientesService.get(id);
+	public ResponseEntity<ClienteDTO> get(@PathVariable Long id) {
+		ClienteDTO cliente = clientesService.get(id);
 		HttpStatus status = cliente != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
 		return new ResponseEntity<>(cliente, status);
 	}

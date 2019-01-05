@@ -2,8 +2,8 @@ package net.bounceme.chronos.comunicacion.services;
 
 import java.util.List;
 
+import net.bounceme.chronos.comunicacion.dto.DireccionClienteDTO;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
-import net.bounceme.chronos.comunicacion.model.DireccionCliente;
 
 public interface DireccionesClienteService {
 
@@ -11,42 +11,25 @@ public interface DireccionesClienteService {
 
 	/**
 	 * @param idCliente
-	 * @param direccion
-	 * @param numero
-	 * @param escalera
-	 * @param piso
-	 * @param puerta
-	 * @param localidad
-	 * @param provincia
-	 * @param codigoPostal
+	 * @param direccionClienteDTO
 	 * @return
 	 * @throws ServiceException
 	 */
-	DireccionCliente nuevo(Long idCliente, String direccion, String numero, String escalera, Integer piso,
-			String puerta, String localidad, String provincia, String codigoPostal) throws ServiceException;
+	DireccionClienteDTO nuevo(Long idCliente, DireccionClienteDTO direccionClienteDTO) throws ServiceException;
 
 	/**
 	 * @param idCliente
 	 * @param idDireccion
 	 * @return
 	 */
-	DireccionCliente get(Long idDireccion);
+	DireccionClienteDTO get(Long idDireccion);
 
+	
 	/**
-	 * @param idCliente
-	 * @param idDireccion
-	 * @param direccion
-	 * @param numero
-	 * @param escalera
-	 * @param piso
-	 * @param puerta
-	 * @param localidad
-	 * @param provincia
-	 * @param codigoPostal
+	 * @param direccionClienteDTO
 	 * @throws ServiceException
 	 */
-	void actualizar(Long idCliente, Long idDireccion, String direccion, String numero, String escalera, Integer piso,
-			String puerta, String localidad, String provincia, String codigoPostal) throws ServiceException;
+	void actualizar(DireccionClienteDTO direccionClienteDTO) throws ServiceException;
 
 	/**
 	 * @param idDireccion
@@ -58,6 +41,6 @@ public interface DireccionesClienteService {
 	 * @param idCliente
 	 * @return
 	 */
-	List<DireccionCliente> listar(Long idCliente);
+	List<DireccionClienteDTO> listar(Long idCliente);
 
 }

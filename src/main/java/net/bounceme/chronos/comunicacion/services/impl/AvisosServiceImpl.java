@@ -1,6 +1,7 @@
 package net.bounceme.chronos.comunicacion.services.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -15,12 +16,15 @@ import org.springframework.transaction.annotation.Transactional;
 import net.bounceme.chronos.comunicacion.config.AppConfig;
 import net.bounceme.chronos.comunicacion.data.dao.DaoPersistence;
 import net.bounceme.chronos.comunicacion.data.dao.DaoQueries;
+import net.bounceme.chronos.comunicacion.dto.AvisoDTO;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.Aviso;
 import net.bounceme.chronos.comunicacion.model.Cliente;
 import net.bounceme.chronos.comunicacion.model.DireccionCliente;
 import net.bounceme.chronos.comunicacion.model.Notificacion;
 import net.bounceme.chronos.comunicacion.services.AvisosService;
+import net.bounceme.chronos.utils.assemblers.Assembler;
+import net.bounceme.chronos.utils.exceptions.AssembleException;
 
 /**
  * Implementación del servicio que gestiona los avisos
@@ -31,6 +35,8 @@ import net.bounceme.chronos.comunicacion.services.AvisosService;
 @Service(AvisosService.NAME)
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class AvisosServiceImpl implements AvisosService {
+	private static final String ERROR = "ERROR: ";
+
 	private static final Logger log = LoggerFactory.getLogger(AvisosServiceImpl.class);
 
 	@Autowired
@@ -52,6 +58,10 @@ public class AvisosServiceImpl implements AvisosService {
 	@Autowired
 	@Qualifier(DaoQueries.NAME)
 	private DaoQueries daoQueries;
+	
+	@Autowired
+	@Qualifier("avisoAssembler")
+	private Assembler<Aviso, AvisoDTO> avisoAssembler;
 
 	/*
 	 * (non-Javadoc)
@@ -62,7 +72,7 @@ public class AvisosServiceImpl implements AvisosService {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public Aviso nuevoAviso(Long idCliente, Long idDireccion, Date fechaInicioObra, String mensaje) throws ServiceException {
+	public AvisoDTO nuevoAviso(Long idCliente, Long idDireccion, Date fechaInicioObra, String mensaje) throws ServiceException {
 		try {
 			Cliente cliente = clientesRepository.getObject(idCliente);
 			DireccionCliente direccionCliente = direccionClienteRepository.getObject(idDireccion);
@@ -74,9 +84,9 @@ public class AvisosServiceImpl implements AvisosService {
 			aviso.setMensaje(mensaje);
 			aviso.setEstaNotificado(Boolean.FALSE);
 
-			return avisosRepository.saveObject(aviso);
+			return avisoAssembler.assemble(avisosRepository.saveObject(aviso));
 		} catch (Exception e) {
-			log.error("ERROR: ", e);
+			log.error(ERROR, e);
 			throw new ServiceException(e);
 		}
 	}
@@ -103,7 +113,7 @@ public class AvisosServiceImpl implements AvisosService {
 				avisosRepository.removeObject(idAviso);
 			}
 		} catch (Exception e) {
-			log.error("ERROR: ", e);
+			log.error(ERROR, e);
 			throw new ServiceException(e);
 		}
 	}
@@ -115,13 +125,23 @@ public class AvisosServiceImpl implements AvisosService {
 	 * Long)
 	 */
 	@Override
-	public Aviso get(Long id) {
-		return avisosRepository.getObject(id);
+	public AvisoDTO get(Long id) {
+		try {
+			return avisoAssembler.assemble(avisosRepository.getObject(id));
+		} catch (AssembleException e) {
+			log.error(ERROR, e);
+			return new AvisoDTO();
+		}
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Aviso> listar() {
-		return new ArrayList<>(daoQueries.executeNamedQuery("avisos", Boolean.TRUE));
+	public List<AvisoDTO> listar() {
+		try {
+			return new ArrayList<>(avisoAssembler.assemble(daoQueries.executeNamedQuery("avisos", Boolean.TRUE)));
+		} catch (AssembleException e) {
+			log.error(ERROR, e);
+			return Collections.emptyList();
+		}
 	}
 }

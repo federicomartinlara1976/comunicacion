@@ -224,7 +224,7 @@ public class AppConfig {
     }
     
     /**
-	 * Configuraci�n para el cross-origin
+	 * Configuración para el cross-origin
 	 * 
 	 * @return
 	 */

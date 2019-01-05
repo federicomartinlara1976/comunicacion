@@ -1,6 +1,7 @@
 package net.bounceme.chronos.comunicacion.services.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,11 +20,14 @@ import org.springframework.transaction.annotation.Transactional;
 import net.bounceme.chronos.comunicacion.config.AppConfig;
 import net.bounceme.chronos.comunicacion.data.dao.DaoPersistence;
 import net.bounceme.chronos.comunicacion.data.dao.DaoQueries;
+import net.bounceme.chronos.comunicacion.dto.MedioComunicacionClienteDTO;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.Cliente;
 import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
 import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
 import net.bounceme.chronos.comunicacion.services.MediosComunicacionClienteService;
+import net.bounceme.chronos.utils.assemblers.Assembler;
+import net.bounceme.chronos.utils.exceptions.AssembleException;
 
 /**
  * Implementación del servicio que gestiona los medios de comunicación de los
@@ -55,6 +59,10 @@ public class MediosComunicacionClienteServiceImpl implements MediosComunicacionC
 	@Autowired
 	@Qualifier(DaoQueries.NAME)
 	private DaoQueries daoQueries;
+	
+	@Autowired
+	@Qualifier("medioComunicacionClienteAssembler")
+	private Assembler<MedioComunicacionCliente, MedioComunicacionClienteDTO> medioComunicacionClienteAssembler;
 
 	/*
 	 * (non-Javadoc)
@@ -65,7 +73,7 @@ public class MediosComunicacionClienteServiceImpl implements MediosComunicacionC
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public MedioComunicacionCliente nuevo(Long idCliente, Long idTipo, String valor) throws ServiceException {
+	public MedioComunicacionClienteDTO nuevo(Long idCliente, Long idTipo, String valor) throws ServiceException {
 		try {
 			MedioComunicacionCliente medioComunicacion = new MedioComunicacionCliente();
 
@@ -73,7 +81,7 @@ public class MediosComunicacionClienteServiceImpl implements MediosComunicacionC
 			medioComunicacion.setTipoComunicacion(tiposComunicacionRepository.getObject(idTipo));
 			medioComunicacion.setValor(valor);
 
-			return mediosComunicacionClienteRepository.saveObject(medioComunicacion);
+			return medioComunicacionClienteAssembler.assemble(mediosComunicacionClienteRepository.saveObject(medioComunicacion));
 		} catch (Exception e) {
 			log.error(ERROR, e);
 			throw new ServiceException(e);
@@ -88,11 +96,16 @@ public class MediosComunicacionClienteServiceImpl implements MediosComunicacionC
 	 * MediosComunicacionClienteService#get(java.lang.Long, java.lang.Long)
 	 */
 	@Override
-	public MedioComunicacionCliente get(Long idCliente, Long idTipo) {
+	public MedioComunicacionClienteDTO get(Long idCliente, Long idTipo) {
 		Cliente cliente = clientesRepository.getObject(idCliente);
 		TipoComunicacion tipo = tiposComunicacionRepository.getObject(idTipo);
 
-		return getMedioComunicacion(cliente, tipo);
+		try {
+			return medioComunicacionClienteAssembler.assemble(getMedioComunicacion(cliente, tipo));
+		} catch (AssembleException e) {
+			log.error(ERROR, e);
+			return null;
+		}
 	}
 
 	/*
@@ -152,13 +165,18 @@ public class MediosComunicacionClienteServiceImpl implements MediosComunicacionC
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<MedioComunicacionCliente> listar(Long idCliente) {
+	public List<MedioComunicacionClienteDTO> listar(Long idCliente) {
 		Cliente cliente = clientesRepository.getObject(idCliente);
 
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("cliente", cliente);
-		return new ArrayList<>(
-				daoQueries.executeNamedQuery("mediosComunicacionCliente", parameters, Boolean.TRUE));
+		try {
+			return new ArrayList<>(medioComunicacionClienteAssembler.assemble(
+					daoQueries.executeNamedQuery("mediosComunicacionCliente", parameters, Boolean.TRUE)));
+		} catch (AssembleException e) {
+			log.error(ERROR, e);
+			return Collections.emptyList();
+		}
 	}
 	
 	/**

@@ -2,8 +2,8 @@ package net.bounceme.chronos.comunicacion.services;
 
 import java.util.List;
 
+import net.bounceme.chronos.comunicacion.dto.ClienteDTO;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
-import net.bounceme.chronos.comunicacion.model.Cliente;
 
 /**
  * Interfaz del servicio de gestión de clientes
@@ -23,7 +23,7 @@ public interface ClientesService {
 	 * @return el cliente creado
 	 * @throws ServiceException 
 	 */
-	Cliente nuevo(String nombre, String apellidos, String dni) throws ServiceException;
+	ClienteDTO nuevo(String nombre, String apellidos, String dni) throws ServiceException;
 	
 	/**
 	 * Obtiene un cliente por su identificador
@@ -31,7 +31,7 @@ public interface ClientesService {
 	 * @param id
 	 * @return cliente
 	 */
-	Cliente get(Long id);
+	ClienteDTO get(Long id);
 	
 	/**
 	 * Actualiza los datos de un cliente
@@ -57,30 +57,30 @@ public interface ClientesService {
 	 * 
 	 * @return listado de clientes
 	 */
-	List<Cliente> listar();
+	List<ClienteDTO> listar();
 	
 	/**
 	 * @param nombre
 	 * @return
 	 */
-	List<Cliente> buscarPorNombre(String nombre);
+	List<ClienteDTO> buscarPorNombre(String nombre);
 	
 	/**
 	 * @param apellidos
 	 * @return
 	 */
-	List<Cliente> buscarPorApellidos(String apellidos);
+	List<ClienteDTO> buscarPorApellidos(String apellidos);
 	
 	/**
 	 * @param nombre
 	 * @param apellidos
 	 * @return
 	 */
-	List<Cliente> buscarPorNombreYApellidos(String nombre, String apellidos);
+	List<ClienteDTO> buscarPorNombreYApellidos(String nombre, String apellidos);
 	
 	/**
 	 * @param dni
 	 * @return
 	 */
-	List<Cliente> buscarPorDNI(String dni);
+	List<ClienteDTO> buscarPorDNI(String dni);
 }

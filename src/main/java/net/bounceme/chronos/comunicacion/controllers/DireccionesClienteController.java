@@ -20,10 +20,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.bounceme.chronos.comunicacion.controllers.params.ParamsDireccion;
+import net.bounceme.chronos.comunicacion.dto.DireccionClienteDTO;
 import net.bounceme.chronos.comunicacion.exceptions.ControllerException;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
-import net.bounceme.chronos.comunicacion.model.DireccionCliente;
 import net.bounceme.chronos.comunicacion.services.DireccionesClienteService;
+import net.bounceme.chronos.utils.assemblers.Assembler;
+import net.bounceme.chronos.utils.exceptions.AssembleException;
 
 /**
  * Controlador para la gestión de medios de comunicación de clientes
@@ -41,6 +43,10 @@ public class DireccionesClienteController {
 	@Autowired
 	@Qualifier(DireccionesClienteService.NAME)
 	private DireccionesClienteService direccionesClienteService;
+	
+	@Autowired
+	@Qualifier("paramsDireccionAssembler")
+	private Assembler<ParamsDireccion, DireccionClienteDTO> paramsDireccionAssembler;
 
 	/**
 	 * @param idCliente
@@ -48,7 +54,7 @@ public class DireccionesClienteController {
 	 */
 	@CrossOrigin
 	@GetMapping
-	public List<DireccionCliente> listAll(@RequestParam(value = "idCliente") Long idCliente) {
+	public List<DireccionClienteDTO> listAll(@RequestParam(value = "idCliente") Long idCliente) {
 		return direccionesClienteService.listar(idCliente);
 	}
 	
@@ -60,10 +66,11 @@ public class DireccionesClienteController {
 	@CrossOrigin
 	@PostMapping(value = "/new")
 	@ResponseStatus(HttpStatus.CREATED)
-	public DireccionCliente nuevo(@RequestBody ParamsDireccion direccion) throws ControllerException {
+	public DireccionClienteDTO nuevo(@RequestBody ParamsDireccion direccion) throws ControllerException {
 		try {
-			return direccionesClienteService.nuevo(direccion.getIdCliente(), direccion.getDireccion(), direccion.getNumero(), direccion.getEscalera(), direccion.getPiso(), direccion.getPuerta(), direccion.getLocalidad(), direccion.getProvincia(), direccion.getCodigoPostal());
-		} catch (ServiceException e) {
+			DireccionClienteDTO direccionClienteDTO = paramsDireccionAssembler.assemble(direccion);
+			return direccionesClienteService.nuevo(direccion.getIdCliente(), direccionClienteDTO);
+		} catch (ServiceException | AssembleException e) {
 			log.error(ERROR, e);
 			throw new ControllerException(e);
 		}
@@ -76,8 +83,8 @@ public class DireccionesClienteController {
 	 */
 	@CrossOrigin
 	@PostMapping(value = "/get")
-	public ResponseEntity<DireccionCliente> get(@RequestBody ParamsDireccion direccion) {
-		DireccionCliente direccionCliente = direccionesClienteService.get(direccion.getIdDireccion());
+	public ResponseEntity<DireccionClienteDTO> get(@RequestBody ParamsDireccion direccion) {
+		DireccionClienteDTO direccionCliente = direccionesClienteService.get(direccion.getIdDireccion());
 		HttpStatus status = direccionCliente != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
 		return new ResponseEntity<>(direccionCliente, status);
 	}
@@ -91,8 +98,9 @@ public class DireccionesClienteController {
 	@PutMapping(value = "/update")
 	public void actualizar(@RequestBody ParamsDireccion direccion) throws ControllerException {
 		try {
-			direccionesClienteService.actualizar(direccion.getIdCliente(), direccion.getIdDireccion(), direccion.getDireccion(), direccion.getNumero(), direccion.getEscalera(), direccion.getPiso(), direccion.getPuerta(), direccion.getLocalidad(), direccion.getProvincia(), direccion.getCodigoPostal());
-		} catch (ServiceException e) {
+			DireccionClienteDTO direccionClienteDTO = paramsDireccionAssembler.assemble(direccion);
+			direccionesClienteService.actualizar(direccionClienteDTO);
+		} catch (ServiceException | AssembleException e) {
 			log.error(ERROR, e);
 			throw new ControllerException(e);
 		}

@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.bounceme.chronos.comunicacion.controllers.params.ParamsAviso;
+import net.bounceme.chronos.comunicacion.dto.AvisoDTO;
 import net.bounceme.chronos.comunicacion.exceptions.ControllerException;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
-import net.bounceme.chronos.comunicacion.model.Aviso;
 import net.bounceme.chronos.comunicacion.services.AvisosService;
 
 /**
@@ -43,7 +43,7 @@ public class AvisosController {
 	
 	@CrossOrigin
 	@GetMapping
-	public List<Aviso> listAll() {
+	public List<AvisoDTO> listAll() {
 		return avisosService.listar();
 	}
 
@@ -57,7 +57,7 @@ public class AvisosController {
 	@CrossOrigin
 	@PostMapping(value = "/new")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Aviso nuevo(@RequestBody @Valid ParamsAviso aviso) throws ControllerException {
+	public AvisoDTO nuevo(@RequestBody @Valid ParamsAviso aviso) throws ControllerException {
 		try {
 			return avisosService.nuevoAviso(aviso.getIdCliente(), aviso.getIdDireccion(), aviso.getFechaInicioObra(), aviso.getMensaje());
 		} catch (ServiceException e) {
@@ -74,8 +74,8 @@ public class AvisosController {
 	 */
 	@CrossOrigin
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Aviso> get(@PathVariable Long id) {
-		Aviso aviso = avisosService.get(id);
+	public ResponseEntity<AvisoDTO> get(@PathVariable Long id) {
+		AvisoDTO aviso = avisosService.get(id);
 		HttpStatus status = aviso != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
 		return new ResponseEntity<>(aviso, status);
 	}

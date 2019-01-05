@@ -2,8 +2,8 @@ package net.bounceme.chronos.comunicacion.services;
 
 import java.util.List;
 
+import net.bounceme.chronos.comunicacion.dto.NotificacionDTO;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
-import net.bounceme.chronos.comunicacion.model.Notificacion;
 
 /**
  * Servicio de gestión y envío de notificaciones
@@ -22,7 +22,7 @@ public interface NotificacionesService {
      * @return la notificación creada
      * @throws ServiceException 
      */
-    Notificacion notificarAviso(Long idAviso, Long idTipoMedio) throws ServiceException;
+    NotificacionDTO notificarAviso(Long idAviso, Long idTipoMedio) throws ServiceException;
     
     /**
      * Prepara la notificación para el envío (La pone en una cola de envíos para no tener que esperar la respuesta)
@@ -43,5 +43,5 @@ public interface NotificacionesService {
     /**
      * @return
      */
-    List<Notificacion> getNotificacionesNoEnviadas();
+    List<NotificacionDTO> getNotificacionesNoEnviadas();
 }

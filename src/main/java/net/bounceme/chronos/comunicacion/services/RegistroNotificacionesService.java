@@ -3,7 +3,7 @@ package net.bounceme.chronos.comunicacion.services;
 import java.util.Date;
 import java.util.List;
 
-import net.bounceme.chronos.comunicacion.model.RegistroNotificacion;
+import net.bounceme.chronos.comunicacion.dto.RegistroNotificacionDTO;
 
 /**
  * Servicio de gestión y envío de notificaciones
@@ -19,11 +19,11 @@ public interface RegistroNotificacionesService {
      * @param to
      * @return
      */
-    List<RegistroNotificacion> searchByDates(Date from, Date to);
+    List<RegistroNotificacionDTO> searchByDates(Date from, Date to);
     
     /**
      * @param idClient
      * @return
      */
-    List<RegistroNotificacion> searchByClient(Long idClient);
+    List<RegistroNotificacionDTO> searchByClient(Long idClient);
 }

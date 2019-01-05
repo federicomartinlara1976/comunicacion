@@ -1,6 +1,7 @@
 package net.bounceme.chronos.comunicacion.services.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,11 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
 import net.bounceme.chronos.comunicacion.config.AppConfig;
 import net.bounceme.chronos.comunicacion.data.dao.DaoPersistence;
 import net.bounceme.chronos.comunicacion.data.dao.DaoQueries;
+import net.bounceme.chronos.comunicacion.dto.ClienteDTO;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.Aviso;
 import net.bounceme.chronos.comunicacion.model.Cliente;
 import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
 import net.bounceme.chronos.comunicacion.services.ClientesService;
+import net.bounceme.chronos.utils.assemblers.Assembler;
+import net.bounceme.chronos.utils.exceptions.AssembleException;
 
 /**
  * Implementación del servicio que gestiona los clientes
@@ -52,6 +56,10 @@ public class ClientesServiceImpl implements ClientesService {
 	@Autowired
 	@Qualifier(DaoQueries.NAME)
 	private DaoQueries daoQueries;
+	
+	@Autowired
+	@Qualifier("clienteAssembler")
+	private Assembler<Cliente, ClienteDTO> clienteAssembler;
 
 	/*
 	 * (non-Javadoc)
@@ -61,14 +69,14 @@ public class ClientesServiceImpl implements ClientesService {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public Cliente nuevo(@NotBlank String nombre, @NotBlank String apellidos, String dni) throws ServiceException {
+	public ClienteDTO nuevo(@NotBlank String nombre, @NotBlank String apellidos, String dni) throws ServiceException {
 		try {
 			Cliente cliente = new Cliente();
 			cliente.setNombre(nombre);
 			cliente.setApellidos(apellidos);
 			cliente.setDni(dni);
 
-			return clientesRepository.saveObject(cliente);
+			return clienteAssembler.assemble(clientesRepository.saveObject(cliente));
 		} catch (Exception e) {
 			log.error(ERROR, e);
 			throw new ServiceException(e);
@@ -83,8 +91,13 @@ public class ClientesServiceImpl implements ClientesService {
 	 * Long)
 	 */
 	@Override
-	public Cliente get(Long id) {
-		return clientesRepository.getObject(id);
+	public ClienteDTO get(Long id) {
+		try {
+			return clienteAssembler.assemble(clientesRepository.getObject(id));
+		} catch (AssembleException e) {
+			log.error(ERROR, e);
+			return null;
+		}
 	}
 
 	/*
@@ -157,54 +170,65 @@ public class ClientesServiceImpl implements ClientesService {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Cliente> listar() {
-		return new ArrayList<>(daoQueries.executeNamedQuery("clientes", Boolean.TRUE));
+	public List<ClienteDTO> listar() {
+		try {
+			return new ArrayList<>(clienteAssembler.assemble(daoQueries.executeNamedQuery("clientes", Boolean.TRUE)));
+		} catch (AssembleException e) {
+			log.error(ERROR, e);
+			return Collections.emptyList();
+		}
 	}
 
 	/* (non-Javadoc)
 	 * @see net.bounceme.chronos.comunicacion.services.ClientesService#buscarPorNombre(java.lang.String)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	public List<Cliente> buscarPorNombre(String nombre) {
+	public List<ClienteDTO> buscarPorNombre(String nombre) {
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("nombre", "%" + nombre + "%");
 		
-		return new ArrayList<>(daoQueries.executeNamedQuery("buscarClientesPorNombre", parameters, Boolean.TRUE));
+		return metodoBuscar("buscarClientesPorNombre", parameters);
 	}
 
 	/* (non-Javadoc)
 	 * @see net.bounceme.chronos.comunicacion.services.ClientesService#buscarPorNombreYApellidos(java.lang.String, java.lang.String)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	public List<Cliente> buscarPorNombreYApellidos(String nombre, String apellidos) {
+	public List<ClienteDTO> buscarPorNombreYApellidos(String nombre, String apellidos) {
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("nombre", "%" + nombre + "%");
 		parameters.put("apellidos", "%" + apellidos + "%");
 		
-		return new ArrayList<>(daoQueries.executeNamedQuery("buscarClientesPorNombreYApellidos", parameters, Boolean.TRUE));
+		return metodoBuscar("buscarClientesPorNombreYApellidos", parameters);
 	}
 
 	/* (non-Javadoc)
 	 * @see net.bounceme.chronos.comunicacion.services.ClientesService#buscarPorDNI(java.lang.String)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	public List<Cliente> buscarPorDNI(String dni) {
+	public List<ClienteDTO> buscarPorDNI(String dni) {
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("dni", dni);
 		
-		return new ArrayList<>(daoQueries.executeNamedQuery("buscarClientesPorDNI", parameters, Boolean.TRUE));
+		return metodoBuscar("buscarClientesPorDNI", parameters);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public List<Cliente> buscarPorApellidos(String apellidos) {
+	public List<ClienteDTO> buscarPorApellidos(String apellidos) {
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("apellidos", "%" + apellidos + "%");
 		
-		return new ArrayList<>(daoQueries.executeNamedQuery("buscarClientesPorApellidos", parameters, Boolean.TRUE));
+		return metodoBuscar("buscarClientesPorApellidos", parameters);
 	}
 
+	@SuppressWarnings("unchecked")
+	private List<ClienteDTO> metodoBuscar(String consulta, Map<String, Object> parameters) {
+		try {
+			return new ArrayList<>(clienteAssembler.assemble(daoQueries.executeNamedQuery(consulta, parameters, Boolean.TRUE)));
+		} catch (AssembleException e) {
+			log.error(ERROR, e);
+			return Collections.emptyList();
+		}
+	}
+	
 }

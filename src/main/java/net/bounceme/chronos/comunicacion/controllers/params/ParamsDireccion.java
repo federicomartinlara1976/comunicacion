@@ -53,112 +53,112 @@ public class ParamsDireccion {
 	/**
 	 * @return the direccion
 	 */
-	public String getDireccion() {
+	public String getAddress() {
 		return direccion;
 	}
 
 	/**
 	 * @param direccion the direccion to set
 	 */
-	public void setDireccion(String direccion) {
+	public void setAddress(String direccion) {
 		this.direccion = direccion;
 	}
 
 	/**
 	 * @return the numero
 	 */
-	public String getNumero() {
+	public String getNumber() {
 		return numero;
 	}
 
 	/**
 	 * @param numero the numero to set
 	 */
-	public void setNumero(String numero) {
+	public void setNumber(String numero) {
 		this.numero = numero;
 	}
 
 	/**
 	 * @return the piso
 	 */
-	public Integer getPiso() {
+	public Integer getFloor() {
 		return piso;
 	}
 
 	/**
 	 * @param piso the piso to set
 	 */
-	public void setPiso(Integer piso) {
+	public void setFloor(Integer piso) {
 		this.piso = piso;
 	}
 
 	/**
 	 * @return the escalera
 	 */
-	public String getEscalera() {
+	public String getEsc() {
 		return escalera;
 	}
 
 	/**
 	 * @param escalera the escalera to set
 	 */
-	public void setEscalera(String escalera) {
+	public void setEsc(String escalera) {
 		this.escalera = escalera;
 	}
 
 	/**
 	 * @return the puerta
 	 */
-	public String getPuerta() {
+	public String getDoor() {
 		return puerta;
 	}
 
 	/**
 	 * @param puerta the puerta to set
 	 */
-	public void setPuerta(String puerta) {
+	public void setDoor(String puerta) {
 		this.puerta = puerta;
 	}
 
 	/**
 	 * @return the localidad
 	 */
-	public String getLocalidad() {
+	public String getCity() {
 		return localidad;
 	}
 
 	/**
 	 * @param localidad the localidad to set
 	 */
-	public void setLocalidad(String localidad) {
+	public void setCity(String localidad) {
 		this.localidad = localidad;
 	}
 
 	/**
 	 * @return the provincia
 	 */
-	public String getProvincia() {
+	public String getProvince() {
 		return provincia;
 	}
 
 	/**
 	 * @param provincia the provincia to set
 	 */
-	public void setProvincia(String provincia) {
+	public void setProvince(String provincia) {
 		this.provincia = provincia;
 	}
 
 	/**
 	 * @return the codigoPostal
 	 */
-	public String getCodigoPostal() {
+	public String getPostalCode() {
 		return codigoPostal;
 	}
 
 	/**
 	 * @param codigoPostal the codigoPostal to set
 	 */
-	public void setCodigoPostal(String codigoPostal) {
+	public void setPostalCode(String codigoPostal) {
 		this.codigoPostal = codigoPostal;
 	}
 }

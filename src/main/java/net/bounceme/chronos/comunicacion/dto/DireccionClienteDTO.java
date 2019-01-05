@@ -2,8 +2,12 @@ package net.bounceme.chronos.comunicacion.dto;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import net.bounceme.chronos.comunicacion.common.Direccion;
 
+@JsonInclude(Include.NON_NULL)
 public class DireccionClienteDTO implements Direccion, Serializable {
 
 	/**

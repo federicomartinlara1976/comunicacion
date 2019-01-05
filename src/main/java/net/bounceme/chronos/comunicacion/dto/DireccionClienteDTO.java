@@ -2,7 +2,9 @@ package net.bounceme.chronos.comunicacion.dto;
 
 import java.io.Serializable;
 
-public class DireccionClienteDTO implements Serializable {
+import net.bounceme.chronos.comunicacion.common.Direccion;
+
+public class DireccionClienteDTO implements Direccion, Serializable {
 
 	/**
      * 

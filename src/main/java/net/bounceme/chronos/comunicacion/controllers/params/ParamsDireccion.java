@@ -1,6 +1,8 @@
 package net.bounceme.chronos.comunicacion.controllers.params;
 
-public class ParamsDireccion {
+import net.bounceme.chronos.comunicacion.common.Direccion;
+
+public class ParamsDireccion implements Direccion {
 	
 	private Long idCliente;
 	
@@ -53,112 +55,112 @@ public class ParamsDireccion {
 	/**
 	 * @return the direccion
 	 */
-	public String getAddress() {
+	public String getDireccion() {
 		return direccion;
 	}
 
 	/**
 	 * @param direccion the direccion to set
 	 */
-	public void setAddress(String direccion) {
+	public void setDireccion(String direccion) {
 		this.direccion = direccion;
 	}
 
 	/**
 	 * @return the numero
 	 */
-	public String getNumber() {
+	public String getNumero() {
 		return numero;
 	}
 
 	/**
 	 * @param numero the numero to set
 	 */
-	public void setNumber(String numero) {
+	public void setNumero(String numero) {
 		this.numero = numero;
 	}
 
 	/**
 	 * @return the piso
 	 */
-	public Integer getFloor() {
+	public Integer getPiso() {
 		return piso;
 	}
 
 	/**
 	 * @param piso the piso to set
 	 */
-	public void setFloor(Integer piso) {
+	public void setPiso(Integer piso) {
 		this.piso = piso;
 	}
 
 	/**
 	 * @return the escalera
 	 */
-	public String getEsc() {
+	public String getEscalera() {
 		return escalera;
 	}
 
 	/**
 	 * @param escalera the escalera to set
 	 */
-	public void setEsc(String escalera) {
+	public void setEscalera(String escalera) {
 		this.escalera = escalera;
 	}
 
 	/**
 	 * @return the puerta
 	 */
-	public String getDoor() {
+	public String getPuerta() {
 		return puerta;
 	}
 
 	/**
 	 * @param puerta the puerta to set
 	 */
-	public void setDoor(String puerta) {
+	public void setPuerta(String puerta) {
 		this.puerta = puerta;
 	}
 
 	/**
 	 * @return the localidad
 	 */
-	public String getCity() {
+	public String getLocalidad() {
 		return localidad;
 	}
 
 	/**
 	 * @param localidad the localidad to set
 	 */
-	public void setCity(String localidad) {
+	public void setLocalidad(String localidad) {
 		this.localidad = localidad;
 	}
 
 	/**
 	 * @return the provincia
 	 */
-	public String getProvince() {
+	public String getProvincia() {
 		return provincia;
 	}
 
 	/**
 	 * @param provincia the provincia to set
 	 */
-	public void setProvince(String provincia) {
+	public void setProvincia(String provincia) {
 		this.provincia = provincia;
 	}
 
 	/**
 	 * @return the codigoPostal
 	 */
-	public String getPostalCode() {
+	public String getCodigoPostal() {
 		return codigoPostal;
 	}
 
 	/**
 	 * @param codigoPostal the codigoPostal to set
 	 */
-	public void setPostalCode(String codigoPostal) {
+	public void setCodigoPostal(String codigoPostal) {
 		this.codigoPostal = codigoPostal;
 	}
 }

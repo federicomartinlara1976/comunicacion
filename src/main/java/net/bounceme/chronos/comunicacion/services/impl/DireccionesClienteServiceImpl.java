@@ -23,6 +23,7 @@ import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.Cliente;
 import net.bounceme.chronos.comunicacion.model.DireccionCliente;
 import net.bounceme.chronos.comunicacion.services.DireccionesClienteService;
+import net.bounceme.chronos.comunicacion.services.helpers.DireccionClienteHelper;
 import net.bounceme.chronos.utils.assemblers.Assembler;
 import net.bounceme.chronos.utils.exceptions.AssembleException;
 
@@ -57,18 +58,11 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 	@Qualifier("direccionClienteAssembler")
 	private Assembler<DireccionCliente, DireccionClienteDTO> direccionClienteAssembler;
 
-	/**
-	 * @param idCliente
-	 * @param direccion
-	 * @param numero
-	 * @param escalera
-	 * @param piso
-	 * @param puerta
-	 * @param localidad
-	 * @param provincia
-	 * @param codigoPostal
-	 * @return
-	 * @throws ServiceException
+	@Autowired
+	private DireccionClienteHelper direccionClienteHelper;  
+	
+	/* (non-Javadoc)
+	 * @see net.bounceme.chronos.comunicacion.services.DireccionesClienteService#nuevo(java.lang.Long, net.bounceme.chronos.comunicacion.dto.DireccionClienteDTO)
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -79,7 +73,7 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 			
 			boolean isNew = true;
 			DireccionCliente direccionCliente = obtenerDireccion(cliente, null, isNew);
-			fillDireccion(direccionCliente, direccionClienteDTO);
+			direccionClienteHelper.copyDireccion(direccionClienteDTO, direccionCliente);
 			
 			return direccionClienteAssembler.assemble(direccionesClienteRepository.saveObject(direccionCliente));
 		} catch (Exception e) {
@@ -88,10 +82,8 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 		}
 	}
 
-	/**
-	 * @param idCliente
-	 * @param idDireccion
-	 * @return
+	/* (non-Javadoc)
+	 * @see net.bounceme.chronos.comunicacion.services.DireccionesClienteService#get(java.lang.Long)
 	 */
 	@Override
 	public DireccionClienteDTO get(Long idDireccion) {
@@ -103,18 +95,8 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 		}
 	}
 
-	/**
-	 * @param idCliente
-	 * @param idDireccion
-	 * @param direccion
-	 * @param numero
-	 * @param escalera
-	 * @param piso
-	 * @param puerta
-	 * @param localidad
-	 * @param provincia
-	 * @param codigoPostal
-	 * @throws ServiceException
+	/* (non-Javadoc)
+	 * @see net.bounceme.chronos.comunicacion.services.DireccionesClienteService#actualizar(net.bounceme.chronos.comunicacion.dto.DireccionClienteDTO)
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -123,7 +105,7 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 		try {
 
 			DireccionCliente direccionCliente = obtenerDireccion(null, direccionClienteDTO.getId(), false);
-			fillDireccion(direccionCliente, direccionClienteDTO);
+			direccionClienteHelper.copyDireccion(direccionClienteDTO, direccionCliente);
 
 			direccionesClienteRepository.updateObject(direccionCliente);
 			log.debug("Direccion modificada correctamente");
@@ -133,10 +115,8 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 		}
 	}
 
-	/**
-	 * @param idCliente
-	 * @param idDireccion
-	 * @throws ServiceException
+	/* (non-Javadoc)
+	 * @see net.bounceme.chronos.comunicacion.services.DireccionesClienteService#borrar(java.lang.Long)
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -152,9 +132,8 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 		}
 	}
 
-	/**
-	 * @param idCliente
-	 * @return
+	/* (non-Javadoc)
+	 * @see net.bounceme.chronos.comunicacion.services.DireccionesClienteService#listar(java.lang.Long)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -206,27 +185,5 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 		}
 		
 		return direccionCliente;
-	}
-	
-	/**
-	 * @param direccionCliente
-	 * @param direccion
-	 * @param numero
-	 * @param escalera
-	 * @param piso
-	 * @param puerta
-	 * @param localidad
-	 * @param provincia
-	 * @param codigoPostal
-	 */
-	private void fillDireccion(DireccionCliente direccionCliente, DireccionClienteDTO direccionClienteDTO) {
-		direccionCliente.setDireccion(direccionClienteDTO.getDireccion());
-		direccionCliente.setNumero(direccionClienteDTO.getNumero());
-		direccionCliente.setEscalera(direccionClienteDTO.getEscalera());
-		direccionCliente.setPiso(direccionClienteDTO.getPiso());
-		direccionCliente.setPuerta(direccionClienteDTO.getPuerta());
-		direccionCliente.setLocalidad(direccionClienteDTO.getLocalidad());
-		direccionCliente.setProvincia(direccionClienteDTO.getProvincia());
-		direccionCliente.setCodigoPostal(direccionClienteDTO.getCodigoPostal());
 	}
 }

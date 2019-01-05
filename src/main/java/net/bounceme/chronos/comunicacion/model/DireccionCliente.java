@@ -16,6 +16,8 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import net.bounceme.chronos.comunicacion.common.Direccion;
+
 /**
  * Entidad que representa una forma de comunicarse con el cliente
  * 
@@ -25,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name = "DIRECCIONES_CLIENTE")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "DIRECCIONES_CLIENTE")
-public class DireccionCliente implements Serializable {
+public class DireccionCliente implements Direccion, Serializable {
 
 	/**
 	 * 

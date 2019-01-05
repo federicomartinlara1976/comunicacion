@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 import net.bounceme.chronos.comunicacion.controllers.params.ParamsDireccion;
 import net.bounceme.chronos.comunicacion.dto.DireccionClienteDTO;
-import net.bounceme.chronos.comunicacion.services.helpers.DireccionClienteHelper;
+import net.bounceme.chronos.comunicacion.helpers.DireccionHelper;
 import net.bounceme.chronos.utils.assemblers.GenericAssembler;
 import net.bounceme.chronos.utils.exceptions.AssembleException;
 
@@ -13,7 +13,7 @@ import net.bounceme.chronos.utils.exceptions.AssembleException;
 public class ParamsDireccionAssembler extends GenericAssembler<ParamsDireccion, DireccionClienteDTO> {
 
 	@Autowired
-	private DireccionClienteHelper direccionClienteHelper; 
+	private DireccionHelper direccionClienteHelper; 
 	
 	public ParamsDireccionAssembler() {
 		super(ParamsDireccion.class, DireccionClienteDTO.class);

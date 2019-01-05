@@ -20,10 +20,10 @@ import net.bounceme.chronos.comunicacion.data.dao.DaoPersistence;
 import net.bounceme.chronos.comunicacion.data.dao.DaoQueries;
 import net.bounceme.chronos.comunicacion.dto.DireccionClienteDTO;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
+import net.bounceme.chronos.comunicacion.helpers.DireccionHelper;
 import net.bounceme.chronos.comunicacion.model.Cliente;
 import net.bounceme.chronos.comunicacion.model.DireccionCliente;
 import net.bounceme.chronos.comunicacion.services.DireccionesClienteService;
-import net.bounceme.chronos.comunicacion.services.helpers.DireccionClienteHelper;
 import net.bounceme.chronos.utils.assemblers.Assembler;
 import net.bounceme.chronos.utils.exceptions.AssembleException;
 
@@ -59,7 +59,7 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 	private Assembler<DireccionCliente, DireccionClienteDTO> direccionClienteAssembler;
 
 	@Autowired
-	private DireccionClienteHelper direccionClienteHelper;  
+	private DireccionHelper direccionClienteHelper;  
 	
 	/* (non-Javadoc)
 	 * @see net.bounceme.chronos.comunicacion.services.DireccionesClienteService#nuevo(java.lang.Long, net.bounceme.chronos.comunicacion.dto.DireccionClienteDTO)

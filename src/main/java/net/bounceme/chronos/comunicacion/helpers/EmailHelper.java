@@ -1,4 +1,4 @@
-package net.bounceme.chronos.comunicacion.services.helpers;
+package net.bounceme.chronos.comunicacion.helpers;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;

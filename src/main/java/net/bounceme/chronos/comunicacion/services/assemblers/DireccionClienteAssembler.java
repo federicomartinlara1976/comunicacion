@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import net.bounceme.chronos.comunicacion.dto.DireccionClienteDTO;
+import net.bounceme.chronos.comunicacion.helpers.DireccionHelper;
 import net.bounceme.chronos.comunicacion.model.DireccionCliente;
-import net.bounceme.chronos.comunicacion.services.helpers.DireccionClienteHelper;
 import net.bounceme.chronos.utils.assemblers.BidirectionalGenericAssembler;
 import net.bounceme.chronos.utils.exceptions.AssembleException;
 
@@ -13,7 +13,7 @@ import net.bounceme.chronos.utils.exceptions.AssembleException;
 public class DireccionClienteAssembler extends BidirectionalGenericAssembler<DireccionCliente, DireccionClienteDTO> {
 
 	@Autowired
-	private DireccionClienteHelper direccionClienteHelper; 
+	private DireccionHelper direccionClienteHelper; 
 	
     public DireccionClienteAssembler() {
         super(DireccionCliente.class, DireccionClienteDTO.class);

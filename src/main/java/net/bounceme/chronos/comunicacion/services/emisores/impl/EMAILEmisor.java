@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import net.bounceme.chronos.comunicacion.helpers.EmailHelper;
 import net.bounceme.chronos.comunicacion.services.emisores.Emisor;
-import net.bounceme.chronos.comunicacion.services.helpers.EmailHelper;
 import net.bounceme.chronos.comunicacion.utils.Constantes;
 import net.bounceme.chronos.comunicacion.utils.Constantes.ResultadoEnvio;
 

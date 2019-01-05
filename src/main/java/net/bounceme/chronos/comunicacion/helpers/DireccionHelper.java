@@ -1,11 +1,11 @@
-package net.bounceme.chronos.comunicacion.services.helpers;
+package net.bounceme.chronos.comunicacion.helpers;
 
 import org.springframework.stereotype.Component;
 
 import net.bounceme.chronos.comunicacion.common.Direccion;
 
 @Component
-public class DireccionClienteHelper {
+public class DireccionHelper {
 
 	
 	/**

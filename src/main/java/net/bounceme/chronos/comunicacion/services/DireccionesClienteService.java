@@ -11,19 +11,11 @@ public interface DireccionesClienteService {
 
 	/**
 	 * @param idCliente
-	 * @param direccion
-	 * @param numero
-	 * @param escalera
-	 * @param piso
-	 * @param puerta
-	 * @param localidad
-	 * @param provincia
-	 * @param codigoPostal
+	 * @param direccionClienteDTO
 	 * @return
 	 * @throws ServiceException
 	 */
-	DireccionClienteDTO nuevo(Long idCliente, String direccion, String numero, String escalera, Integer piso,
-			String puerta, String localidad, String provincia, String codigoPostal) throws ServiceException;
+	DireccionClienteDTO nuevo(Long idCliente, DireccionClienteDTO direccionClienteDTO) throws ServiceException;
 
 	/**
 	 * @param idCliente
@@ -32,21 +24,12 @@ public interface DireccionesClienteService {
 	 */
 	DireccionClienteDTO get(Long idDireccion);
 
+	
 	/**
-	 * @param idCliente
-	 * @param idDireccion
-	 * @param direccion
-	 * @param numero
-	 * @param escalera
-	 * @param piso
-	 * @param puerta
-	 * @param localidad
-	 * @param provincia
-	 * @param codigoPostal
+	 * @param direccionClienteDTO
 	 * @throws ServiceException
 	 */
-	void actualizar(Long idCliente, Long idDireccion, String direccion, String numero, String escalera, Integer piso,
-			String puerta, String localidad, String provincia, String codigoPostal) throws ServiceException;
+	void actualizar(DireccionClienteDTO direccionClienteDTO) throws ServiceException;
 
 	/**
 	 * @param idDireccion

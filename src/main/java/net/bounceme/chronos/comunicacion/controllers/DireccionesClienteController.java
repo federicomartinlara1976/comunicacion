@@ -24,6 +24,8 @@ import net.bounceme.chronos.comunicacion.dto.DireccionClienteDTO;
 import net.bounceme.chronos.comunicacion.exceptions.ControllerException;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.services.DireccionesClienteService;
+import net.bounceme.chronos.utils.assemblers.Assembler;
+import net.bounceme.chronos.utils.exceptions.AssembleException;
 
 /**
  * Controlador para la gestión de medios de comunicación de clientes
@@ -41,6 +43,10 @@ public class DireccionesClienteController {
 	@Autowired
 	@Qualifier(DireccionesClienteService.NAME)
 	private DireccionesClienteService direccionesClienteService;
+	
+	@Autowired
+	@Qualifier("paramsDireccionAssembler")
+	private Assembler<ParamsDireccion, DireccionClienteDTO> paramsDireccionAssembler;
 
 	/**
 	 * @param idCliente
@@ -62,8 +68,9 @@ public class DireccionesClienteController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public DireccionClienteDTO nuevo(@RequestBody ParamsDireccion direccion) throws ControllerException {
 		try {
-			return direccionesClienteService.nuevo(direccion.getIdCliente(), direccion.getAddress(), direccion.getNumber(), direccion.getEsc(), direccion.getFloor(), direccion.getDoor(), direccion.getCity(), direccion.getProvince(), direccion.getPostalCode());
-		} catch (ServiceException e) {
+			DireccionClienteDTO direccionClienteDTO = paramsDireccionAssembler.assemble(direccion);
+			return direccionesClienteService.nuevo(direccion.getIdCliente(), direccionClienteDTO);
+		} catch (ServiceException | AssembleException e) {
 			log.error(ERROR, e);
 			throw new ControllerException(e);
 		}
@@ -91,8 +98,9 @@ public class DireccionesClienteController {
 	@PutMapping(value = "/update")
 	public void actualizar(@RequestBody ParamsDireccion direccion) throws ControllerException {
 		try {
-			direccionesClienteService.actualizar(direccion.getIdCliente(), direccion.getIdDireccion(), direccion.getAddress(), direccion.getNumber(), direccion.getEsc(), direccion.getFloor(), direccion.getDoor(), direccion.getCity(), direccion.getProvince(), direccion.getPostalCode());
-		} catch (ServiceException e) {
+			DireccionClienteDTO direccionClienteDTO = paramsDireccionAssembler.assemble(direccion);
+			direccionesClienteService.actualizar(direccionClienteDTO);
+		} catch (ServiceException | AssembleException e) {
 			log.error(ERROR, e);
 			throw new ControllerException(e);
 		}

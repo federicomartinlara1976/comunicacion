@@ -72,15 +72,14 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public DireccionClienteDTO nuevo(Long idCliente, String direccion, String numero, String escalera,
-			Integer piso, String puerta, String localidad, String provincia, String codigoPostal)
+	public DireccionClienteDTO nuevo(Long idCliente, DireccionClienteDTO direccionClienteDTO)
 			throws ServiceException {
 		try {
 			Cliente cliente = clientesRepository.getObject(idCliente);
 			
 			boolean isNew = true;
 			DireccionCliente direccionCliente = obtenerDireccion(cliente, null, isNew);
-			fillDireccion(direccionCliente, direccion, numero, escalera, piso, puerta, localidad, provincia, codigoPostal);
+			fillDireccion(direccionCliente, direccionClienteDTO);
 			
 			return direccionClienteAssembler.assemble(direccionesClienteRepository.saveObject(direccionCliente));
 		} catch (Exception e) {
@@ -119,14 +118,12 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public void actualizar(Long idCliente, Long idDireccion, String direccion, String numero, String escalera,
-			Integer piso, String puerta, String localidad, String provincia, String codigoPostal)
+	public void actualizar(DireccionClienteDTO direccionClienteDTO)
 			throws ServiceException {
 		try {
-			Cliente cliente = clientesRepository.getObject(idCliente);
 
-			DireccionCliente direccionCliente = obtenerDireccion(cliente, idDireccion, false);
-			fillDireccion(direccionCliente, direccion, numero, escalera, piso, puerta, localidad, provincia, codigoPostal);
+			DireccionCliente direccionCliente = obtenerDireccion(null, direccionClienteDTO.getId(), false);
+			fillDireccion(direccionCliente, direccionClienteDTO);
 
 			direccionesClienteRepository.updateObject(direccionCliente);
 			log.debug("Direccion modificada correctamente");
@@ -222,15 +219,14 @@ public class DireccionesClienteServiceImpl implements DireccionesClienteService 
 	 * @param provincia
 	 * @param codigoPostal
 	 */
-	private void fillDireccion(DireccionCliente direccionCliente, String direccion, String numero, String escalera,
-			Integer piso, String puerta, String localidad, String provincia, String codigoPostal) {
-		direccionCliente.setDireccion(direccion);
-		direccionCliente.setNumero(numero);
-		direccionCliente.setEscalera(escalera);
-		direccionCliente.setPiso(piso);
-		direccionCliente.setPuerta(puerta);
-		direccionCliente.setLocalidad(localidad);
-		direccionCliente.setProvincia(provincia);
-		direccionCliente.setCodigoPostal(codigoPostal);
+	private void fillDireccion(DireccionCliente direccionCliente, DireccionClienteDTO direccionClienteDTO) {
+		direccionCliente.setDireccion(direccionClienteDTO.getDireccion());
+		direccionCliente.setNumero(direccionClienteDTO.getNumero());
+		direccionCliente.setEscalera(direccionClienteDTO.getEscalera());
+		direccionCliente.setPiso(direccionClienteDTO.getPiso());
+		direccionCliente.setPuerta(direccionClienteDTO.getPuerta());
+		direccionCliente.setLocalidad(direccionClienteDTO.getLocalidad());
+		direccionCliente.setProvincia(direccionClienteDTO.getProvincia());
+		direccionCliente.setCodigoPostal(direccionClienteDTO.getCodigoPostal());
 	}
 }

@@ -4,7 +4,6 @@ import java.util.List;
 
 import net.bounceme.chronos.comunicacion.dto.TipoComunicacionDTO;
 import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
-import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
 
 /**
  * Interfaz del servicio que gestiona los tipos de comunicación 

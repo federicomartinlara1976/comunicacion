@@ -1,103 +1,34 @@
-package net.bounceme.chronos.comunicacion.model;
+package net.bounceme.chronos.comunicacion.common;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import net.bounceme.chronos.comunicacion.common.Direccion;
-
-/**
- * Entidad que representa una forma de comunicarse con el cliente
- * 
- * @author frederik
- *
- */
-@Entity
-@Table(name = "DIRECCIONES_CLIENTE")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "DIRECCIONES_CLIENTE")
-public class DireccionCliente implements Direccion, Serializable {
+@JsonInclude(Include.NON_NULL)
+public class DireccionDTO implements Direccion, Serializable {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -2396223420414145945L;
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	
-	/**
-	 * Cliente al que pertenece este medio
-	 */
-	@JsonIgnore
-	@ManyToOne
-	@JoinColumn(name="idCliente")
-	private Cliente cliente;
+	private static final long serialVersionUID = -1775117564075688057L;
 
-	@Column
 	private String direccion;
 	
-	@Column
 	private String numero;
 	
-	@Column
 	private Integer piso;
 	
-	@Column
 	private String escalera;
 	
-	@Column
 	private String puerta;
 	
-	@Column
 	private String localidad;
 	
-	@Column
 	private String provincia;
 	
-	@Column
 	private String codigoPostal;
-	
-	/**
-	 * @return
-	 */
-	public Long getId() {
-		return id;
-	}
-
-	/**
-	 * @param id
-	 */
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	/**
-	 * @return the cliente
-	 */
-	public Cliente getCliente() {
-		return cliente;
-	}
-
-	/**
-	 * @param cliente the cliente to set
-	 */
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
-	}
 
 	/**
 	 * @return the direccion
@@ -216,7 +147,7 @@ public class DireccionCliente implements Direccion, Serializable {
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(cliente, codigoPostal, direccion, escalera, id, localidad, numero, piso, provincia, puerta);
+		return Objects.hash(codigoPostal, direccion, escalera, localidad, numero, piso, provincia, puerta);
 	}
 
 	/* (non-Javadoc)
@@ -230,13 +161,12 @@ public class DireccionCliente implements Direccion, Serializable {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof DireccionCliente)) {
+		if (!(obj instanceof DireccionDTO)) {
 			return false;
 		}
-		DireccionCliente other = (DireccionCliente) obj;
-		return Objects.equals(cliente, other.cliente) && Objects.equals(codigoPostal, other.codigoPostal)
-				&& Objects.equals(direccion, other.direccion) && Objects.equals(escalera, other.escalera)
-				&& Objects.equals(id, other.id) && Objects.equals(localidad, other.localidad)
+		DireccionDTO other = (DireccionDTO) obj;
+		return Objects.equals(codigoPostal, other.codigoPostal) && Objects.equals(direccion, other.direccion)
+				&& Objects.equals(escalera, other.escalera) && Objects.equals(localidad, other.localidad)
 				&& Objects.equals(numero, other.numero) && Objects.equals(piso, other.piso)
 				&& Objects.equals(provincia, other.provincia) && Objects.equals(puerta, other.puerta);
 	}
@@ -247,17 +177,7 @@ public class DireccionCliente implements Direccion, Serializable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("DireccionCliente [");
-		if (id != null) {
-			builder.append("id=");
-			builder.append(id);
-			builder.append(", ");
-		}
-		if (cliente != null) {
-			builder.append("cliente=");
-			builder.append(cliente);
-			builder.append(", ");
-		}
+		builder.append("DireccionDTO [");
 		if (direccion != null) {
 			builder.append("direccion=");
 			builder.append(direccion);

@@ -26,7 +26,7 @@ import net.bounceme.chronos.comunicacion.services.NotificacionesService;
  *
  */
 @RestController
-@RequestMapping("/notificaciones")
+@RequestMapping("/api/notificaciones")
 public class NotificacionesController {
 	Logger log = LoggerFactory.getLogger(NotificacionesController.class);
 

@@ -34,7 +34,7 @@ import net.bounceme.chronos.comunicacion.services.ClientesService;
  *
  */
 @RestController
-@RequestMapping("/clientes")
+@RequestMapping("/api/clientes")
 public class ClientesController {
 	private static final String ERROR = "ERROR: ";
 

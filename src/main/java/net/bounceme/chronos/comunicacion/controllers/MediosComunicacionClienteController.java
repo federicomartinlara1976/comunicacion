@@ -32,7 +32,7 @@ import net.bounceme.chronos.comunicacion.services.MediosComunicacionClienteServi
  *
  */
 @RestController
-@RequestMapping("/clientes/mediosComunicacion")
+@RequestMapping("/api/clientes/mediosComunicacion")
 public class MediosComunicacionClienteController {
 	private static final String ERROR = "ERROR: ";
 

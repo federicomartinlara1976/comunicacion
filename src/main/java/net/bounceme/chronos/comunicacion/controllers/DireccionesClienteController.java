@@ -34,7 +34,7 @@ import net.bounceme.chronos.utils.exceptions.AssembleException;
  *
  */
 @RestController
-@RequestMapping("/clientes/direcciones")
+@RequestMapping("/api/clientes/direcciones")
 public class DireccionesClienteController {
 	private static final String ERROR = "ERROR: ";
 

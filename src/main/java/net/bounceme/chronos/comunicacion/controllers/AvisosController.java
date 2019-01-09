@@ -33,7 +33,7 @@ import net.bounceme.chronos.comunicacion.services.AvisosService;
  *
  */
 @RestController
-@RequestMapping("/avisos")
+@RequestMapping("/api/avisos")
 public class AvisosController {
 	Logger log = LoggerFactory.getLogger(AvisosController.class);
 

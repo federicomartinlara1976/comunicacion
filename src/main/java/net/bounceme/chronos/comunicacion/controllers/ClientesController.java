@@ -66,7 +66,7 @@ public class ClientesController {
 	 */
 	@CrossOrigin
 	@PostMapping(value = "/search", consumes = "application/json")
-	@ResponseStatus(HttpStatus.CREATED)
+	@ResponseStatus(HttpStatus.OK)
 	public List<ClienteDTO> buscar(@RequestBody ParamCliente cliente) {
 		List<ClienteDTO> clientes = new ArrayList<>();
 		if (!Objects.isNull(cliente.getName()) && !Objects.isNull(cliente.getLastName())) {

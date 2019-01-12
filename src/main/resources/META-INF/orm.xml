@@ -194,5 +194,16 @@
     		 ]]>
 		</query>
     </named-query>
+    
+    <!-- Consulta de un usuario activo -->
+    <named-query name="usuarioActivo">
+    	<query>
+			<![CDATA[
+    		select u
+    		from UserInfo u 
+    		where u.userName = :username and u.enabled = :enabled	
+    		 ]]>
+		</query>
+    </named-query>
 
 </entity-mappings>

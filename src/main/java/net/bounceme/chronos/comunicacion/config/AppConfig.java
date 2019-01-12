@@ -28,6 +28,7 @@ import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -45,6 +46,7 @@ import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
 import net.bounceme.chronos.comunicacion.model.Notificacion;
 import net.bounceme.chronos.comunicacion.model.RegistroNotificacion;
 import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
+import net.bounceme.chronos.comunicacion.security.PlainPasswordEncoder;
 import net.bounceme.chronos.comunicacion.services.TiposComunicacionService;
 
 @Configuration
@@ -277,6 +279,11 @@ public class AppConfig {
 				log.error("ERROR: ", e);
 			}
 		});
+	}
+	
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new PlainPasswordEncoder();
 	}
 	
 	@Bean(name = TLS_MAIL_SESSION)

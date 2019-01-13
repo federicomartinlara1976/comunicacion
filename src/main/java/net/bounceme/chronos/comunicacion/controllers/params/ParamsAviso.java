@@ -2,15 +2,17 @@ package net.bounceme.chronos.comunicacion.controllers.params;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class ParamsAviso {
 
-	@NotBlank
+	@NotNull
     private Long idCliente;
     
-	@NotBlank
+	@NotNull
     private Long idDireccion;
     
     @DateTimeFormat(pattern="yyyy-MM-dd")
@@ -74,4 +76,34 @@ public class ParamsAviso {
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
     }
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("ParamsAviso [");
+		if (idCliente != null) {
+			builder.append("idCliente=");
+			builder.append(idCliente);
+			builder.append(", ");
+		}
+		if (idDireccion != null) {
+			builder.append("idDireccion=");
+			builder.append(idDireccion);
+			builder.append(", ");
+		}
+		if (fechaInicioObra != null) {
+			builder.append("fechaInicioObra=");
+			builder.append(fechaInicioObra);
+			builder.append(", ");
+		}
+		if (mensaje != null) {
+			builder.append("mensaje=");
+			builder.append(mensaje);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
 }

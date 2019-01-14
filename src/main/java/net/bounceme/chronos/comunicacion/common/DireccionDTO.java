@@ -6,6 +6,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import net.bounceme.chronos.utils.validation.integersize.IntegerSize;
 import net.bounceme.chronos.utils.validation.positive.PositiveInteger;
 
 @JsonInclude(Include.NON_NULL)
@@ -18,7 +19,8 @@ public class DireccionDTO implements Direccion, Serializable {
 
 	private String direccion;
 	
-	private String numero;
+	@PositiveInteger
+	private Integer numero;
 	
 	@PositiveInteger
 	private Integer piso;
@@ -31,7 +33,8 @@ public class DireccionDTO implements Direccion, Serializable {
 	
 	private String provincia;
 	
-	private String codigoPostal;
+	@IntegerSize(5)
+	private Integer codigoPostal;
 
 	/**
 	 * @return the direccion
@@ -50,14 +53,14 @@ public class DireccionDTO implements Direccion, Serializable {
 	/**
 	 * @return the numero
 	 */
-	public String getNumero() {
+	public Integer getNumero() {
 		return numero;
 	}
 
 	/**
 	 * @param numero the numero to set
 	 */
-	public void setNumero(String numero) {
+	public void setNumero(Integer numero) {
 		this.numero = numero;
 	}
 
@@ -134,14 +137,14 @@ public class DireccionDTO implements Direccion, Serializable {
 	/**
 	 * @return the codigoPostal
 	 */
-	public String getCodigoPostal() {
+	public Integer getCodigoPostal() {
 		return codigoPostal;
 	}
 
 	/**
 	 * @param codigoPostal the codigoPostal to set
 	 */
-	public void setCodigoPostal(String codigoPostal) {
+	public void setCodigoPostal(Integer codigoPostal) {
 		this.codigoPostal = codigoPostal;
 	}
 

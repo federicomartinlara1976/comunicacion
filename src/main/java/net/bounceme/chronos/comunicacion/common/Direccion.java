@@ -14,12 +14,12 @@ public interface Direccion {
 	/**
 	 * @return the numero
 	 */
-	public String getNumero();
+	public Integer getNumero();
 
 	/**
 	 * @param numero the numero to set
 	 */
-	public void setNumero(String numero);
+	public void setNumero(Integer numero);
 
 	/**
 	 * @return the piso
@@ -74,10 +74,10 @@ public interface Direccion {
 	/**
 	 * @return the codigoPostal
 	 */
-	public String getCodigoPostal();
+	public Integer getCodigoPostal();
 
 	/**
 	 * @param codigoPostal the codigoPostal to set
 	 */
-	public void setCodigoPostal(String codigoPostal);
+	public void setCodigoPostal(Integer codigoPostal);
 }

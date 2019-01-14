@@ -1,5 +1,7 @@
 package net.bounceme.chronos.comunicacion.controllers;
 
+import javax.validation.ValidationException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -40,7 +42,7 @@ public class StatusHandler {
 	 * @param exception
 	 */
 	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR, reason = "Error interno")
-	@ExceptionHandler({ ControllerException.class, MethodArgumentNotValidException.class, Exception.class })
+	@ExceptionHandler({ ControllerException.class, MethodArgumentNotValidException.class, ValidationException.class, Exception.class })
 	public void handleServiceException(Exception exception) {
 		log.error("ERROR: ", exception);
 	}

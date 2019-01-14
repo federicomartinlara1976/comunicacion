@@ -6,6 +6,8 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import net.bounceme.chronos.utils.validation.positive.PositiveInteger;
+
 @JsonInclude(Include.NON_NULL)
 public class DireccionDTO implements Direccion, Serializable {
 
@@ -18,6 +20,7 @@ public class DireccionDTO implements Direccion, Serializable {
 	
 	private String numero;
 	
+	@PositiveInteger
 	private Integer piso;
 	
 	private String escalera;

@@ -2,6 +2,8 @@ package net.bounceme.chronos.comunicacion.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +68,7 @@ public class DireccionesClienteController {
 	@CrossOrigin
 	@PostMapping(value = "/new")
 	@ResponseStatus(HttpStatus.CREATED)
-	public DireccionClienteDTO nuevo(@RequestBody ParamsDireccion direccion) throws ControllerException {
+	public DireccionClienteDTO nuevo(@RequestBody @Valid ParamsDireccion direccion) throws ControllerException {
 		try {
 			DireccionClienteDTO direccionClienteDTO = paramsDireccionAssembler.assemble(direccion);
 			return direccionesClienteService.nuevo(direccion.getIdCliente(), direccionClienteDTO);
@@ -96,7 +98,7 @@ public class DireccionesClienteController {
 	 */
 	@CrossOrigin
 	@PutMapping(value = "/update")
-	public void actualizar(@RequestBody ParamsDireccion direccion) throws ControllerException {
+	public void actualizar(@RequestBody @Valid ParamsDireccion direccion) throws ControllerException {
 		try {
 			DireccionClienteDTO direccionClienteDTO = paramsDireccionAssembler.assemble(direccion);
 			direccionesClienteService.actualizar(direccionClienteDTO);

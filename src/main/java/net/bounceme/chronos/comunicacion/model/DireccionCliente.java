@@ -9,7 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
@@ -43,7 +43,7 @@ public class DireccionCliente implements Direccion, Serializable {
 	 * Cliente al que pertenece este medio
 	 */
 	@JsonIgnore
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name="idCliente")
 	private Cliente cliente;
 

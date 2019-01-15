@@ -1,6 +1,7 @@
 package net.bounceme.chronos.comunicacion.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,7 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
@@ -39,7 +40,7 @@ public class MedioComunicacionCliente implements Serializable {
 	/**
 	 * El tipo de comunicación (SMS, FAX, email)
 	 */
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name="idTipoComunicacion")
 	private TipoComunicacion tipoComunicacion;
 	
@@ -47,7 +48,7 @@ public class MedioComunicacionCliente implements Serializable {
 	 * Cliente al que pertenece este medio
 	 */
 	@JsonIgnore
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name="idCliente")
 	private Cliente cliente;
 
@@ -115,23 +116,11 @@ public class MedioComunicacionCliente implements Serializable {
 	}
 
 	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "MedioComunicacionCliente [valor=" + valor + "]";
-	}
-
-	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((cliente == null) ? 0 : cliente.hashCode());
-		result = prime * result + ((valor == null) ? 0 : valor.hashCode());
-		return result;
+		return Objects.hash(cliente, id, tipoComunicacion, valor);
 	}
 
 	/* (non-Javadoc)
@@ -139,25 +128,47 @@ public class MedioComunicacionCliente implements Serializable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (!(obj instanceof MedioComunicacionCliente)) {
 			return false;
+		}
 		MedioComunicacionCliente other = (MedioComunicacionCliente) obj;
-		if (cliente == null) {
-			if (other.cliente != null)
-				return false;
+		return Objects.equals(cliente, other.cliente) && Objects.equals(id, other.id)
+				&& Objects.equals(tipoComunicacion, other.tipoComunicacion) && Objects.equals(valor, other.valor);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("MedioComunicacionCliente [");
+		if (id != null) {
+			builder.append("id=");
+			builder.append(id);
+			builder.append(", ");
 		}
-		else if (!cliente.equals(other.cliente))
-			return false;
-		if (valor == null) {
-			if (other.valor != null)
-				return false;
+		if (tipoComunicacion != null) {
+			builder.append("tipoComunicacion=");
+			builder.append(tipoComunicacion);
+			builder.append(", ");
 		}
-		else if (!valor.equals(other.valor))
-			return false;
-		return true;
+		if (cliente != null) {
+			builder.append("cliente=");
+			builder.append(cliente);
+			builder.append(", ");
+		}
+		if (valor != null) {
+			builder.append("valor=");
+			builder.append(valor);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 }

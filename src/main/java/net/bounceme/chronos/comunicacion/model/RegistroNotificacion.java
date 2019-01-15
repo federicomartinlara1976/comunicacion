@@ -2,6 +2,7 @@ package net.bounceme.chronos.comunicacion.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
@@ -29,11 +30,11 @@ public class RegistroNotificacion implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name="idCliente", nullable = true)
 	private Cliente cliente;
 	
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name="idNotificacion", nullable = true)
 	private Notificacion notificacion;
 	
@@ -83,58 +84,66 @@ public class RegistroNotificacion implements Serializable {
 		this.fechaHoraNotificacion = fechaHoraNotificacion;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((cliente == null) ? 0 : cliente.hashCode());
-		result = prime * result + ((fechaHoraNotificacion == null) ? 0 : fechaHoraNotificacion.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((notificacion == null) ? 0 : notificacion.hashCode());
-		result = prime * result + ((resultado == null) ? 0 : resultado.hashCode());
-		return result;
+		return Objects.hash(cliente, fechaHoraNotificacion, id, notificacion, resultado);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (!(obj instanceof RegistroNotificacion)) {
 			return false;
+		}
 		RegistroNotificacion other = (RegistroNotificacion) obj;
-		if (cliente == null) {
-			if (other.cliente != null)
-				return false;
-		} else if (!cliente.equals(other.cliente))
-			return false;
-		if (fechaHoraNotificacion == null) {
-			if (other.fechaHoraNotificacion != null)
-				return false;
-		} else if (!fechaHoraNotificacion.equals(other.fechaHoraNotificacion))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (notificacion == null) {
-			if (other.notificacion != null)
-				return false;
-		} else if (!notificacion.equals(other.notificacion))
-			return false;
-		if (resultado == null) {
-			if (other.resultado != null)
-				return false;
-		} else if (!resultado.equals(other.resultado))
-			return false;
-		return true;
+		return Objects.equals(cliente, other.cliente)
+				&& Objects.equals(fechaHoraNotificacion, other.fechaHoraNotificacion) && Objects.equals(id, other.id)
+				&& Objects.equals(notificacion, other.notificacion) && Objects.equals(resultado, other.resultado);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return "RegistroNotificacion [id=" + id + ", cliente=" + cliente + ", notificacion=" + notificacion
-				+ ", resultado=" + resultado + ", fechaHoraNotificacion=" + fechaHoraNotificacion + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("RegistroNotificacion [");
+		if (id != null) {
+			builder.append("id=");
+			builder.append(id);
+			builder.append(", ");
+		}
+		if (cliente != null) {
+			builder.append("cliente=");
+			builder.append(cliente);
+			builder.append(", ");
+		}
+		if (notificacion != null) {
+			builder.append("notificacion=");
+			builder.append(notificacion);
+			builder.append(", ");
+		}
+		if (resultado != null) {
+			builder.append("resultado=");
+			builder.append(resultado);
+			builder.append(", ");
+		}
+		if (fechaHoraNotificacion != null) {
+			builder.append("fechaHoraNotificacion=");
+			builder.append(fechaHoraNotificacion);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 }

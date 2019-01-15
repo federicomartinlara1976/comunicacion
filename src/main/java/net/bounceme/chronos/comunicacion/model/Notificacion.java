@@ -2,6 +2,7 @@ package net.bounceme.chronos.comunicacion.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -69,7 +69,7 @@ public class Notificacion implements Serializable {
 	 * y el medio de comunicación
 	 */
 	@JsonIgnore
-	@ManyToOne(optional=false)
+	@OneToOne(optional=false)
 	@JoinColumn(name="idAviso", nullable=false, updatable=false)
 	private Aviso aviso;
 	
@@ -192,80 +192,84 @@ public class Notificacion implements Serializable {
         this.datosMedioComunicacion = datosMedioComunicacion;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        return "Notificacion [id=" + id + ", fechaHoraCreacion=" + fechaHoraCreacion
-            + ", fechaHoraEnvio=" + fechaHoraEnvio + ", resultado=" + resultado + "]";
-    }
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return Objects.hash(aviso, datosMedioComunicacion, estado, fechaHoraCreacion, fechaHoraEnvio, id, reintentos,
+				resultado);
+	}
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((aviso == null) ? 0 : aviso.hashCode());
-        result = prime * result
-            + ((datosMedioComunicacion == null) ? 0 : datosMedioComunicacion.hashCode());
-        result = prime * result + ((fechaHoraCreacion == null) ? 0 : fechaHoraCreacion.hashCode());
-        result = prime * result + ((fechaHoraEnvio == null) ? 0 : fechaHoraEnvio.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((resultado == null) ? 0 : resultado.hashCode());
-        return result;
-    }
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Notificacion)) {
+			return false;
+		}
+		Notificacion other = (Notificacion) obj;
+		return Objects.equals(aviso, other.aviso)
+				&& Objects.equals(datosMedioComunicacion, other.datosMedioComunicacion)
+				&& Objects.equals(estado, other.estado) && Objects.equals(fechaHoraCreacion, other.fechaHoraCreacion)
+				&& Objects.equals(fechaHoraEnvio, other.fechaHoraEnvio) && Objects.equals(id, other.id)
+				&& Objects.equals(reintentos, other.reintentos) && Objects.equals(resultado, other.resultado);
+	}
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Notificacion other = (Notificacion) obj;
-        if (aviso == null) {
-            if (other.aviso != null)
-                return false;
-        }
-        else if (!aviso.equals(other.aviso))
-            return false;
-        if (datosMedioComunicacion == null) {
-            if (other.datosMedioComunicacion != null)
-                return false;
-        }
-        else if (!datosMedioComunicacion.equals(other.datosMedioComunicacion))
-            return false;
-        if (fechaHoraCreacion == null) {
-            if (other.fechaHoraCreacion != null)
-                return false;
-        }
-        else if (!fechaHoraCreacion.equals(other.fechaHoraCreacion))
-            return false;
-        if (fechaHoraEnvio == null) {
-            if (other.fechaHoraEnvio != null)
-                return false;
-        }
-        else if (!fechaHoraEnvio.equals(other.fechaHoraEnvio))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!id.equals(other.id))
-            return false;
-        if (resultado == null) {
-            if (other.resultado != null)
-                return false;
-        }
-        else if (!resultado.equals(other.resultado))
-            return false;
-        return true;
-    }
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Notificacion [");
+		if (id != null) {
+			builder.append("id=");
+			builder.append(id);
+			builder.append(", ");
+		}
+		if (fechaHoraCreacion != null) {
+			builder.append("fechaHoraCreacion=");
+			builder.append(fechaHoraCreacion);
+			builder.append(", ");
+		}
+		if (fechaHoraEnvio != null) {
+			builder.append("fechaHoraEnvio=");
+			builder.append(fechaHoraEnvio);
+			builder.append(", ");
+		}
+		if (resultado != null) {
+			builder.append("resultado=");
+			builder.append(resultado);
+			builder.append(", ");
+		}
+		if (reintentos != null) {
+			builder.append("reintentos=");
+			builder.append(reintentos);
+			builder.append(", ");
+		}
+		if (estado != null) {
+			builder.append("estado=");
+			builder.append(estado);
+			builder.append(", ");
+		}
+		if (aviso != null) {
+			builder.append("aviso=");
+			builder.append(aviso);
+			builder.append(", ");
+		}
+		if (datosMedioComunicacion != null) {
+			builder.append("datosMedioComunicacion=");
+			builder.append(datosMedioComunicacion);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
 }

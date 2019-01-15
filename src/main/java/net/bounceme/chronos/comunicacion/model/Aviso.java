@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,8 +13,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
@@ -55,7 +56,7 @@ public class Aviso implements Serializable {
 	 * Este es el cliente para el cual se genera este aviso
 	 */
 	@JsonIgnore
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name="idCliente", nullable = true)
 	private Cliente cliente;
 
@@ -63,7 +64,7 @@ public class Aviso implements Serializable {
 	 * Esta es la direccion del cliente para el cual se genera este aviso
 	 */
 	@JsonIgnore
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name="idDireccion", nullable = true)
 	private DireccionCliente direccionCliente;
 	
@@ -174,88 +175,77 @@ public class Aviso implements Serializable {
 		this.notificaciones = Collections.unmodifiableList(notificaciones);
 	}
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        return "Aviso [id=" + id + ", fechaInicioObra=" + fechaInicioObra + ", mensaje=" + mensaje
-            + ", estaNotificado=" + estaNotificado + "]";
-    }
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return Objects.hash(cliente, direccionCliente, estaNotificado, fechaInicioObra, id, mensaje, notificaciones);
+	}
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((cliente == null) ? 0 : cliente.hashCode());
-        result = prime * result + ((direccionCliente == null) ? 0 : direccionCliente.hashCode());
-        result = prime * result + ((estaNotificado == null) ? 0 : estaNotificado.hashCode());
-        result = prime * result + ((fechaInicioObra == null) ? 0 : fechaInicioObra.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((mensaje == null) ? 0 : mensaje.hashCode());
-        result = prime * result + ((notificaciones == null) ? 0 : notificaciones.hashCode());
-        return result;
-    }
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Aviso)) {
+			return false;
+		}
+		Aviso other = (Aviso) obj;
+		return Objects.equals(cliente, other.cliente) && Objects.equals(direccionCliente, other.direccionCliente)
+				&& Objects.equals(estaNotificado, other.estaNotificado)
+				&& Objects.equals(fechaInicioObra, other.fechaInicioObra) && Objects.equals(id, other.id)
+				&& Objects.equals(mensaje, other.mensaje) && Objects.equals(notificaciones, other.notificaciones);
+	}
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Aviso other = (Aviso) obj;
-        if (cliente == null) {
-            if (other.cliente != null)
-                return false;
-        }
-        else if (!cliente.equals(other.cliente))
-            return false;
-        
-        if (direccionCliente == null) {
-            if (other.direccionCliente != null)
-                return false;
-        }
-        else if (!direccionCliente.equals(other.direccionCliente))
-            return false;
-        
-        if (estaNotificado == null) {
-            if (other.estaNotificado != null)
-                return false;
-        }
-        else if (!estaNotificado.equals(other.estaNotificado))
-            return false;
-        if (fechaInicioObra == null) {
-            if (other.fechaInicioObra != null)
-                return false;
-        }
-        else if (!fechaInicioObra.equals(other.fechaInicioObra))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        }
-        else if (!id.equals(other.id))
-            return false;
-        if (mensaje == null) {
-            if (other.mensaje != null)
-                return false;
-        }
-        else if (!mensaje.equals(other.mensaje))
-            return false;
-        if (notificaciones == null) {
-            if (other.notificaciones != null)
-                return false;
-        }
-        else if (!notificaciones.equals(other.notificaciones))
-            return false;
-        return true;
-    }
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Aviso [");
+		if (id != null) {
+			builder.append("id=");
+			builder.append(id);
+			builder.append(", ");
+		}
+		if (fechaInicioObra != null) {
+			builder.append("fechaInicioObra=");
+			builder.append(fechaInicioObra);
+			builder.append(", ");
+		}
+		if (mensaje != null) {
+			builder.append("mensaje=");
+			builder.append(mensaje);
+			builder.append(", ");
+		}
+		if (estaNotificado != null) {
+			builder.append("estaNotificado=");
+			builder.append(estaNotificado);
+			builder.append(", ");
+		}
+		if (cliente != null) {
+			builder.append("cliente=");
+			builder.append(cliente);
+			builder.append(", ");
+		}
+		if (direccionCliente != null) {
+			builder.append("direccionCliente=");
+			builder.append(direccionCliente);
+			builder.append(", ");
+		}
+		if (notificaciones != null) {
+			builder.append("notificaciones=");
+			builder.append(notificaciones);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
 }

@@ -37,7 +37,7 @@
 			<AppenderRef ref="gelfAppender" />
 		</logger>
 
-		<logger name="net.bounceme.chronos.comunicacion.services.impl"
+		<logger name="net.bounceme.chronos.comunicacion.services"
 			level="DEBUG" additivity="false">
 			<AppenderRef ref="gelfAppender" />
 		</logger>

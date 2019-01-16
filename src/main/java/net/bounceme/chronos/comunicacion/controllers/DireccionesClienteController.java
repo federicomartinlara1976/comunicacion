@@ -43,7 +43,6 @@ public class DireccionesClienteController {
 	Logger log = LoggerFactory.getLogger(DireccionesClienteController.class);
 	
 	@Autowired
-	@Qualifier(DireccionesClienteService.NAME)
 	private DireccionesClienteService direccionesClienteService;
 	
 	@Autowired

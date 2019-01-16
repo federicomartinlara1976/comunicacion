@@ -21,7 +21,6 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
@@ -260,7 +259,7 @@ public class AppConfig {
 	 */
 	@Bean
 	public CommandLineRunner init(
-			@Autowired @Qualifier(TiposComunicacionService.NAME) TiposComunicacionService tiposComunicacionService) {
+			@Autowired TiposComunicacionService tiposComunicacionService) {
 
 		Map<String, String> medios = new HashMap<>();
 		medios.put("SMS", "SMS_Emisor");

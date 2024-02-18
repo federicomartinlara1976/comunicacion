@@ -83,5 +83,5 @@ public class Notificacion implements Serializable {
      */
     @JsonIgnore
     @OneToOne
-    private MedioComunicacionCliente datosMedioComunicacion;
+    private MedioComunicacionCliente medioComunicacionCliente;
 }

@@ -1,22 +1,21 @@
 package net.bounceme.chronos.comunicacion.controllers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.bounceme.chronos.comunicacion.controllers.params.ParamsNotificacion;
+import lombok.extern.slf4j.Slf4j;
 import net.bounceme.chronos.comunicacion.dto.NotificacionDTO;
 import net.bounceme.chronos.comunicacion.exceptions.ControllerException;
-import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.services.NotificacionesService;
 
 /**
@@ -27,11 +26,10 @@ import net.bounceme.chronos.comunicacion.services.NotificacionesService;
  */
 @RestController
 @RequestMapping("/notificaciones")
+@Slf4j
 public class NotificacionesController {
-	Logger log = LoggerFactory.getLogger(NotificacionesController.class);
-
+	
 	@Autowired
-	@Qualifier(NotificacionesService.NAME)
 	private NotificacionesService notificacionesService;
 
 	/**
@@ -43,14 +41,15 @@ public class NotificacionesController {
 	 */
 	@CrossOrigin
 	@PostMapping(value = "/new")
-	@ResponseStatus(HttpStatus.CREATED)
-	public NotificacionDTO nuevo(@RequestBody ParamsNotificacion notificacion) throws ControllerException {
-		try {
-			return notificacionesService.notificarAviso(notificacion.getIdAviso(), notificacion.getIdTipoMedio());
-		} catch (ServiceException e) {
-			log.error("ERROR: ", e);
-			throw new ControllerException(e);
-		}
+	public ResponseEntity<?> nuevo(@RequestBody NotificacionDTO notificacion) {
+		Map<String, Object> response = new HashMap<>();
+
+		notificacion = notificacionesService.save(notificacion);
+
+		log.info("Creada: {}", notificacion.toString());
+		response.put("mensaje", "La notificación ha sido creada con éxito");
+		response.put("notificacion", notificacion);
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	}
 
 	/**
@@ -60,14 +59,8 @@ public class NotificacionesController {
 	 * @throws ControllerException
 	 */
 	@CrossOrigin
-	@PutMapping(value = "/send", consumes = "application/json")
-	@ResponseStatus(HttpStatus.OK)
-	public void enviar(@RequestBody ParamsNotificacion notificacion) throws ControllerException {
-		try {
-			notificacionesService.prepararNotificacionParaEnvio(notificacion.getIdNotificacion());
-		} catch (ServiceException e) {
-			log.error("ERROR: ", e);
-			throw new ControllerException(e);
-		}
+	@PutMapping(value = "/send")
+	public void enviar(@RequestBody NotificacionDTO notificacion) {
+		notificacionesService.prepararNotificacionParaEnvio(notificacion);
 	}
 }

@@ -49,5 +49,5 @@ public class NotificacionDTO implements Serializable {
 	/**
      * 
      */
-    private MedioComunicacionClienteDTO datosMedioComunicacion;
+    private MedioComunicacionClienteDTO medioComunicacion;
 }

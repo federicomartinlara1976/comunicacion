@@ -1,14 +1,23 @@
 package net.bounceme.chronos.comunicacion.services.assemblers;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import net.bounceme.chronos.comunicacion.dto.MedioComunicacionClienteDTO;
 import net.bounceme.chronos.comunicacion.dto.NotificacionDTO;
+import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
 import net.bounceme.chronos.comunicacion.model.Notificacion;
+import net.bounceme.chronos.utils.assemblers.BidirectionalAssembler;
 import net.bounceme.chronos.utils.assemblers.BidirectionalGenericAssembler;
 import net.bounceme.chronos.utils.exceptions.AssembleException;
 
 @Component("notificacionAssembler")
 public class NotificacionAssembler extends BidirectionalGenericAssembler<Notificacion, NotificacionDTO> {
+	
+	@Autowired
+	@Qualifier("clienteAssembler")
+	private BidirectionalAssembler<MedioComunicacionCliente, MedioComunicacionClienteDTO> medioComunicacionClienteAssembler;
 
     public NotificacionAssembler() {
         super(Notificacion.class, NotificacionDTO.class);
@@ -23,6 +32,7 @@ public class NotificacionAssembler extends BidirectionalGenericAssembler<Notific
         		.fechaHoraEnvio(target.getFechaHoraEnvio())
         		.reintentos(target.getReintentos())
         		.resultado(target.getResultado())
+        		.medioComunicacionCliente(medioComunicacionClienteAssembler.reverseAssemble(target.getMedioComunicacion()))
         		.build();
     }
 
@@ -35,6 +45,7 @@ public class NotificacionAssembler extends BidirectionalGenericAssembler<Notific
         		.fechaHoraEnvio(source.getFechaHoraEnvio())
         		.reintentos(source.getReintentos())
         		.resultado(source.getResultado())
+        		.medioComunicacion(medioComunicacionClienteAssembler.assemble(source.getMedioComunicacionCliente()))
         		.build();
     }
 }

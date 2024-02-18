@@ -22,7 +22,6 @@ public class Receiver {
 	private static final Logger log = LoggerFactory.getLogger(Receiver.class);
 
 	@Autowired
-	@Qualifier(NotificacionesService.NAME)
 	private NotificacionesService notificacionesService;
 
 	/**

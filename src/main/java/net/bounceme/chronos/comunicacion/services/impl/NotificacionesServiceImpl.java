@@ -138,22 +138,19 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 			notificacion.setResultado(resultado.name());
 			notificacionRepository.save(notificacion);
 			avisoRepository.save(aviso);
-			registraNotificacion(notificacion, cliente);
+			
+			RegistroNotificacion registroNotificacion = RegistroNotificacion.builder()
+					.notificacion(notificacion)
+					.cliente(cliente)
+					.resultado(notificacion.getResultado())
+					.fechaHoraNotificacion(notificacion.getFechaHoraEnvio())
+					.build();
+
+			registroNotificacionRepository.save(registroNotificacion);
 		} catch (Exception e) {
 			log.error("Error: {}", e.getMessage());
 			throw e;
 		}
-	}
-
-	@Transactional
-	private void registraNotificacion(Notificacion notificacion, Cliente cliente) throws Exception {
-		RegistroNotificacion registroNotificacion = new RegistroNotificacion();
-		registroNotificacion.setNotificacion(notificacion);
-		registroNotificacion.setCliente(cliente);
-		registroNotificacion.setResultado(notificacion.getResultado());
-		registroNotificacion.setFechaHoraNotificacion(notificacion.getFechaHoraEnvio());
-
-		registroNotificacionRepository.save(registroNotificacion);
 	}
 
 	@Transactional(readOnly = true)

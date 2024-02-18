@@ -16,26 +16,21 @@ public class TipoComunicacionAssembler extends BidirectionalGenericAssembler<Tip
 
     @Override
     public TipoComunicacion reverseAssemble(TipoComunicacionDTO target) throws AssembleException {
-        TipoComunicacion tipoComunicacion = new TipoComunicacion();
-        
-        tipoComunicacion.setId(target.getId());
-        tipoComunicacion.setDenominacion(target.getDenominacion());
-        tipoComunicacion.setNombreClaseEmisora(target.getNombreClaseEmisora());
-        tipoComunicacion.setIcono(target.getIcono());
-        
-        return tipoComunicacion;
+        return TipoComunicacion.builder()
+        		.id(target.getId())
+        		.denominacion(target.getDenominacion())
+        		.nombreClaseEmisora(target.getNombreClaseEmisora())
+        		.icono(target.getIcono())
+        		.build();
     }
 
     @Override
     public TipoComunicacionDTO assemble(TipoComunicacion source) throws AssembleException {
-        TipoComunicacionDTO tipoComunicacionDTO = new TipoComunicacionDTO();
-        
-        tipoComunicacionDTO.setId(source.getId());
-        tipoComunicacionDTO.setDenominacion(source.getDenominacion());
-        tipoComunicacionDTO.setNombreClaseEmisora(source.getNombreClaseEmisora());
-        tipoComunicacionDTO.setIcono(source.getIcono());
-        
-        return tipoComunicacionDTO;
+    	return TipoComunicacionDTO.builder()
+        		.id(source.getId())
+        		.denominacion(source.getDenominacion())
+        		.nombreClaseEmisora(source.getNombreClaseEmisora())
+        		.icono(source.getIcono())
+        		.build();
     }
-
 }

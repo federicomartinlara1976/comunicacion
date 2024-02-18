@@ -2,29 +2,23 @@ package net.bounceme.chronos.comunicacion.services.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.bounceme.chronos.comunicacion.config.AppConfig;
-import net.bounceme.chronos.comunicacion.data.dao.DaoPersistence;
-import net.bounceme.chronos.comunicacion.data.dao.DaoQueries;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import net.bounceme.chronos.comunicacion.data.dao.ClienteRepository;
+import net.bounceme.chronos.comunicacion.data.dao.DireccionClienteRepository;
 import net.bounceme.chronos.comunicacion.dto.DireccionClienteDTO;
-import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
-import net.bounceme.chronos.comunicacion.helpers.DireccionHelper;
 import net.bounceme.chronos.comunicacion.model.Cliente;
 import net.bounceme.chronos.comunicacion.model.DireccionCliente;
 import net.bounceme.chronos.comunicacion.services.DireccionesClienteService;
-import net.bounceme.chronos.utils.assemblers.Assembler;
+import net.bounceme.chronos.utils.assemblers.BidirectionalAssembler;
 import net.bounceme.chronos.utils.exceptions.AssembleException;
 
 /**
@@ -34,156 +28,83 @@ import net.bounceme.chronos.utils.exceptions.AssembleException;
  * @author frederik
  *
  */
-@Service(DireccionesClienteService.NAME)
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
+@Service
+@Slf4j
 public class DireccionesClienteServiceImpl implements DireccionesClienteService {
 
-	private static final String ERROR = "ERROR: ";
-
-    private static final Logger log = LoggerFactory.getLogger(DireccionesClienteServiceImpl.class);
+	@Autowired
+	private DireccionClienteRepository direccionClienteRepository;
 
 	@Autowired
-	@Qualifier(AppConfig.DIRECCIONES_CLIENTE_REPOSITORY)
-	private DaoPersistence<DireccionCliente> direccionesClienteRepository;
-
-	@Autowired
-	@Qualifier(AppConfig.CLIENTE_REPOSITORY)
-	private DaoPersistence<Cliente> clientesRepository;
-
-	@Autowired
-	@Qualifier(DaoQueries.NAME)
-	private DaoQueries daoQueries;
+	private ClienteRepository clienteRepository;
 	
 	@Autowired
 	@Qualifier("direccionClienteAssembler")
-	private Assembler<DireccionCliente, DireccionClienteDTO> direccionClienteAssembler;
-
-	@Autowired
-	private DireccionHelper direccionClienteHelper;  
+	private BidirectionalAssembler<DireccionCliente, DireccionClienteDTO> direccionClienteAssembler;
 	
-	/* (non-Javadoc)
-	 * @see net.bounceme.chronos.comunicacion.services.DireccionesClienteService#nuevo(java.lang.Long, net.bounceme.chronos.comunicacion.dto.DireccionClienteDTO)
-	 */
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public DireccionClienteDTO nuevo(Long idCliente, DireccionClienteDTO direccionClienteDTO)
-			throws ServiceException {
+	@Transactional
+	@SneakyThrows
+	public DireccionClienteDTO save(Long id, DireccionClienteDTO direccionClienteDTO) {
 		try {
-			Cliente cliente = clientesRepository.getObject(idCliente);
+			Optional<Cliente> oCliente = clienteRepository.findById(id);
 			
-			boolean isNew = true;
-			DireccionCliente direccionCliente = obtenerDireccion(cliente, null, isNew);
-			direccionClienteHelper.copyDireccion(direccionClienteDTO, direccionCliente);
+			DireccionCliente direccionCliente = direccionClienteAssembler.reverseAssemble(direccionClienteDTO);
+			direccionCliente.setCliente(oCliente.isPresent() ? oCliente.get() : null);
+			direccionCliente = direccionClienteRepository.save(direccionCliente);
 			
-			return direccionClienteAssembler.assemble(direccionesClienteRepository.saveObject(direccionCliente));
-		} catch (Exception e) {
-			log.error(ERROR, e);
-			throw new ServiceException(e);
+			return direccionClienteAssembler.assemble(direccionCliente);
+		} catch (AssembleException e) {
+			throw e;
+		}
+	}
+	
+	@Override
+	@Transactional
+	@SneakyThrows
+	public DireccionClienteDTO save(DireccionClienteDTO direccionClienteDTO) {
+		try {
+			DireccionCliente direccionCliente = direccionClienteAssembler.reverseAssemble(direccionClienteDTO);
+			direccionCliente = direccionClienteRepository.save(direccionCliente);
+			
+			return direccionClienteAssembler.assemble(direccionCliente);
+		} catch (AssembleException e) {
+			throw e;
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see net.bounceme.chronos.comunicacion.services.DireccionesClienteService#get(java.lang.Long)
-	 */
 	@Override
-	public DireccionClienteDTO get(Long idDireccion) {
+	@Transactional(readOnly = true)
+	public DireccionClienteDTO findById(Long id) {
 		try {
-			return direccionClienteAssembler.assemble(getDireccionCliente(idDireccion));
+			Optional<DireccionCliente> oDireccionCliente = direccionClienteRepository.findById(id);
+			return oDireccionCliente.isPresent() ? direccionClienteAssembler.assemble(oDireccionCliente.get()) : null;
 		} catch (AssembleException e) {
-			log.error(ERROR, e);
+			log.error("Error: {}", e.getMessage());
 			return null;
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see net.bounceme.chronos.comunicacion.services.DireccionesClienteService#actualizar(net.bounceme.chronos.comunicacion.dto.DireccionClienteDTO)
-	 */
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public void actualizar(DireccionClienteDTO direccionClienteDTO)
-			throws ServiceException {
-		try {
-
-			DireccionCliente direccionCliente = obtenerDireccion(null, direccionClienteDTO.getId(), false);
-			direccionClienteHelper.copyDireccion(direccionClienteDTO, direccionCliente);
-
-			direccionesClienteRepository.updateObject(direccionCliente);
-			log.debug("Direccion modificada correctamente");
-		} catch (Exception e) {
-			log.error(ERROR, e);
-			throw new ServiceException(e);
-		}
+	@Transactional
+	public void delete(Long id) {
+		direccionClienteRepository.deleteById(id);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.bounceme.chronos.comunicacion.services.DireccionesClienteService#borrar(java.lang.Long)
-	 */
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public void borrar(Long idDireccion) throws ServiceException {
+	public List<DireccionClienteDTO> list(Long id) {
 		try {
-			DireccionCliente direccion = getDireccionCliente(idDireccion);
-
-			direccionesClienteRepository.removeObject(direccion);
-			log.debug("Direccion borrada correctamente");
-		} catch (Exception e) {
-			log.error(ERROR, e);
-			throw new ServiceException(e);
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see net.bounceme.chronos.comunicacion.services.DireccionesClienteService#listar(java.lang.Long)
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<DireccionClienteDTO> listar(Long idCliente) {
-		Cliente cliente = clientesRepository.getObject(idCliente);
-
-		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("cliente", cliente);
-		
-		try {
-			return new ArrayList<>(direccionClienteAssembler.assemble(
-					daoQueries.executeNamedQuery("direccionesCliente", parameters, Boolean.TRUE)));
+			Optional<Cliente> oCliente = clienteRepository.findById(id);
+			if (oCliente.isPresent()) {
+				List<DireccionCliente> direcciones = direccionClienteRepository.findByCliente(oCliente.get());
+				return new ArrayList<>(direccionClienteAssembler.assemble(direcciones));
+			}
+			else {
+				return Collections.emptyList();
+			}
 		} catch (AssembleException e) {
-			log.error(ERROR, e);
+			log.error("Error: {}", e.getMessage());
 			return Collections.emptyList();
 		}
-	}
-
-	/**
-	 * @param cliente
-	 * @param idDireccion
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	private DireccionCliente getDireccionCliente(Long idDireccion) {
-		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("idDireccion", idDireccion);
-		Optional<DireccionCliente> oResult = daoQueries.executeScalarNamedQuery("direccionCliente", parameters,
-				Boolean.TRUE);
-		
-		return (oResult.isPresent()) ? oResult.get() : null;
-	}
-	
-	/**
-	 * @param cliente
-	 * @param idDireccion
-	 * @param isNew
-	 * @return
-	 */
-	private DireccionCliente obtenerDireccion(Cliente cliente, Long idDireccion, boolean isNew) {
-		DireccionCliente direccionCliente;
-		
-		if (isNew) {
-			direccionCliente = new DireccionCliente();
-			direccionCliente.setCliente(cliente);
-		}
-		else {
-			direccionCliente = getDireccionCliente(idDireccion);
-		}
-		
-		return direccionCliente;
 	}
 }

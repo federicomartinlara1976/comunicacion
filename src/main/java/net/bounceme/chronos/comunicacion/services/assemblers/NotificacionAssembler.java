@@ -16,31 +16,25 @@ public class NotificacionAssembler extends BidirectionalGenericAssembler<Notific
 
     @Override
     public Notificacion reverseAssemble(NotificacionDTO target) throws AssembleException {
-        Notificacion notificacion = new Notificacion();
-        
-        notificacion.setId(target.getId());
-        notificacion.setEstado(target.getEstado());
-        notificacion.setFechaHoraCreacion(target.getFechaHoraCreacion());
-        notificacion.setFechaHoraEnvio(target.getFechaHoraEnvio());
-        notificacion.setReintentos(target.getReintentos());
-        notificacion.setResultado(target.getResultado());
-        
-        return notificacion;
+        return Notificacion.builder()
+        		.id(target.getId())
+        		.estado(target.getEstado())
+        		.fechaHoraCreacion(target.getFechaHoraCreacion())
+        		.fechaHoraEnvio(target.getFechaHoraEnvio())
+        		.reintentos(target.getReintentos())
+        		.resultado(target.getResultado())
+        		.build();
     }
 
     @Override
     public NotificacionDTO assemble(Notificacion source) throws AssembleException {
-        NotificacionDTO notificacionDTO = new NotificacionDTO();
-        
-        notificacionDTO.setId(source.getId());
-        notificacionDTO.setEstado(source.getEstado());
-        notificacionDTO.setFechaHoraCreacion(source.getFechaHoraCreacion());
-        notificacionDTO.setFechaHoraEnvio(source.getFechaHoraEnvio());
-        notificacionDTO.setReintentos(source.getReintentos());
-        notificacionDTO.setResultado(source.getResultado());
-        
-        return notificacionDTO;
+        return NotificacionDTO.builder()
+        		.id(source.getId())
+        		.estado(source.getEstado())
+        		.fechaHoraCreacion(source.getFechaHoraCreacion())
+        		.fechaHoraEnvio(source.getFechaHoraEnvio())
+        		.reintentos(source.getReintentos())
+        		.resultado(source.getResultado())
+        		.build();
     }
-    
-    
 }

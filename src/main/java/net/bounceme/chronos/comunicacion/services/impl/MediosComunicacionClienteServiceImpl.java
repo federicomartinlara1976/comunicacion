@@ -2,31 +2,24 @@ package net.bounceme.chronos.comunicacion.services.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.bounceme.chronos.comunicacion.config.AppConfig;
-import net.bounceme.chronos.comunicacion.data.dao.DaoPersistence;
-import net.bounceme.chronos.comunicacion.data.dao.DaoQueries;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import net.bounceme.chronos.comunicacion.data.dao.ClienteRepository;
+import net.bounceme.chronos.comunicacion.data.dao.MedioComunicacionClienteRepository;
 import net.bounceme.chronos.comunicacion.dto.MedioComunicacionClienteDTO;
-import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.Cliente;
 import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
-import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
 import net.bounceme.chronos.comunicacion.services.MediosComunicacionClienteService;
-import net.bounceme.chronos.utils.assemblers.Assembler;
+import net.bounceme.chronos.utils.assemblers.BidirectionalAssembler;
 import net.bounceme.chronos.utils.exceptions.AssembleException;
 
 /**
@@ -36,162 +29,102 @@ import net.bounceme.chronos.utils.exceptions.AssembleException;
  * @author frederik
  *
  */
-@Service(MediosComunicacionClienteService.NAME)
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
+@Service
+@Slf4j
 public class MediosComunicacionClienteServiceImpl implements MediosComunicacionClienteService {
 
-	private static final String ERROR = "ERROR: ";
-
-    private static final Logger log = LoggerFactory.getLogger(MediosComunicacionClienteServiceImpl.class);
+	@Autowired
+	private MedioComunicacionClienteRepository medioComunicacionClienteRepository;
 
 	@Autowired
-	@Qualifier(AppConfig.MEDIOS_COMUNICACION_CLIENTE_REPOSITORY)
-	private DaoPersistence<MedioComunicacionCliente> mediosComunicacionClienteRepository;
+	private ClienteRepository clienteRepository;
 
-	@Autowired
-	@Qualifier(AppConfig.CLIENTE_REPOSITORY)
-	private DaoPersistence<Cliente> clientesRepository;
-
-	@Autowired
-	@Qualifier(AppConfig.TIPOS_COMUNICACION_REPOSITORY)
-	private DaoPersistence<TipoComunicacion> tiposComunicacionRepository;
-
-	@Autowired
-	@Qualifier(DaoQueries.NAME)
-	private DaoQueries daoQueries;
-	
 	@Autowired
 	@Qualifier("medioComunicacionClienteAssembler")
-	private Assembler<MedioComunicacionCliente, MedioComunicacionClienteDTO> medioComunicacionClienteAssembler;
+	private BidirectionalAssembler<MedioComunicacionCliente, MedioComunicacionClienteDTO> medioComunicacionClienteAssembler;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.bounceme.chronos.comunicacion.services.
-	 * MediosComunicacionClienteService#nuevo(java.lang.Long, java.lang.Long,
-	 * java.lang.String)
-	 */
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public MedioComunicacionClienteDTO nuevo(Long idCliente, Long idTipo, String valor) throws ServiceException {
+	@Transactional
+	@SneakyThrows
+	public MedioComunicacionClienteDTO save(Long id, MedioComunicacionClienteDTO medioComunicacionClienteDTO) {
 		try {
-			MedioComunicacionCliente medioComunicacion = new MedioComunicacionCliente();
-
-			medioComunicacion.setCliente(clientesRepository.getObject(idCliente));
-			medioComunicacion.setTipoComunicacion(tiposComunicacionRepository.getObject(idTipo));
-			medioComunicacion.setValor(valor);
-
-			return medioComunicacionClienteAssembler.assemble(mediosComunicacionClienteRepository.saveObject(medioComunicacion));
-		} catch (Exception e) {
-			log.error(ERROR, e);
-			throw new ServiceException(e);
+			Optional<Cliente> oCliente = clienteRepository.findById(id);
+			
+			MedioComunicacionCliente medioComunicacionCliente = medioComunicacionClienteAssembler.reverseAssemble(medioComunicacionClienteDTO);
+			medioComunicacionCliente.setCliente(oCliente.isPresent() ? oCliente.get() : null);
+			medioComunicacionClienteRepository.save(medioComunicacionCliente);
+			return medioComunicacionClienteAssembler.assemble(medioComunicacionCliente);
+		} catch (AssembleException e) {
+			log.error("Error: {}", e.getMessage());
+			throw e;
 		}
-
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.bounceme.chronos.comunicacion.services.
-	 * MediosComunicacionClienteService#get(java.lang.Long, java.lang.Long)
-	 */
 	@Override
-	public MedioComunicacionClienteDTO get(Long idCliente, Long idTipo) {
-		Cliente cliente = clientesRepository.getObject(idCliente);
-		TipoComunicacion tipo = tiposComunicacionRepository.getObject(idTipo);
-
+	@Transactional
+	@SneakyThrows
+	public MedioComunicacionClienteDTO save(MedioComunicacionClienteDTO medioComunicacionClienteDTO) {
 		try {
-			return medioComunicacionClienteAssembler.assemble(getMedioComunicacion(cliente, tipo));
+			MedioComunicacionCliente medioComunicacionCliente = medioComunicacionClienteAssembler.reverseAssemble(medioComunicacionClienteDTO);
+			medioComunicacionCliente = medioComunicacionClienteRepository.save(medioComunicacionCliente);
+			
+			return medioComunicacionClienteAssembler.assemble(medioComunicacionCliente);
 		} catch (AssembleException e) {
-			log.error(ERROR, e);
+			throw e;
+		}
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public MedioComunicacionClienteDTO findById(Long id) {
+		try {
+			Optional<MedioComunicacionCliente> oMedioComunicacionCliente = medioComunicacionClienteRepository.findById(id);
+			return oMedioComunicacionCliente.isPresent() ? medioComunicacionClienteAssembler.assemble(oMedioComunicacionCliente.get()) : null;
+		} catch (AssembleException e) {
+			log.error("Error: {}", e.getMessage());
 			return null;
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.bounceme.chronos.comunicacion.services.
-	 * MediosComunicacionClienteService#actualizar(java.lang.Long, java.lang.Long,
-	 * java.lang.String)
-	 */
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public void actualizar(Long idCliente, Long idTipo, String valor) throws ServiceException {
+	@Transactional
+	public void delete(Long id) {
+		medioComunicacionClienteRepository.deleteById(id);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<MedioComunicacionClienteDTO> list(Long id) {
 		try {
-			Cliente cliente = clientesRepository.getObject(idCliente);
-			TipoComunicacion tipo = tiposComunicacionRepository.getObject(idTipo);
-
-			MedioComunicacionCliente medio = getMedioComunicacion(cliente, tipo);
-
-			if (!Objects.isNull(medio) && StringUtils.isNotBlank(valor)) {
-				medio.setValor(valor);
+			Optional<Cliente> oCliente = clienteRepository.findById(id);
+			if (oCliente.isPresent()) {
+				List<MedioComunicacionCliente> medios = medioComunicacionClienteRepository.findByCliente(oCliente.get());
+				return new ArrayList<>(medioComunicacionClienteAssembler.assemble(medios));
 			}
-
-			mediosComunicacionClienteRepository.updateObject(medio);
-		} catch (Exception e) {
-			log.error(ERROR, e);
-			throw new ServiceException(e);
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.bounceme.chronos.comunicacion.services.
-	 * MediosComunicacionClienteService#borrar(java.lang.Long, java.lang.Long)
-	 */
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public void borrar(Long idCliente, Long idTipo) throws ServiceException {
-		try {
-			Cliente cliente = clientesRepository.getObject(idCliente);
-			TipoComunicacion tipo = tiposComunicacionRepository.getObject(idTipo);
-			
-			MedioComunicacionCliente medio = getMedioComunicacion(cliente, tipo);
-
-			mediosComunicacionClienteRepository.removeObject(medio);
-		} catch (Exception e) {
-			log.error(ERROR, e);
-			throw new ServiceException(e);
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.bounceme.chronos.comunicacion.services.
-	 * MediosComunicacionClienteService#listar(java.lang.Long)
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<MedioComunicacionClienteDTO> listar(Long idCliente) {
-		Cliente cliente = clientesRepository.getObject(idCliente);
-
-		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("cliente", cliente);
-		try {
-			return new ArrayList<>(medioComunicacionClienteAssembler.assemble(
-					daoQueries.executeNamedQuery("mediosComunicacionCliente", parameters, Boolean.TRUE)));
+			else {
+				return Collections.emptyList();
+			}
 		} catch (AssembleException e) {
-			log.error(ERROR, e);
+			log.error("Error: {}", e.getMessage());
 			return Collections.emptyList();
 		}
 	}
-	
-	/**
-	 * @param cliente
-	 * @param tipo
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	private MedioComunicacionCliente getMedioComunicacion(Cliente cliente, TipoComunicacion tipo) {
-		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("cliente", cliente);
-		parameters.put("tipo", tipo);
-		Optional<MedioComunicacionCliente> oResult = daoQueries.executeScalarNamedQuery("medioComunicacionCliente", parameters,
-				Boolean.TRUE);
-		
-		return (oResult.isPresent()) ? oResult.get() : null;
+
+	@Override
+	@Transactional(readOnly = true)
+	public MedioComunicacionClienteDTO findByClienteAndTipo(Long idCliente, String tipo) {
+		try {
+			Optional<Cliente> oCliente = clienteRepository.findById(idCliente);
+			if (oCliente.isPresent()) {
+				MedioComunicacionCliente medioComunicacionCliente = medioComunicacionClienteRepository.findByClienteAndTipo(oCliente.get(), tipo);
+				return !Objects.isNull(medioComunicacionCliente) ? medioComunicacionClienteAssembler.assemble(medioComunicacionCliente) : null;
+			}
+			else {
+				return null;
+			}
+		} catch (AssembleException e) {
+			log.error("Error: {}", e.getMessage());
+			return null;
+		}
 	}
 }

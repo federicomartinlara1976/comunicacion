@@ -1,11 +1,13 @@
 package net.bounceme.chronos.comunicacion.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,13 +18,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.bounceme.chronos.comunicacion.controllers.params.ParamTipo;
+import lombok.extern.slf4j.Slf4j;
 import net.bounceme.chronos.comunicacion.dto.TipoComunicacionDTO;
-import net.bounceme.chronos.comunicacion.exceptions.ControllerException;
-import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.services.TiposComunicacionService;
 
 /**
@@ -33,13 +32,10 @@ import net.bounceme.chronos.comunicacion.services.TiposComunicacionService;
  */
 @RestController
 @RequestMapping("/tiposComunicacion")
+@Slf4j
 public class TiposComunicacionController {
-	private static final String ERROR = "ERROR: ";
-
-	Logger log = LoggerFactory.getLogger(TiposComunicacionController.class);
 
 	@Autowired
-	@Qualifier(TiposComunicacionService.NAME)
 	private TiposComunicacionService tiposComunicacionService;
 
 	/**
@@ -48,78 +44,69 @@ public class TiposComunicacionController {
 	 * @return listado
 	 */
 	@CrossOrigin
-	@GetMapping
+	@GetMapping("/")
 	public List<TipoComunicacionDTO> listAll() {
-		return tiposComunicacionService.listar();
+		return tiposComunicacionService.list();
 	}
 
-	/**
-	 * Crea un nuevo tipo de comunicación
-	 * 
-	 * @param denominacion nombre del tipo
-	 * @return el tipo creado
-	 * @throws ControllerException
-	 */
 	@CrossOrigin
-	@PostMapping(value = "/new")
-	@ResponseStatus(HttpStatus.CREATED)
-	public TipoComunicacionDTO nuevo(@RequestBody ParamTipo tipo) throws ControllerException {
-		try {
-			return tiposComunicacionService.nuevo(tipo.getDenominacion(), tipo.getNombreClaseEmisora());
-		} catch (ServiceException e) {
-			log.error(ERROR, e);
-			throw new ControllerException(e);
-		}
+	@PostMapping(value = "/")
+	public ResponseEntity<?> create(@RequestBody TipoComunicacionDTO tipoComunicacionDTO) {
+		Map<String, Object> response = new HashMap<>();
+
+		tipoComunicacionDTO = tiposComunicacionService.save(tipoComunicacionDTO);
+
+		log.info("Creado: {}", tipoComunicacionDTO.toString());
+		response.put("mensaje", "El tipo de comunicación ha sido creado con éxito");
+		response.put("tipoComunicacion", tipoComunicacionDTO);
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	}
 
-	/**
-	 * Obtiene un tipo de comunicación
-	 * 
-	 * @param id identificador
-	 * @return el tipo
-	 */
 	@CrossOrigin
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<TipoComunicacionDTO> get(@PathVariable Long id) {
-		TipoComunicacionDTO tipoComunicacion = tiposComunicacionService.get(id);
-		HttpStatus status = tipoComunicacion != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
-		return new ResponseEntity<>(tipoComunicacion, status);
+	public ResponseEntity<?> get(@PathVariable Long id) {
+		Map<String, Object> response = new HashMap<>();
+
+		TipoComunicacionDTO tipoComunicacionDTO = tiposComunicacionService.findById(id);
+
+		if (Objects.isNull(tipoComunicacionDTO)) {
+			response.put("mensaje", String.format("El tipo de comunicación con ID %d no existe", id));
+			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<TipoComunicacionDTO>(tipoComunicacionDTO, HttpStatus.OK);
 	}
 
-	/**
-	 * Actualiza un tipo de comunicación
-	 * 
-	 * @param id   identificador
-	 * @param tipo Los datos modificados del tipo (denominacion)
-	 * @throws ControllerException
-	 */
 	@CrossOrigin
-	@PutMapping(value = "/{id}/update")
-	@ResponseStatus(HttpStatus.OK)
-	public void actualizar(@PathVariable Long id, @RequestBody ParamTipo tipo) throws ControllerException {
-		try {
-			tiposComunicacionService.actualizar(id, tipo.getDenominacion(), tipo.getNombreClaseEmisora());
-		} catch (ServiceException e) {
-			log.error(ERROR, e);
-			throw new ControllerException(e);
+	@PutMapping(value = "/{id}")
+	public ResponseEntity<?> actualizar(@Valid @RequestBody TipoComunicacionDTO tipoComunicacionDTO, @PathVariable Long id) {
+		Map<String, Object> response = new HashMap<>();
+
+		TipoComunicacionDTO tipoComunicacionActual = tiposComunicacionService.findById(id);
+		if (Objects.isNull(tipoComunicacionActual)) {
+			response.put("mensaje", String.format("El tipo de comunicación con ID %d no existe", id));
+			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		}
+
+		tipoComunicacionActual.setDenominacion(tipoComunicacionDTO.getDenominacion());
+		tipoComunicacionActual.setIcono(tipoComunicacionDTO.getIcono());
+		tipoComunicacionActual.setNombreClaseEmisora(tipoComunicacionDTO.getNombreClaseEmisora());
+
+		tipoComunicacionActual = tiposComunicacionService.save(tipoComunicacionActual);
+
+		response.put("mensaje", "El tipo de comunicación ha sido actualizado con éxito");
+		response.put("tipoComunicacion", tipoComunicacionActual);
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	}
 
-	/**
-	 * Borra un tipo de comunicación
-	 * 
-	 * @param id identificador
-	 * @throws ControllerException
-	 */
 	@CrossOrigin
-	@DeleteMapping(value = "/{id}/delete")
-	@ResponseStatus(HttpStatus.OK)
-	public void borrar(@PathVariable Long id) throws ControllerException {
-		try {
-			tiposComunicacionService.borrar(id);
-		} catch (ServiceException e) {
-			log.error(ERROR, e);
-			throw new ControllerException(e);
-		}
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<?> borrar(@PathVariable Long id) {
+		Map<String, Object> response = new HashMap<>();
+
+		tiposComunicacionService.delete(id);
+
+		response.put("mensaje", "El tipo de comunicación ha sido borrado con éxito");
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 	}
 }

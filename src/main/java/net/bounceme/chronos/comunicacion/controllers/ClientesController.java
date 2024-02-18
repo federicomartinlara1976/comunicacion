@@ -1,13 +1,15 @@
 package net.bounceme.chronos.comunicacion.controllers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.validation.Valid;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,13 +20,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.bounceme.chronos.comunicacion.controllers.params.ParamCliente;
+import lombok.extern.slf4j.Slf4j;
 import net.bounceme.chronos.comunicacion.dto.ClienteDTO;
-import net.bounceme.chronos.comunicacion.exceptions.ControllerException;
-import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.services.ClientesService;
 
 /**
@@ -35,130 +34,100 @@ import net.bounceme.chronos.comunicacion.services.ClientesService;
  */
 @RestController
 @RequestMapping("/clientes")
+@Slf4j
 public class ClientesController {
-	private static final String ERROR = "ERROR: ";
-
-	Logger log = LoggerFactory.getLogger(ClientesController.class);
 
 	@Autowired
-	@Qualifier(ClientesService.NAME)
 	private ClientesService clientesService;
 
-	/**
-	 * Lista todos los clientes
-	 * 
-	 * @return listado de clientes
-	 * @throws ServiceException
-	 */
 	@CrossOrigin
-	@GetMapping
+	@GetMapping("/")
 	public List<ClienteDTO> listAll() {
-		return clientesService.listar();
+		return clientesService.list();
 	}
 	
-	/**
-	 * Crea un cliente
-	 * 
-	 * @param nombre
-	 * @param apellidos
-	 * @param dni
-	 * @throws ControllerException
-	 */
 	@CrossOrigin
-	@PostMapping(value = "/search", consumes = "application/json")
-	@ResponseStatus(HttpStatus.CREATED)
-	public List<ClienteDTO> buscar(@RequestBody ParamCliente cliente) {
+	@PostMapping(value = "/search")
+	public List<ClienteDTO> buscar(@RequestBody ClienteDTO cliente) {
 		List<ClienteDTO> clientes = new ArrayList<>();
-		if (!Objects.isNull(cliente.getName()) && !Objects.isNull(cliente.getLastName())) {
-			clientes = clientesService.buscarPorNombreYApellidos(cliente.getName(), cliente.getLastName());
+		if (!StringUtils.isNotBlank(cliente.getNombre()) && !StringUtils.isNotBlank(cliente.getApellidos())) {
+			clientes = clientesService.findByNombreAndApellidos(cliente.getNombre(), cliente.getApellidos());
 		}
 		else {
-			if (!Objects.isNull(cliente.getName())) {
-				clientes = clientesService.buscarPorNombre(cliente.getName());
+			if (!StringUtils.isNotBlank(cliente.getNombre())) {
+				clientes = clientesService.findByNombre(cliente.getNombre());
 			}
 			
-			if (!Objects.isNull(cliente.getLastName())) {
-				clientes = clientesService.buscarPorApellidos(cliente.getLastName());
+			if (!StringUtils.isNotBlank(cliente.getApellidos())) {
+				clientes = clientesService.findByApellidos(cliente.getApellidos());
 			}
 			
-			if (!Objects.isNull(cliente.getIdentification())) {
-				clientes = clientesService.buscarPorDNI(cliente.getIdentification());
+			if (!StringUtils.isNotBlank(cliente.getDni())) {
+				clientes.add(clientesService.findByDNI(cliente.getDni()));
 			}
 		}
 	
 		return clientes;
 	}
 
-	/**
-	 * Crea un cliente
-	 * 
-	 * @param nombre
-	 * @param apellidos
-	 * @param dni
-	 * @throws ControllerException
-	 */
 	@CrossOrigin
-	@PostMapping(value = "/new", consumes = "application/json")
-	@ResponseStatus(HttpStatus.CREATED)
-	public ClienteDTO nuevo(@RequestBody ParamCliente cliente) throws ControllerException {
-		try {
-			return clientesService.nuevo(cliente.getName(), cliente.getLastName(), cliente.getIdentification());
-		} catch (ServiceException e) {
-			log.error(ERROR, e);
-			throw new ControllerException(e);
-		}
+	@PostMapping(value = "/")
+	public ResponseEntity<?> create(@RequestBody ClienteDTO cliente) {
+		Map<String, Object> response = new HashMap<>();
+
+		cliente = clientesService.save(cliente);
+
+		log.info("Creado: {}", cliente.toString());
+		response.put("mensaje", "El cliente ha sido creado con éxito");
+		response.put("cliente", cliente);
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	}
 
-	/**
-	 * Obtiene un cliente
-	 * 
-	 * @param id
-	 * @return
-	 */
 	@CrossOrigin
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<ClienteDTO> get(@PathVariable Long id) {
-		ClienteDTO cliente = clientesService.get(id);
-		HttpStatus status = cliente != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
-		return new ResponseEntity<>(cliente, status);
+	public ResponseEntity<?> get(@PathVariable Long id) {
+		Map<String, Object> response = new HashMap<>();
+
+		ClienteDTO cliente = clientesService.findById(id);
+
+		if (Objects.isNull(cliente)) {
+			response.put("mensaje", String.format("El cliente con ID %d no existe", id));
+			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<ClienteDTO>(cliente, HttpStatus.OK);
 	}
 
-	/**
-	 * Actualiza un cliente.
-	 * 
-	 * @param id        identificador del cliente
-	 * @param nombre
-	 * @param apellidos
-	 * @param dni
-	 * @throws ControllerException
-	 */
 	@CrossOrigin
-	@PutMapping(value = "/{id}/update", consumes = "application/json")
-	@ResponseStatus(HttpStatus.OK)
-	public void actualizar(@PathVariable Long id, @RequestBody ParamCliente cliente) throws ControllerException {
-		try {
-			clientesService.actualizar(id, cliente.getName(), cliente.getLastName(), cliente.getIdentification());
-		} catch (ServiceException e) {
-			log.error(ERROR, e);
-			throw new ControllerException(e);
+	@PutMapping(value = "/{id}")
+	public ResponseEntity<?> actualizar(@Valid @RequestBody ClienteDTO cliente, @PathVariable Long id) {
+		Map<String, Object> response = new HashMap<>();
+
+		ClienteDTO clienteActual = clientesService.findById(id);
+		if (Objects.isNull(clienteActual)) {
+			response.put("mensaje", String.format("El cliente con ID %d no existe", id));
+			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		}
+
+		clienteActual.setNombre(cliente.getNombre());
+		clienteActual.setApellidos(cliente.getApellidos());
+		clienteActual.setDni(cliente.getDni());
+
+		clienteActual = clientesService.save(clienteActual);
+
+		response.put("mensaje", "El cliente ha sido actualizado con éxito");
+		response.put("cliente", clienteActual);
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	}
 
-	/**
-	 * Borra un cliente.
-	 * 
-	 * @param id identificador del cliente
-	 * @throws ControllerException
-	 */
 	@CrossOrigin
-	@DeleteMapping(value = "/{id}/delete")
-	@ResponseStatus(HttpStatus.OK)
-	public void borrar(@PathVariable Long id) throws ControllerException {
-		try {
-			clientesService.borrar(id);
-		} catch (ServiceException e) {
-			log.error(ERROR, e);
-			throw new ControllerException(e);
-		}
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<?> borrar(@PathVariable Long id) {
+		Map<String, Object> response = new HashMap<>();
+
+		clientesService.delete(id);
+
+		response.put("mensaje", "El cliente ha sido borrado con éxito");
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 	}
 }

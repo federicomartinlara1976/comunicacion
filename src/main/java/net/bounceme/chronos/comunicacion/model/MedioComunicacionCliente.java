@@ -11,10 +11,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Entidad que representa una forma de comunicarse con el cliente
@@ -22,9 +24,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * @author frederik
  *
  */
+@Data
+@Builder(toBuilder = true)
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "MEDIOS_COMUNICACION_CLIENTE")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "MEDIOS_COMUNICACION_CLIENTE")
 public class MedioComunicacionCliente implements Serializable {
 
 	/**
@@ -56,108 +61,4 @@ public class MedioComunicacionCliente implements Serializable {
 	 */
 	@Column
 	private String valor;
-	
-
-	/**
-	 * @return
-	 */
-	public Long getId() {
-		return id;
-	}
-
-	/**
-	 * @param id
-	 */
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	/**
-	 * @return
-	 */
-	public TipoComunicacion getTipoComunicacion() {
-		return tipoComunicacion;
-	}
-
-	/**
-	 * @param tipoComunicacion
-	 */
-	public void setTipoComunicacion(TipoComunicacion tipoComunicacion) {
-		this.tipoComunicacion = tipoComunicacion;
-	}
-
-	/**
-	 * @return the cliente
-	 */
-	public Cliente getCliente() {
-		return cliente;
-	}
-
-	/**
-	 * @param cliente the cliente to set
-	 */
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
-	}
-
-	/**
-	 * @return the valor
-	 */
-	public String getValor() {
-		return valor;
-	}
-
-	/**
-	 * @param valor the valor to set
-	 */
-	public void setValor(String valor) {
-		this.valor = valor;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "MedioComunicacionCliente [valor=" + valor + "]";
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((cliente == null) ? 0 : cliente.hashCode());
-		result = prime * result + ((valor == null) ? 0 : valor.hashCode());
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		MedioComunicacionCliente other = (MedioComunicacionCliente) obj;
-		if (cliente == null) {
-			if (other.cliente != null)
-				return false;
-		}
-		else if (!cliente.equals(other.cliente))
-			return false;
-		if (valor == null) {
-			if (other.valor != null)
-				return false;
-		}
-		else if (!valor.equals(other.valor))
-			return false;
-		return true;
-	}
 }

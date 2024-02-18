@@ -2,28 +2,22 @@ package net.bounceme.chronos.comunicacion.services.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.bounceme.chronos.comunicacion.config.AppConfig;
-import net.bounceme.chronos.comunicacion.data.dao.DaoPersistence;
-import net.bounceme.chronos.comunicacion.data.dao.DaoQueries;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import net.bounceme.chronos.comunicacion.data.dao.TipoComunicacionRepository;
 import net.bounceme.chronos.comunicacion.dto.TipoComunicacionDTO;
-import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
 import net.bounceme.chronos.comunicacion.services.TiposComunicacionService;
-import net.bounceme.chronos.utils.assemblers.Assembler;
+import net.bounceme.chronos.utils.assemblers.BidirectionalAssembler;
 import net.bounceme.chronos.utils.exceptions.AssembleException;
 
 /**
@@ -33,136 +27,69 @@ import net.bounceme.chronos.utils.exceptions.AssembleException;
  * @author frederik
  *
  */
-@Service(TiposComunicacionService.NAME)
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
+@Service
+@Slf4j
 public class TiposComunicacionServiceImpl implements TiposComunicacionService {
-	private static final String ERROR = "ERROR: ";
-
-    private static final Logger log = LoggerFactory.getLogger(TiposComunicacionServiceImpl.class);
-
+	
 	@Autowired
-	@Qualifier(AppConfig.TIPOS_COMUNICACION_REPOSITORY)
-	private DaoPersistence<TipoComunicacion> tiposComunicacionRepository;
-
-	@Autowired
-	@Qualifier(DaoQueries.NAME)
-	private DaoQueries daoQueries;
+	private TipoComunicacionRepository tipoComunicacionRepository;
 	
 	@Autowired
 	@Qualifier("tipoComunicacionAssembler")
-	private Assembler<TipoComunicacion, TipoComunicacionDTO> tipoComunicacionAssembler;
+	private BidirectionalAssembler<TipoComunicacion, TipoComunicacionDTO> tipoComunicacionAssembler;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.bounceme.chronos.comunicacion.services.TiposComunicacionService#nuevo
-	 * (java.lang.String)
-	 */
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public TipoComunicacionDTO nuevo(String denominacion, String nombreEmisor) throws ServiceException {
+	@Transactional
+	@SneakyThrows
+	public TipoComunicacionDTO save(TipoComunicacionDTO tipoComunicacionDTO) {
 		try {
-			TipoComunicacion tipo = new TipoComunicacion();
-			tipo.setDenominacion(denominacion);
-			tipo.setNombreClaseEmisora(nombreEmisor);
-
-			return tipoComunicacionAssembler.assemble(tiposComunicacionRepository.saveObject(tipo));
-		} catch (Exception e) {
-			log.error(ERROR, e);
-			throw new ServiceException(e);
+			TipoComunicacion tipoComunicacion = tipoComunicacionAssembler.reverseAssemble(tipoComunicacionDTO);
+			tipoComunicacionRepository.save(tipoComunicacion);
+			return tipoComunicacionAssembler.assemble(tipoComunicacion);
+		} catch (AssembleException e) {
+			log.error("Error: {}", e.getMessage());
+			throw e;
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.bounceme.chronos.comunicacion.services.TiposComunicacionService#get(
-	 * java.lang.String)
-	 */
 	@Override
-	public TipoComunicacionDTO get(Long id) {
+	@Transactional(readOnly = true)
+	public TipoComunicacionDTO findById(Long id) {
 		try {
-			return tipoComunicacionAssembler.assemble(tiposComunicacionRepository.getObject(id));
+			Optional<TipoComunicacion> oTipoComunicacion = tipoComunicacionRepository.findById(id);
+			return oTipoComunicacion.isPresent() ? tipoComunicacionAssembler.assemble(oTipoComunicacion.get()) : null;
 		} catch (AssembleException e) {
-			log.error(ERROR, e);
+			log.error("Error: {}", e.getMessage());
 			return null;
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public TipoComunicacionDTO get(String name) {
-		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("denominacion", name);
-		Optional<TipoComunicacion> oResult = daoQueries.executeScalarNamedQuery("tipoComunicacion", parameters, Boolean.TRUE);
-		
+	@Transactional(readOnly = true)
+	public TipoComunicacionDTO findByName(String name) {
 		try {
-			return (oResult.isPresent()) ? tipoComunicacionAssembler.assemble(oResult.get()) : null;
+			TipoComunicacion tipoComunicacion = tipoComunicacionRepository.findByName(name);
+			return !Objects.isNull(tipoComunicacion) ? tipoComunicacionAssembler.assemble(tipoComunicacion) : null;
 		} catch (AssembleException e) {
-			log.error(ERROR, e);
+			log.error("Error: {}", e.getMessage());
 			return null;
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.bounceme.chronos.comunicacion.services.TiposComunicacionService#
-	 * actualizar(java.lang.String, java.lang.String)
-	 */
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public void actualizar(Long id, String nuevaDenominacion, String nuevoEmisor) throws ServiceException {
-		try {
-			TipoComunicacion tipoComunicacion = tiposComunicacionRepository.getObject(id);
-
-			if (StringUtils.isNotBlank(nuevaDenominacion)) {
-				tipoComunicacion.setDenominacion(nuevaDenominacion);
-			}
-
-			if (StringUtils.isNotBlank(nuevoEmisor)) {
-				tipoComunicacion.setNombreClaseEmisora(nuevoEmisor);
-			}
-
-			tiposComunicacionRepository.updateObject(tipoComunicacion);
-		} catch (Exception e) {
-			log.error(ERROR, e);
-			throw new ServiceException(e);
-		}
+	@Transactional
+	public void delete(Long id) {
+		tipoComunicacionRepository.deleteById(id);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.bounceme.chronos.comunicacion.services.TiposComunicacionService#
-	 * borrar(java.lang.String)
-	 */
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public void borrar(Long id) throws ServiceException {
+	@Transactional(readOnly = true)
+	public List<TipoComunicacionDTO> list() {
 		try {
-			tiposComunicacionRepository.removeObject(id);
-		} catch (Exception e) {
-			log.error(ERROR, e);
-			throw new ServiceException(e);
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.bounceme.chronos.comunicacion.services.TiposComunicacionService#
-	 * listar()
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<TipoComunicacionDTO> listar() {
-		try {
-			return new ArrayList<>(tipoComunicacionAssembler.assemble(
-					daoQueries.executeNamedQuery("tiposComunicacion", Boolean.TRUE)));
+			List<TipoComunicacion> tipos = tipoComunicacionRepository.findAll();
+			return new ArrayList<>(tipoComunicacionAssembler.assemble(tipos));
 		} catch (AssembleException e) {
-			log.error(ERROR, e);
+			log.error("Error: {}", e.getMessage());
 			return Collections.emptyList();
 		}
 	}

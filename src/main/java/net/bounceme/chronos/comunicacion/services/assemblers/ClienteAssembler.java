@@ -7,14 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import net.bounceme.chronos.comunicacion.data.model.Aviso;
+import net.bounceme.chronos.comunicacion.data.model.Cliente;
+import net.bounceme.chronos.comunicacion.data.model.DireccionCliente;
+import net.bounceme.chronos.comunicacion.data.model.MedioComunicacionCliente;
 import net.bounceme.chronos.comunicacion.dto.AvisoDTO;
 import net.bounceme.chronos.comunicacion.dto.ClienteDTO;
 import net.bounceme.chronos.comunicacion.dto.DireccionClienteDTO;
 import net.bounceme.chronos.comunicacion.dto.MedioComunicacionClienteDTO;
-import net.bounceme.chronos.comunicacion.model.Aviso;
-import net.bounceme.chronos.comunicacion.model.Cliente;
-import net.bounceme.chronos.comunicacion.model.DireccionCliente;
-import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
 import net.bounceme.chronos.utils.assemblers.Assembler;
 import net.bounceme.chronos.utils.assemblers.BidirectionalGenericAssembler;
 import net.bounceme.chronos.utils.exceptions.AssembleException;

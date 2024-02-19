@@ -1,4 +1,4 @@
-package net.bounceme.chronos.comunicacion.model;
+package net.bounceme.chronos.comunicacion.data.model;
 
 import java.io.Serializable;
 import java.util.Date;

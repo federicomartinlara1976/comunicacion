@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
+import net.bounceme.chronos.comunicacion.data.model.TipoComunicacion;
 
 @Repository
 public interface TipoComunicacionRepository extends JpaRepository<TipoComunicacion, Long> {

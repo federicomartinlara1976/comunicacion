@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import net.bounceme.chronos.comunicacion.model.Cliente;
-import net.bounceme.chronos.comunicacion.model.RegistroNotificacion;
+import net.bounceme.chronos.comunicacion.data.model.Cliente;
+import net.bounceme.chronos.comunicacion.data.model.RegistroNotificacion;
 
 @Repository
 public interface RegistroNotificacionRepository extends JpaRepository<RegistroNotificacion, Long> {

@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import net.bounceme.chronos.comunicacion.model.Cliente;
-import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
+import net.bounceme.chronos.comunicacion.data.model.Cliente;
+import net.bounceme.chronos.comunicacion.data.model.MedioComunicacionCliente;
 
 @Repository
 public interface MedioComunicacionClienteRepository extends JpaRepository<MedioComunicacionCliente, Long> {

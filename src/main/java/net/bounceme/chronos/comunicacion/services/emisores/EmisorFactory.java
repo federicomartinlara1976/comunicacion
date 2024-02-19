@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
+import net.bounceme.chronos.comunicacion.data.model.TipoComunicacion;
 
 /**
  * Clase para la obtención del emisor adecuado según el tipo de comunicación que se use.

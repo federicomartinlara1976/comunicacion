@@ -1,20 +1,23 @@
 package net.bounceme.chronos.comunicacion.services.impl;
 
+import java.util.Date;
+
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
+import net.bounceme.chronos.comunicacion.config.AppConfig;
 import net.bounceme.chronos.comunicacion.services.EmailService;
+import net.bounceme.chronos.dto.mail.MailDataDTO;
 
 @Service
 @Slf4j
 public class EmailServiceImpl implements EmailService {
 
 	@Autowired
-	private JavaMailSender emailSender;
+	private RabbitTemplate rabbitTemplate;
 	
 	@Value("${spring.mail.username}")
 	private String sender;
@@ -22,14 +25,16 @@ public class EmailServiceImpl implements EmailService {
 	@Override
 	public Boolean sendSimpleMessage(String to, String subject, String text) {
 		try {
-			SimpleMailMessage message = new SimpleMailMessage();
+			MailDataDTO message = MailDataDTO.builder()
+					.sender(sender)
+					.receiver(to)
+					.subject(subject)
+					.date(new Date())
+					.message(text)
+					.messageType("simple")
+					.build();
 			
-			message.setFrom(sender);
-			message.setTo(to);
-			message.setSubject(subject);
-			message.setText(text);
-			
-			emailSender.send(message);
+			rabbitTemplate.convertAndSend(AppConfig.QUEUE_NAME, message);
 			
 			return Boolean.TRUE;
 		} catch (Exception e) {

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import net.bounceme.chronos.comunicacion.config.AppConfig;
 import net.bounceme.chronos.comunicacion.data.dao.AvisoRepository;
 import net.bounceme.chronos.comunicacion.data.dao.NotificacionRepository;
 import net.bounceme.chronos.comunicacion.data.dao.RegistroNotificacionRepository;
@@ -62,9 +60,6 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 	private BidirectionalAssembler<Notificacion, NotificacionDTO> notificacionAssembler;
 
 	@Autowired
-	private RabbitTemplate rabbitTemplate;
-
-	@Autowired
 	private EmailService emailService;
 
 	@Value("${application.envio.reintentos}")
@@ -82,11 +77,6 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 			log.error("Error: {}", e.getMessage());
 			throw e;
 		}
-	}
-
-	@Override
-	public void prepararNotificacionParaEnvio(NotificacionDTO notificacionDTO) {
-		rabbitTemplate.convertAndSend(AppConfig.QUEUE_NAME, notificacionDTO.getId());
 	}
 
 	@Override

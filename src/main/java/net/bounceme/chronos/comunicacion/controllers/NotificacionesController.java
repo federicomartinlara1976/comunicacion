@@ -55,12 +55,11 @@ public class NotificacionesController {
 	/**
 	 * Envia una notificación.
 	 * 
-	 * @param id identificador del cliente
-	 * @throws ControllerException
+	 * @param notificacion
 	 */
 	@CrossOrigin
 	@PutMapping(value = "/send")
 	public void enviar(@RequestBody NotificacionDTO notificacion) {
-		notificacionesService.prepararNotificacionParaEnvio(notificacion);
+		notificacionesService.enviarNotificacion(notificacion);
 	}
 }

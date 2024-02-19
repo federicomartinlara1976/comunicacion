@@ -16,8 +16,6 @@ public interface NotificacionesService {
     
     NotificacionDTO findById(Long id);
     
-    void prepararNotificacionParaEnvio(NotificacionDTO notificacionDTO); 
-    
     void enviarNotificacion(NotificacionDTO notificacionDTO);
     
     List<NotificacionDTO> getNotificaciones(String estado);

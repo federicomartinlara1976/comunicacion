@@ -45,11 +45,6 @@
 		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-mail</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
 		
@@ -114,6 +109,12 @@
 			<groupId>net.bounceme.chronos.chronoslibs</groupId>
 			<artifactId>chronos-utils</artifactId>
 			<version>1.0.3-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>net.bounceme.chronos.chronoslibs</groupId>
+			<artifactId>chronos-data-utils</artifactId>
+			<version>1.0.5-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 

@@ -1,10 +1,6 @@
 package net.bounceme.chronos.comunicacion.config;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -13,17 +9,12 @@ import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
 import lombok.extern.slf4j.Slf4j;
-import net.bounceme.chronos.comunicacion.dto.TipoComunicacionDTO;
 import net.bounceme.chronos.comunicacion.jms.Receiver;
-import net.bounceme.chronos.comunicacion.services.TiposComunicacionService;
 import net.bounceme.chronos.comunicacion.utils.Constantes;
 
 @Configuration
@@ -33,20 +24,6 @@ public class AppConfig {
 	public static final String QUEUE_NAME = "notificaciones";
 	
 	public static final String TOPIC_NAME = "spring-boot-exchange";
-	
-	public static final String TLS_MAIL_SESSION = "tls-mail-session";
-	
-	@Value("${application.envio.smtp.server}")
-	String smtpServer;
-	
-	@Value("${application.envio.smtp.port}")
-	String smtpPort;
-	
-	@Value("${application.envio.smtp.user}")
-	String fromEmail;
-	
-	@Value("${application.envio.smtp.password}")
-	String password;
 	
 	@Bean
 	@Scope("prototype")

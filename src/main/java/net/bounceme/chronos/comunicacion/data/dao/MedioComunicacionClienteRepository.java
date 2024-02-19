@@ -16,6 +16,6 @@ public interface MedioComunicacionClienteRepository extends JpaRepository<MedioC
 	@Query("select m from MedioComunicacionCliente m where m.cliente = :cliente")
 	List<MedioComunicacionCliente> findByCliente(@Param("cliente") Cliente cliente);
 	
-	@Query("select m from MedioComunicacionCliente m where m.cliente = :cliente and m.tipo.denominacion = :tipo")
+	@Query("select m from MedioComunicacionCliente m where m.cliente = :cliente and m.tipoComunicacion.denominacion = :tipo")
 	MedioComunicacionCliente findByClienteAndTipo(@Param("cliente") Cliente cliente, @Param("tipo") String tipo);
 }

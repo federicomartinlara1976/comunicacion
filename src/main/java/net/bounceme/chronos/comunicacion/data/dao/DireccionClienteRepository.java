@@ -13,6 +13,6 @@ import net.bounceme.chronos.comunicacion.data.model.DireccionCliente;
 @Repository
 public interface DireccionClienteRepository extends JpaRepository<DireccionCliente, Long> {
 
-	@Query("select d from DireccionCliente d where c.cliente = :cliente")
+	@Query("select d from DireccionCliente d where d.cliente = :cliente")
 	List<DireccionCliente> findByCliente(@Param("cliente") Cliente cliente);
 }

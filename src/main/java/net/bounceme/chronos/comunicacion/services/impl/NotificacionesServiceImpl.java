@@ -66,7 +66,7 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 	@Autowired
 	private EmisorFactory emisorFactory;
 
-	@Value("${envio.reintentos}")
+	@Value("${application.envio.reintentos}")
 	int maxNumReintentos;
 
 	@Override

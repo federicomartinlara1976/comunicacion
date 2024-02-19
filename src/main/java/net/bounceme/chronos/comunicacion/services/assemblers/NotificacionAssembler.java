@@ -16,7 +16,7 @@ import net.bounceme.chronos.utils.exceptions.AssembleException;
 public class NotificacionAssembler extends BidirectionalGenericAssembler<Notificacion, NotificacionDTO> {
 	
 	@Autowired
-	@Qualifier("clienteAssembler")
+	@Qualifier("medioComunicacionClienteAssembler")
 	private BidirectionalAssembler<MedioComunicacionCliente, MedioComunicacionClienteDTO> medioComunicacionClienteAssembler;
 
     public NotificacionAssembler() {

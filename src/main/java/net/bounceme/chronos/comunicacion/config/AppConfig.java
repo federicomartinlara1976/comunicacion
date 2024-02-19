@@ -36,16 +36,16 @@ public class AppConfig {
 	
 	public static final String TLS_MAIL_SESSION = "tls-mail-session";
 	
-	@Value("${envio.smtp.server}")
+	@Value("${application.envio.smtp.server}")
 	String smtpServer;
 	
-	@Value("${envio.smtp.port}")
+	@Value("${application.envio.smtp.port}")
 	String smtpPort;
 	
-	@Value("${envio.smtp.user}")
+	@Value("${application.envio.smtp.user}")
 	String fromEmail;
 	
-	@Value("${envio.smtp.password}")
+	@Value("${application.envio.smtp.password}")
 	String password;
 	
 	@Bean

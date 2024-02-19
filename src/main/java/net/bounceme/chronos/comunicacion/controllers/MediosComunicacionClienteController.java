@@ -37,7 +37,7 @@ public class MediosComunicacionClienteController {
 	private MediosComunicacionClienteService mediosComunicacionClienteService;
 
 	@CrossOrigin
-	@GetMapping("/{id}")
+	@GetMapping("/{id}/list")
 	public List<MedioComunicacionClienteDTO> listDirecciones(@PathVariable Long id) {
 		return mediosComunicacionClienteService.list(id);
 	}

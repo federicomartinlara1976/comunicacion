@@ -27,9 +27,8 @@ import net.bounceme.chronos.comunicacion.data.model.Notificacion;
 import net.bounceme.chronos.comunicacion.data.model.RegistroNotificacion;
 import net.bounceme.chronos.comunicacion.data.model.TipoComunicacion;
 import net.bounceme.chronos.comunicacion.dto.NotificacionDTO;
+import net.bounceme.chronos.comunicacion.services.EmailService;
 import net.bounceme.chronos.comunicacion.services.NotificacionesService;
-import net.bounceme.chronos.comunicacion.services.emisores.Emisor;
-import net.bounceme.chronos.comunicacion.services.emisores.EmisorFactory;
 import net.bounceme.chronos.comunicacion.utils.Constantes.EstadoNotificacion;
 import net.bounceme.chronos.comunicacion.utils.Constantes.ResultadoEnvio;
 import net.bounceme.chronos.utils.assemblers.BidirectionalAssembler;
@@ -64,7 +63,7 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 	private RabbitTemplate rabbitTemplate;
 
 	@Autowired
-	private EmisorFactory emisorFactory;
+	private EmailService emailService;
 
 	@Value("${application.envio.reintentos}")
 	int maxNumReintentos;
@@ -103,17 +102,15 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 			Aviso aviso = notificacion.getAviso();
 			Cliente cliente = aviso.getCliente();
 
-			// Obtiene el emisor
-			Emisor emisor = emisorFactory.getEmisor(tipo);
-
 			// Construye el mensaje a enviar
 			String mensaje = String.format(MENSAJE_FORMAT, aviso.getMensaje(), aviso.getFechaInicioObra(),
 					aviso.getDireccionCliente().toString());
 
 			// Envía el mensaje a través del medio seleccionado
 			notificacion.setFechaHoraEnvio(new Date());
-			ResultadoEnvio resultado = emisor.enviar(mensaje, medio.getValor());
-
+			//ResultadoEnvio resultado = emisor.enviar(mensaje, medio.getValor());
+			ResultadoEnvio resultado = ResultadoEnvio.OK;
+			
 			// Obtiene el numero de reintentos de la notificacion
 			Integer reintentos = Objects.isNull(notificacion.getReintentos()) ? 0 : notificacion.getReintentos();
 			reintentos += 1;

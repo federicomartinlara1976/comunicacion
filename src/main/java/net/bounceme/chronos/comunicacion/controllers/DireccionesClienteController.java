@@ -31,7 +31,7 @@ public class DireccionesClienteController {
 	private DireccionesClienteService direccionesClienteService;
 	
 	@CrossOrigin
-	@GetMapping("/{id}")
+	@GetMapping("/{id}/list")
 	public List<DireccionClienteDTO> listDirecciones(@PathVariable Long id) {
 		return direccionesClienteService.list(id);
 	}

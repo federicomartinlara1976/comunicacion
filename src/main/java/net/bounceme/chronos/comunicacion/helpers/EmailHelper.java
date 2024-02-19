@@ -10,17 +10,11 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-
-import net.bounceme.chronos.comunicacion.config.AppConfig;
 
 @Component
 public class EmailHelper {
 	
-	@Autowired
-	@Qualifier(AppConfig.TLS_MAIL_SESSION)
 	private Session session;	
 
 	/**

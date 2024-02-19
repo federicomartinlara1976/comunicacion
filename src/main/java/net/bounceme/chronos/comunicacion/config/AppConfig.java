@@ -86,39 +86,4 @@ public class AppConfig {
     public MessageListenerAdapter listenerAdapter(Receiver receiver) {
         return new MessageListenerAdapter(receiver, "receiveMessage");
     }
-	
-	/**
-	 * Este método alimenta la base de datos con datos iniciales, en concreto la
-	 * tabla de tipos de comunicaciones. Si hay un fallo, termina el arranque de la
-	 * aplicación con error
-	 * 
-	 * @param tipoComunicacionRepository
-	 * @return
-	 */
-	@Bean
-	public CommandLineRunner init(
-			@Autowired TiposComunicacionService tiposComunicacionService) {
-
-		Map<String, String> medios = new HashMap<>();
-		medios.put("SMS", "SMS_Emisor");
-		medios.put("FAX", "FAX_Emisor");
-		medios.put("EMAIL", "EMAIL_Emisor");
-
-		return evt -> Arrays.asList("SMS", "FAX", "EMAIL").forEach(a -> {
-			try {
-				String emisor = medios.get(a);
-				
-				if (Objects.isNull(tiposComunicacionService.findByName(a))) {
-					TipoComunicacionDTO tipoComunicacionDTO = TipoComunicacionDTO.builder()
-							.denominacion(a)
-							.nombreClaseEmisora(emisor)
-							.build();
-					tiposComunicacionService.save(tipoComunicacionDTO);
-
-				}
-			} catch (Exception e) {
-				log.error("ERROR: ", e);
-			}
-		});
-	}
 }

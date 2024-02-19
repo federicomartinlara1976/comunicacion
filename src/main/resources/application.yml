@@ -38,7 +38,6 @@ logging.level.org.hibernate.SQL: debug
   
 server:
   port : ${PORT}
-#  servlet.context-path: /comunicacion
 
 application:
   envio.reintentos: 3

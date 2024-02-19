@@ -1,5 +1,6 @@
 package net.bounceme.chronos.comunicacion.config;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,11 +18,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
 import lombok.extern.slf4j.Slf4j;
 import net.bounceme.chronos.comunicacion.dto.TipoComunicacionDTO;
 import net.bounceme.chronos.comunicacion.jms.Receiver;
 import net.bounceme.chronos.comunicacion.services.TiposComunicacionService;
+import net.bounceme.chronos.comunicacion.utils.Constantes;
 
 @Configuration
 @Slf4j
@@ -44,6 +47,12 @@ public class AppConfig {
 	
 	@Value("${envio.smtp.password}")
 	String password;
+	
+	@Bean
+	@Scope("prototype")
+	public SimpleDateFormat dateFormat() {
+		return new SimpleDateFormat(Constantes.DATE_FORMAT);
+	}
 	
 	/**
 	 * @return

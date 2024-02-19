@@ -7,6 +7,8 @@ package net.bounceme.chronos.comunicacion.utils;
  *
  */
 public class Constantes {
+	public static final String DATE_FORMAT = "dd-mm-yyyy";
+	
 	public static final String HINT_CACHEABLE = "org.hibernate.cacheable";
 	
 	public enum ResultadoEnvio {

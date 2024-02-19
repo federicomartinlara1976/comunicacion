@@ -12,7 +12,7 @@ import net.bounceme.chronos.comunicacion.dto.AvisoDTO;
  */
 public interface AvisosService {
     
-	AvisoDTO save(AvisoDTO aviso);
+	AvisoDTO save(Long id, AvisoDTO aviso);
     
     void anularAviso(AvisoDTO aviso);
 

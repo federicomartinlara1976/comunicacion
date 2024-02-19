@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -162,6 +163,18 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 		} catch (AssembleException e) {
 			log.error("Error: {}", e.getMessage());
 			return Collections.emptyList();
+		}
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public NotificacionDTO findById(Long id) {
+		try {
+			Optional<Notificacion> oNotificacion = notificacionRepository.findById(id);
+			return oNotificacion.isPresent() ? notificacionAssembler.assemble(oNotificacion.get()) : null;
+		} catch (AssembleException e) {
+			log.error("Error: {}", e.getMessage());
+			return null;
 		}
 	}
 }

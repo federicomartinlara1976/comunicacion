@@ -1,12 +1,11 @@
 package net.bounceme.chronos.comunicacion.jms;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
+import lombok.extern.slf4j.Slf4j;
+import net.bounceme.chronos.comunicacion.dto.NotificacionDTO;
 import net.bounceme.chronos.comunicacion.services.NotificacionesService;
 
 /**
@@ -17,9 +16,8 @@ import net.bounceme.chronos.comunicacion.services.NotificacionesService;
  *
  */
 @Component
+@Slf4j
 public class Receiver {
-
-	private static final Logger log = LoggerFactory.getLogger(Receiver.class);
 
 	@Autowired
 	private NotificacionesService notificacionesService;
@@ -29,12 +27,10 @@ public class Receiver {
 	 * 
 	 * @param message
 	 */
+	@Transactional(readOnly = true)
 	public void receiveMessage(String message) {
-		try {
-			log.info("Received <{}>", message);
-			notificacionesService.enviarNotificacion(Long.valueOf(message));
-		} catch (ServiceException e) {
-			log.error("ERROR: ", e);
-		}
+		log.info("Received <{}>", message);
+		NotificacionDTO notificacion = notificacionesService.findById(Long.valueOf(message));
+		notificacionesService.enviarNotificacion(notificacion);
 	}
 }

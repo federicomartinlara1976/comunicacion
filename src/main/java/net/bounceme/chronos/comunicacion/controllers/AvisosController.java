@@ -42,11 +42,11 @@ public class AvisosController {
 	}
 
 	@CrossOrigin
-	@PostMapping(value = "/")
-	public ResponseEntity<?> create(@RequestBody AvisoDTO aviso) {
+	@PostMapping(value = "/{id}/new")
+	public ResponseEntity<?> create(@PathVariable Long id, @RequestBody AvisoDTO aviso) {
 		Map<String, Object> response = new HashMap<>();
 
-		aviso = avisosService.save(aviso);
+		aviso = avisosService.save(id, aviso);
 
 		log.info("Creado: {}", aviso.toString());
 		response.put("mensaje", "El aviso ha sido creado con éxito");

@@ -14,6 +14,8 @@ public interface NotificacionesService {
 	
     NotificacionDTO save(NotificacionDTO notificacionDTO);
     
+    NotificacionDTO findById(Long id);
+    
     void prepararNotificacionParaEnvio(NotificacionDTO notificacionDTO); 
     
     void enviarNotificacion(NotificacionDTO notificacionDTO);

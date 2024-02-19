@@ -2,28 +2,25 @@ package net.bounceme.chronos.comunicacion.services.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.bounceme.chronos.comunicacion.config.AppConfig;
-import net.bounceme.chronos.comunicacion.data.dao.DaoPersistence;
-import net.bounceme.chronos.comunicacion.data.dao.DaoQueries;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import net.bounceme.chronos.comunicacion.data.dao.AvisoRepository;
+import net.bounceme.chronos.comunicacion.data.dao.ClienteRepository;
+import net.bounceme.chronos.comunicacion.data.dao.NotificacionRepository;
 import net.bounceme.chronos.comunicacion.dto.AvisoDTO;
-import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.model.Aviso;
 import net.bounceme.chronos.comunicacion.model.Cliente;
-import net.bounceme.chronos.comunicacion.model.DireccionCliente;
 import net.bounceme.chronos.comunicacion.model.Notificacion;
 import net.bounceme.chronos.comunicacion.services.AvisosService;
-import net.bounceme.chronos.utils.assemblers.Assembler;
+import net.bounceme.chronos.utils.assemblers.BidirectionalAssembler;
 import net.bounceme.chronos.utils.exceptions.AssembleException;
 
 /**
@@ -32,116 +29,89 @@ import net.bounceme.chronos.utils.exceptions.AssembleException;
  * @author frederik
  *
  */
-@Service(AvisosService.NAME)
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
+@Service
+@Slf4j
 public class AvisosServiceImpl implements AvisosService {
-	private static final String ERROR = "ERROR: ";
-
-	private static final Logger log = LoggerFactory.getLogger(AvisosServiceImpl.class);
 
 	@Autowired
-	@Qualifier(AppConfig.CLIENTE_REPOSITORY)
-	private DaoPersistence<Cliente> clientesRepository;
-
-	@Autowired
-	@Qualifier(AppConfig.DIRECCIONES_CLIENTE_REPOSITORY)
-	private DaoPersistence<DireccionCliente> direccionClienteRepository;
+	private ClienteRepository clienteRepository;
 	
 	@Autowired
-	@Qualifier(AppConfig.AVISOS_REPOSITORY)
-	private DaoPersistence<Aviso> avisosRepository;
+	private AvisoRepository avisosRepository;
 
 	@Autowired
-	@Qualifier(AppConfig.NOTIFICACIONES_REPOSITORY)
-	private DaoPersistence<Notificacion> notificacionesRepository;
-	
-	@Autowired
-	@Qualifier(DaoQueries.NAME)
-	private DaoQueries daoQueries;
+	private NotificacionRepository notificacionesRepository;
 	
 	@Autowired
 	@Qualifier("avisoAssembler")
-	private Assembler<Aviso, AvisoDTO> avisoAssembler;
+	private BidirectionalAssembler<Aviso, AvisoDTO> avisoAssembler;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.bounceme.chronos.comunicacion.services.AvisosService#nuevoAviso(java.
-	 * lang.Long, java.util.Date, java.lang.String)
-	 */
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public AvisoDTO nuevoAviso(Long idCliente, Long idDireccion, Date fechaInicioObra, String mensaje) throws ServiceException {
+	@SneakyThrows
+	public AvisoDTO save(Long id, AvisoDTO avisoDTO) {
 		try {
-			Cliente cliente = clientesRepository.getObject(idCliente);
-			DireccionCliente direccionCliente = direccionClienteRepository.getObject(idDireccion);
+			Optional<Cliente> oCliente = clienteRepository.findById(id);
 			
-			Aviso aviso = new Aviso();
-			aviso.setCliente(cliente);
-			aviso.setDireccionCliente(direccionCliente);
-			aviso.setFechaInicioObra(fechaInicioObra);
-			aviso.setMensaje(mensaje);
-			aviso.setEstaNotificado(Boolean.FALSE);
-
-			return avisoAssembler.assemble(avisosRepository.saveObject(aviso));
-		} catch (Exception e) {
-			log.error(ERROR, e);
-			throw new ServiceException(e);
+			Aviso aviso = avisoAssembler.reverseAssemble(avisoDTO);
+			aviso.setCliente(oCliente.isPresent() ? oCliente.get() : null);
+			aviso = avisosRepository.save(aviso);
+			
+			return avisoAssembler.assemble(aviso);
+		} catch (AssembleException e) {
+			throw e;
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.bounceme.chronos.comunicacion.services.AvisosService#anularAviso(java
-	 * .lang.Long)
-	 */
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public void anularAviso(Long idAviso) throws ServiceException {
+	@Transactional
+	public void anularAviso(AvisoDTO avisoDTO) {
 		try {
-			Aviso aviso = avisosRepository.getObject(idAviso);
+			Optional<Aviso> oAviso = avisosRepository.findById(avisoDTO.getId());
 
-			// Si está notificado este aviso, no lo borra
-			if (!aviso.getEstaNotificado()) {
-				for (Notificacion notificacion : aviso.getNotificaciones()) {
-					notificacionesRepository.removeObject(notificacion.getId());
+			if (oAviso.isPresent()) {
+				Aviso aviso = oAviso.get();
+				
+				// Si está notificado este aviso, no lo borra
+				if (!aviso.getEstaNotificado()) {
+					for (Notificacion notificacion : aviso.getNotificaciones()) {
+						notificacionesRepository.deleteById(notificacion.getId());
+					}
+
+					avisosRepository.deleteById(aviso.getId());
 				}
-
-				avisosRepository.removeObject(idAviso);
 			}
 		} catch (Exception e) {
-			log.error(ERROR, e);
-			throw new ServiceException(e);
+			log.error("Error: {}", e.getMessage());
+			throw e;
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.bounceme.chronos.comunicacion.services.AvisosService#get(java.lang.
-	 * Long)
-	 */
 	@Override
-	public AvisoDTO get(Long id) {
+	public AvisoDTO findById(Long id) {
 		try {
-			return avisoAssembler.assemble(avisosRepository.getObject(id));
+			Optional<Aviso> oAviso = avisosRepository.findById(id);
+			return oAviso.isPresent() ? avisoAssembler.assemble(oAviso.get()) : null;
 		} catch (AssembleException e) {
-			log.error(ERROR, e);
-			return new AvisoDTO();
+			log.error("Error: {}", e.getMessage());
+			return null;
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public List<AvisoDTO> listar() {
+	@Transactional(readOnly = true)
+	public List<AvisoDTO> list() {
 		try {
-			return new ArrayList<>(avisoAssembler.assemble(daoQueries.executeNamedQuery("avisos", Boolean.TRUE)));
+			List<Aviso> avisos = avisosRepository.findAll();
+			return new ArrayList<>(avisoAssembler.assemble(avisos));
 		} catch (AssembleException e) {
-			log.error(ERROR, e);
+			log.error("Error: {}", e.getMessage());
 			return Collections.emptyList();
 		}
+	}
+
+	@Override
+	@Transactional
+	public void delete(Long id) {
+		avisosRepository.deleteById(id);
 	}
 }

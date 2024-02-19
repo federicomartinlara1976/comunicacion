@@ -41,3 +41,4 @@ server:
 
 application:
   envio.reintentos: 3
+  envio.asunto: Notificación

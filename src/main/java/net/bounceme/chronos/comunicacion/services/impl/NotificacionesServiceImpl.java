@@ -25,7 +25,6 @@ import net.bounceme.chronos.comunicacion.data.model.Cliente;
 import net.bounceme.chronos.comunicacion.data.model.MedioComunicacionCliente;
 import net.bounceme.chronos.comunicacion.data.model.Notificacion;
 import net.bounceme.chronos.comunicacion.data.model.RegistroNotificacion;
-import net.bounceme.chronos.comunicacion.data.model.TipoComunicacion;
 import net.bounceme.chronos.comunicacion.dto.NotificacionDTO;
 import net.bounceme.chronos.comunicacion.services.EmailService;
 import net.bounceme.chronos.comunicacion.services.NotificacionesService;
@@ -45,6 +44,9 @@ import net.bounceme.chronos.utils.exceptions.AssembleException;
 public class NotificacionesServiceImpl implements NotificacionesService {
 
 	private static final String MENSAJE_FORMAT = "%s (%s)\n%s";
+	
+	@Value("${application.envio.asunto}")
+	private String asunto;
 
 	@Autowired
 	private AvisoRepository avisoRepository;
@@ -96,7 +98,6 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 
 			// Obtiene el medio de comunicación
 			MedioComunicacionCliente medio = notificacion.getMedioComunicacionCliente();
-			TipoComunicacion tipo = medio.getTipoComunicacion();
 
 			// Obtiene el aviso a enviar
 			Aviso aviso = notificacion.getAviso();
@@ -108,8 +109,7 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 
 			// Envía el mensaje a través del medio seleccionado
 			notificacion.setFechaHoraEnvio(new Date());
-			//ResultadoEnvio resultado = emisor.enviar(mensaje, medio.getValor());
-			ResultadoEnvio resultado = ResultadoEnvio.OK;
+			Boolean resultado = emailService.sendSimpleMessage(medio.getValor(), asunto, mensaje);
 			
 			// Obtiene el numero de reintentos de la notificacion
 			Integer reintentos = Objects.isNull(notificacion.getReintentos()) ? 0 : notificacion.getReintentos();
@@ -133,7 +133,8 @@ public class NotificacionesServiceImpl implements NotificacionesService {
 				}
 			}
 
-			notificacion.setResultado(resultado.name());
+			String result = (resultado) ? ResultadoEnvio.OK.name() : ResultadoEnvio.FALLO.name();
+			notificacion.setResultado(result);
 			notificacionRepository.save(notificacion);
 			avisoRepository.save(aviso);
 			

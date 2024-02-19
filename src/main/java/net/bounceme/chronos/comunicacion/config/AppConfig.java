@@ -13,12 +13,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
-import lombok.extern.slf4j.Slf4j;
 import net.bounceme.chronos.comunicacion.jms.Receiver;
 import net.bounceme.chronos.comunicacion.utils.Constantes;
 
 @Configuration
-@Slf4j
 public class AppConfig {
 	
 	public static final String QUEUE_NAME = "notificaciones";

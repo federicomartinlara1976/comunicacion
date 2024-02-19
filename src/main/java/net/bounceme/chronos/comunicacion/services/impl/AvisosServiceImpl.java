@@ -47,6 +47,7 @@ public class AvisosServiceImpl implements AvisosService {
 	private BidirectionalAssembler<Aviso, AvisoDTO> avisoAssembler;
 
 	@Override
+	@Transactional
 	@SneakyThrows
 	public AvisoDTO save(Long id, AvisoDTO avisoDTO) {
 		try {
@@ -87,6 +88,7 @@ public class AvisosServiceImpl implements AvisosService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public AvisoDTO findById(Long id) {
 		try {
 			Optional<Aviso> oAviso = avisosRepository.findById(id);

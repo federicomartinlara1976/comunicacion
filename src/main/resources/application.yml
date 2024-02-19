@@ -15,10 +15,10 @@ spring:
     properties.hibernate.format_sql: true
     
   mail:
-    host:
+    host: smtp.gmail.com
     port: 587
-    username:
-    password:
+    username: federicomartinlara1976@gmail.com
+    password: mre13185
     properties:
       mail:
         smtp:
@@ -42,7 +42,3 @@ server:
 
 application:
   envio.reintentos: 3
-  envio.smtp.server: smtp.gmail.com
-  envio.smtp.port: 587
-  envio.smtp.user: federicomartinlara1976@gmail.com
-  envio.smtp.password: mre13185

@@ -14,17 +14,6 @@ spring:
     show-sql: true
     properties.hibernate.format_sql: true
     
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: federicomartinlara1976@gmail.com
-    password: mre13185
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls.enable: true
-    
 c3p0:
   user: federico
   password: MedinaAzahara2468@

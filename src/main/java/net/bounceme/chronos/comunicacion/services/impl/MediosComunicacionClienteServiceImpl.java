@@ -13,11 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import net.bounceme.chronos.comunicacion.data.dao.ClienteRepository;
-import net.bounceme.chronos.comunicacion.data.dao.MedioComunicacionClienteRepository;
-import net.bounceme.chronos.comunicacion.data.model.Cliente;
-import net.bounceme.chronos.comunicacion.data.model.MedioComunicacionCliente;
 import net.bounceme.chronos.comunicacion.dto.MedioComunicacionClienteDTO;
+import net.bounceme.chronos.comunicacion.model.Cliente;
+import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
+import net.bounceme.chronos.comunicacion.repository.ClienteRepository;
+import net.bounceme.chronos.comunicacion.repository.MedioComunicacionClienteRepository;
 import net.bounceme.chronos.comunicacion.services.MediosComunicacionClienteService;
 import net.bounceme.chronos.utils.assemblers.BidirectionalAssembler;
 import net.bounceme.chronos.utils.exceptions.AssembleException;

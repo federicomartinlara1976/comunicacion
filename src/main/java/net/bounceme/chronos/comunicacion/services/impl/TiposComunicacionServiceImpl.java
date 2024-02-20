@@ -13,9 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import net.bounceme.chronos.comunicacion.data.dao.TipoComunicacionRepository;
-import net.bounceme.chronos.comunicacion.data.model.TipoComunicacion;
 import net.bounceme.chronos.comunicacion.dto.TipoComunicacionDTO;
+import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
+import net.bounceme.chronos.comunicacion.repository.TipoComunicacionRepository;
 import net.bounceme.chronos.comunicacion.services.TiposComunicacionService;
 import net.bounceme.chronos.utils.assemblers.BidirectionalAssembler;
 import net.bounceme.chronos.utils.exceptions.AssembleException;

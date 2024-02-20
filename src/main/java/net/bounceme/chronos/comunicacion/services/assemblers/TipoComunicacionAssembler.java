@@ -2,8 +2,8 @@ package net.bounceme.chronos.comunicacion.services.assemblers;
 
 import org.springframework.stereotype.Component;
 
-import net.bounceme.chronos.comunicacion.data.model.TipoComunicacion;
 import net.bounceme.chronos.comunicacion.dto.TipoComunicacionDTO;
+import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
 import net.bounceme.chronos.utils.assemblers.BidirectionalGenericAssembler;
 import net.bounceme.chronos.utils.exceptions.AssembleException;
 

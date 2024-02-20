@@ -11,11 +11,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
-import net.bounceme.chronos.comunicacion.data.dao.ClienteRepository;
-import net.bounceme.chronos.comunicacion.data.dao.RegistroNotificacionRepository;
-import net.bounceme.chronos.comunicacion.data.model.Cliente;
-import net.bounceme.chronos.comunicacion.data.model.RegistroNotificacion;
 import net.bounceme.chronos.comunicacion.dto.RegistroNotificacionDTO;
+import net.bounceme.chronos.comunicacion.model.Cliente;
+import net.bounceme.chronos.comunicacion.model.RegistroNotificacion;
+import net.bounceme.chronos.comunicacion.repository.ClienteRepository;
+import net.bounceme.chronos.comunicacion.repository.RegistroNotificacionRepository;
 import net.bounceme.chronos.comunicacion.services.RegistroNotificacionesService;
 import net.bounceme.chronos.utils.assemblers.Assembler;
 import net.bounceme.chronos.utils.exceptions.AssembleException;

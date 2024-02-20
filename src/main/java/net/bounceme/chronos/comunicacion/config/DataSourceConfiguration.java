@@ -19,13 +19,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
-import net.bounceme.chronos.comunicacion.data.model.Aviso;
-import net.bounceme.chronos.comunicacion.data.model.Cliente;
-import net.bounceme.chronos.comunicacion.data.model.DireccionCliente;
-import net.bounceme.chronos.comunicacion.data.model.MedioComunicacionCliente;
-import net.bounceme.chronos.comunicacion.data.model.Notificacion;
-import net.bounceme.chronos.comunicacion.data.model.RegistroNotificacion;
-import net.bounceme.chronos.comunicacion.data.model.TipoComunicacion;
+import net.bounceme.chronos.comunicacion.model.Aviso;
+import net.bounceme.chronos.comunicacion.model.Cliente;
+import net.bounceme.chronos.comunicacion.model.DireccionCliente;
+import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
+import net.bounceme.chronos.comunicacion.model.Notificacion;
+import net.bounceme.chronos.comunicacion.model.RegistroNotificacion;
+import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
 
 @Configuration
 @EnableTransactionManagement

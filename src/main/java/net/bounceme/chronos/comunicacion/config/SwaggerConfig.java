@@ -34,7 +34,7 @@ public class SwaggerConfig {
 				"Api backend para comunicacion",
 				"0.0.1-SNAPSHOT",
 				"https://github.com/federicomartinlara1976/comunicacion/blob/master/LICENSE",
-				new Contact("CHGuadalquivir", "https://github.com/federicomartinlara1976/comunicacion", "federicomartinlara1976@gmail.com"),
+				new Contact("comunicacion", "https://github.com/federicomartinlara1976/comunicacion", "federicomartinlara1976@gmail.com"),
 				"LICENSE",
 				"LICENSE URL",
 				Collections.emptyList()

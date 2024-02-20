@@ -20,7 +20,7 @@ import net.bounceme.chronos.comunicacion.utils.Constantes;
 public class AppConfig {
 	
 	@Value("${application.queue}")
-	public static String queueName;
+	private String queueName;
 	
 	@Value("${application.topic}")
 	private String topicName;

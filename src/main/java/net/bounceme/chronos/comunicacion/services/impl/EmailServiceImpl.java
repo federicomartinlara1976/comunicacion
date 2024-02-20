@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
-import net.bounceme.chronos.comunicacion.config.AppConfig;
 import net.bounceme.chronos.comunicacion.services.EmailService;
 import net.bounceme.chronos.dto.mail.MailDataDTO;
 
@@ -18,6 +17,9 @@ public class EmailServiceImpl implements EmailService {
 
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
+	
+	@Value("${application.queue}")
+	private String queueName;
 	
 	@Value("${spring.mail.username}")
 	private String sender;
@@ -34,7 +36,7 @@ public class EmailServiceImpl implements EmailService {
 					.messageType("simple")
 					.build();
 			
-			rabbitTemplate.convertAndSend(AppConfig.queueName, message);
+			rabbitTemplate.convertAndSend(queueName, message);
 			
 			return Boolean.TRUE;
 		} catch (Exception e) {

@@ -30,7 +30,7 @@ import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        basePackages = {"net.bounceme.chronos.comunicacion.data.dao"},
+        basePackages = {"net.bounceme.chronos.comunicacion.repository"},
         entityManagerFactoryRef = "entityManagerFactory",
         transactionManagerRef = "transactionManager"
 )

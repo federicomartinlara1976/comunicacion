@@ -25,27 +25,20 @@ public class RegistroNotificacionAssembler extends BidirectionalGenericAssembler
 
     @Override
     public RegistroNotificacion reverseAssemble(RegistroNotificacionDTO target) throws AssembleException {
-        RegistroNotificacion registroNotificacion = new RegistroNotificacion();
-        
-        registroNotificacion.setId(target.getId());
-        registroNotificacion.setFechaHoraNotificacion(target.getFechaHoraNotificacion());
-        registroNotificacion.setResultado(target.getResultado());
-        
-        return registroNotificacion;
+        return RegistroNotificacion.builder()
+        		.id(target.getId())
+        		.fechaHoraNotificacion(target.getFechaHoraNotificacion())
+        		.resultado(target.getResultado())
+        		.build();
     }
 
     @Override
     public RegistroNotificacionDTO assemble(RegistroNotificacion source) throws AssembleException {
-        RegistroNotificacionDTO registroNotificacionDTO = new RegistroNotificacionDTO();
-        
-        registroNotificacionDTO.setId(source.getId());
-        registroNotificacionDTO.setFechaHoraNotificacion(source.getFechaHoraNotificacion());
-        registroNotificacionDTO.setResultado(source.getResultado());
-        
-        registroNotificacionDTO.setNotificacion(notificacionAssembler.assemble(source.getNotificacion()));
-        
-        return registroNotificacionDTO;
+        return RegistroNotificacionDTO.builder()
+        		.id(source.getId())
+        		.fechaHoraNotificacion(source.getFechaHoraNotificacion())
+        		.resultado(source.getResultado())
+        		.notificacion(notificacionAssembler.assemble(source.getNotificacion()))
+        		.build();
     }
-
-    
 }

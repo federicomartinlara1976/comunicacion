@@ -8,7 +8,7 @@ import net.bounceme.chronos.comunicacion.dto.MedioComunicacionClienteDTO;
 import net.bounceme.chronos.comunicacion.dto.TipoComunicacionDTO;
 import net.bounceme.chronos.comunicacion.model.MedioComunicacionCliente;
 import net.bounceme.chronos.comunicacion.model.TipoComunicacion;
-import net.bounceme.chronos.utils.assemblers.Assembler;
+import net.bounceme.chronos.utils.assemblers.BidirectionalAssembler;
 import net.bounceme.chronos.utils.assemblers.BidirectionalGenericAssembler;
 import net.bounceme.chronos.utils.exceptions.AssembleException;
 
@@ -17,7 +17,7 @@ public class MedioComunicacionClienteAssembler extends BidirectionalGenericAssem
 
     @Autowired
     @Qualifier("tipoComunicacionAssembler")
-    private Assembler<TipoComunicacion, TipoComunicacionDTO> tipoComunicacionAssembler;
+    private BidirectionalAssembler<TipoComunicacion, TipoComunicacionDTO> tipoComunicacionAssembler;
     
     public MedioComunicacionClienteAssembler() {
         super(MedioComunicacionCliente.class, MedioComunicacionClienteDTO.class);
@@ -25,24 +25,20 @@ public class MedioComunicacionClienteAssembler extends BidirectionalGenericAssem
 
     @Override
     public MedioComunicacionCliente reverseAssemble(MedioComunicacionClienteDTO target) throws AssembleException {
-        MedioComunicacionCliente medioComunicacionCliente = new MedioComunicacionCliente();
-        
-        medioComunicacionCliente.setId(target.getId());
-        medioComunicacionCliente.setValor(target.getValor());
-        
-        return medioComunicacionCliente;
+        return MedioComunicacionCliente.builder()
+        		.id(target.getId())
+        		.valor(target.getValor())
+        		.tipoComunicacion(tipoComunicacionAssembler.reverseAssemble(target.getTipoComunicacion()))
+        		.build();
     }
 
     @Override
     public MedioComunicacionClienteDTO assemble(MedioComunicacionCliente source) throws AssembleException {
-        MedioComunicacionClienteDTO medioComunicacionClienteDTO = new MedioComunicacionClienteDTO();
-        
-        medioComunicacionClienteDTO.setId(source.getId());
-        medioComunicacionClienteDTO.setValor(source.getValor());
-        
-        medioComunicacionClienteDTO.setTipoComunicacion(tipoComunicacionAssembler.assemble(source.getTipoComunicacion()));
-        
-        return medioComunicacionClienteDTO;
+        return MedioComunicacionClienteDTO.builder()
+        		.id(source.getId())
+        		.valor(source.getValor())
+        		.tipoComunicacion(tipoComunicacionAssembler.assemble(source.getTipoComunicacion()))
+        		.build();
     }
 
     

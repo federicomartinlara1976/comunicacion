@@ -40,34 +40,29 @@ public class ClienteAssembler extends BidirectionalGenericAssembler<Cliente, Cli
 
     @Override
     public Cliente reverseAssemble(ClienteDTO target) throws AssembleException {
-        Cliente cliente = new Cliente();
-        
-        cliente.setId(target.getId());
-        cliente.setNombre(target.getNombre());
-        cliente.setApellidos(target.getApellidos());
-        cliente.setDni(target.getDni());
-        
-        return cliente;
+        return Cliente.builder()
+        		.id(target.getId())
+        		.nombre(target.getNombre())
+        		.apellidos(target.getApellidos())
+        		.dni(target.getDni())
+        		.build();
     }
 
     @Override
     public ClienteDTO assemble(Cliente source) throws AssembleException {
-        ClienteDTO clienteDTO = new ClienteDTO();
-        
-        clienteDTO.setId(source.getId());
-        clienteDTO.setNombre(source.getNombre());
-        clienteDTO.setApellidos(source.getApellidos());
-        clienteDTO.setDni(source.getDni());
-        
-        List<MedioComunicacionClienteDTO> listMediosComunicacion = new ArrayList<>(mediosComunicacionAssembler.assemble(source.getMediosComunicacion()));
+    	List<MedioComunicacionClienteDTO> listMediosComunicacion = new ArrayList<>(mediosComunicacionAssembler.assemble(source.getMediosComunicacion()));
         List<DireccionClienteDTO> listDirecciones = new ArrayList<>(direccionesClienteAssembler.assemble(source.getDirecciones()));
         List<AvisoDTO> listAvisos = new ArrayList<>(avisoAssembler.assemble(source.getAvisos()));
-        
-        clienteDTO.setMediosComunicacion(listMediosComunicacion);
-        clienteDTO.setDirecciones(listDirecciones);
-        clienteDTO.setAvisos(listAvisos);
-        
-        return clienteDTO;
+    	
+    	return ClienteDTO.builder()
+    			.id(source.getId())
+        		.nombre(source.getNombre())
+        		.apellidos(source.getApellidos())
+        		.dni(source.getDni())
+        		.mediosComunicacion(listMediosComunicacion)
+        		.direcciones(listDirecciones)
+        		.avisos(listAvisos)
+        		.build();
     }
 
 }

@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: comunicacion
+    description: Api backend para comunicacion
+
+  main.allow-bean-definition-overriding: true
+  
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+          
+  jpa:
+    hibernate.ddl-auto: create
+    show-sql: true
+    properties.hibernate.format_sql: true
+    
+  mail:
+    username: federicomartinlara1976@gmail.com
+    
+c3p0:
+  user: federico
+  password: MedinaAzahara2468@
+  driverClass: com.mysql.cj.jdbc.Driver
+  jdbcUrl: jdbc:mysql://localhost:3306/comunicacion?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+  minPoolSize: 1
+  maxPoolSize: 3
+  maxIdleTime: 500
+    
+logging.level.org.hibernate.SQL: debug
+  
+server:
+  port : ${PORT}
+
+application:
+  topic: mail-exchange
+  queue: notificaciones
+
+  envio.reintentos: 3
+  envio.asunto: Notificación

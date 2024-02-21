@@ -2,14 +2,12 @@ package net.bounceme.chronos.comunicacion.scheduling;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
 import net.bounceme.chronos.comunicacion.dto.NotificacionDTO;
-import net.bounceme.chronos.comunicacion.exceptions.ServiceException;
 import net.bounceme.chronos.comunicacion.services.NotificacionesService;
 
 /**
@@ -17,9 +15,9 @@ import net.bounceme.chronos.comunicacion.services.NotificacionesService;
  *
  */
 @Component
+@Slf4j
 public class GestionReintentos {
-	private static final Logger log = LoggerFactory.getLogger(GestionReintentos.class);
-
+	
 	@Autowired
 	private NotificacionesService notificacionesService;
 
@@ -31,13 +29,13 @@ public class GestionReintentos {
 	public void reenvioNotificaciones() {
 		try {
 
-			List<NotificacionDTO> notificacionesPendientes = notificacionesService.getNotificacionesNoEnviadas();
+			List<NotificacionDTO> notificacionesPendientes = notificacionesService.getNotificaciones("NO_ENVIADA");
 
 			for (NotificacionDTO notificacion : notificacionesPendientes) {
-				notificacionesService.enviarNotificacion(notificacion.getId());
+				notificacionesService.enviarNotificacion(notificacion);
 			}
 
-		} catch (ServiceException e) {
+		} catch (Exception e) {
 			log.error("ERROR: ", e);
 		}
 	}

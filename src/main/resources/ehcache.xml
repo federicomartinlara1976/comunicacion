@@ -3,10 +3,7 @@
 <ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="classpath:ehcache.xsd" updateCheck="false"
 	monitoring="autodetect" dynamicConfig="true"
-	name="CM1"
-    maxBytesLocalHeap="100M"
-    maxBytesLocalOffHeap="10G"
-    maxBytesLocalDisk="60G">
+	name="CM1">
 
 	<diskStore path="java.io.tmpdir" />
 

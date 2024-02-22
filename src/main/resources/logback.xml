@@ -53,7 +53,7 @@
             </fullPatternLayout>
             <numbersAsString>false</numbersAsString>
             <staticField>application:comunicacion</staticField>
-            <staticField>environment:DEV</staticField>
+            <staticField>environment:${ENV}</staticField>
         </encoder>
     </appender>
 

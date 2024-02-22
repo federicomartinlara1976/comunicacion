@@ -30,6 +30,8 @@ logging.level.org.hibernate.SQL: debug
   
 server:
   port : ${PORT}
+  
+env: ${ENV}
 
 application:
   topic: mail-exchange

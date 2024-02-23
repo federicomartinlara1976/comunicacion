@@ -2,6 +2,7 @@ package net.bounceme.chronos.comunicacion.config;
 
 import java.util.Collections;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,6 +17,12 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
+	
+	@Value("${spring.application.name}")
+	private String name;
+	
+	@Value("${spring.application.description}")
+	private String description;
 
 	@Bean
 	public Docket apiDocket() {
@@ -30,8 +37,8 @@ public class SwaggerConfig {
 	
 	private ApiInfo getApiInfo() {
 		return new ApiInfo(
-				"Comunicacion Api controller",
-				"Api backend para comunicacion",
+				name,
+				description,
 				"0.0.1-SNAPSHOT",
 				"https://github.com/federicomartinlara1976/comunicacion/blob/master/LICENSE",
 				new Contact("comunicacion", "https://github.com/federicomartinlara1976/comunicacion", "federicomartinlara1976@gmail.com"),

@@ -39,3 +39,15 @@ application:
 
   envio.reintentos: 3
   envio.asunto: Notificación
+  
+eureka:
+  client:
+    register-with-eureka: true
+    service-url.defaultZone: http://localhost:8761/eureka
+    
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+    
